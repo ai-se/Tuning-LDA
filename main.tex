@@ -1258,17 +1258,54 @@ The usual software analytics threats to validity hold for this paper:
   Our conclusions assume that the goal of topic modeling is to produce stable topics
   that humans will browse and reflect on. As mentioned in the introduction, there are
   a class of papers that do {\em not} do that. Rather, they use LDA as part of some internal
-  process where the topics are intermediaries used to generate some other goal\footnote{amrith: apper)
-
+  process where the topics are intermediaries
+  used to generate some other goal\footnote{amrith: apper). As we said at the start
+    of this paper, our results do not effect that kind of paper.
 \item
-Its conclusions are based on a finite number of data sets and it is possible
+The conclusions of this paper are based on a finite number of data sets and it is possible
 that other data might invalidate our conclusions. As with all analytics papers,
 all any researcher can do is make their conclusions and materials public, then encourage
-other researchers to repeat/ refute/ improve their conclusions.
-  \ei
-Our first threat to validity for these conclusions
-\textit{\textbf{Is it a quirk of the implementation?}} This instability problem remained the same across any implementation of LDA. Figure \ref{python_spark}, is with VEM method implemented in Spark. In this figure, x-axis represents different term overlaps and y-axis represents the $\Re$ scores. Dashed lines represents the untuned results and the solid lines represents the tuned results. We can see that tuning helped in achieving stable topic generation. The results of other datasets, can be referred at \href{https://goo.gl/UVaql1}{\textit{https://goo.gl/UVaql1}}. So it is not a quirk of implementation.
+other researchers to repeat/ refute/ improve their conclusions\footnote{amrith: can we make
+  all the footnotes of this paper be urls where folsk can download materials relevant to this paper}. For example, the footnotes of this contain all the urls where other researchers can download
+our materials and explore the conclusions of this paper.
+\ei
 
+As to more specific threats to validity, one issue might be that our conclusions
+on ``LDA'' are really quirks of a specific implementation.
+To check this, it is insightful to compare our results with:
+\bi
+\item The Pits and Citemap results, executed in Scikit-Learn and Python running on
+  a desktop machine.
+\item The StackOverflow data set executed in Scala using Mllib running on a Spark cluster.
+  \ei
+  Another useful comparison is to change the internal of the LDA:
+  \bi
+\item Sometimes use VEM sampling;
+\item Sometimes use Gibbs sampling;
+  \ei
+  Figure~\ref{gibbs_vem} compares the  VEM vs Gibbs sampling.
+  and Figure
+   \ref{python_spark} shows tuning results for StackOverflow, Citemap, and PitsA
+   using Scala/Spark cluster (for results on other data sets, see
+   https://goo.gl/UVaql1 and https://goo.gl/faYAcg)
+   When compared with the Python/desktop results of
+   Figure~\ref{fig:delta} we see the same patterns:
+   \bi
+ \item Tuning never makes stability worse.
+ \item Sometimes, it dramatically improves it (in particular, see the Citemap results
+   of  Figure~\ref{python_spark}).
+   \ei
+   That said, there are some deltas between VEM and Gibbs where it seems tuning
+   is more important for VEM than Gibbs (evidence: the improvements seen after
+   tuning are largest for the  VEM results of  Figure~\ref{gibbs_vem} and at  https://goo.gl/faYAcg).
+
+   
+\begin{figure}[!htbp]
+  \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{./fig/gibbs_vem1.png}
+  \caption{GIBBS vs VEM}
+  \label{gibbs_vem}
+\end{figure}
 \begin{figure}[!htbp]
   \captionsetup{justification=centering}
   \includegraphics[width=\linewidth]{./fig/spark.png}
@@ -1276,39 +1313,40 @@ Our first threat to validity for these conclusions
   \label{python_spark}
 \end{figure}
 
-\textit{\textbf{Is it a quirk of the sampling method used?}} In Figure \ref{gibbs_vem}, dashed lines represents the Gibbs implementation and solid line represents the tradition VEM method. The y-axis represents the delta improvement between tuning and untuned results. We can see that even after 5 terms, the stability score went down in both Gibbs Sampling and VEM. We also saw the same magnitude of improvements. So it is not a quirk of a particular sampling method. Here results of only 3 datasets are shown. For other datasets, results can be referred at \href{https://goo.gl/faYAcg}{\textit{https://goo.gl/faYAcg}}. So it is not a quirk of implementation.
+Another threat to validity of this work is that it is a qurk of the control
+parameters used within our DE optimizer.
+We have some evidence that this is not the case.
+Figure~\ref{fig:RQ4} and https://goo.gl/HQNASF explored a range of DE tunings and found
+little difference across that range. Also, Table~V explores another choice within DE-- how
+many evaluations to execute before terminating DEs. All the results in this paper use an
+evaluation budget of 300 evaluations\footnote{amrit? true?}.  Table~V
+compares results across different numbers of evaluations. While clearly,
+the more evaluations the better, there is little improvement after 300 evalautions.
 
-\begin{figure}[!htbp]
-  \captionsetup{justification=centering}
-  \includegraphics[width=\linewidth]{./fig/gibbs_vem1.png}
-  \caption{GIBBS vs VEM}
-  \label{gibbs_vem}
-\end{figure}
-
-
-\textit{\textbf{Terminating criteria for DE}} From table III, we can see that after 300 evaluations, there was no improvement in the stability scores across all the datasets and it stayed the same.
+%YYY dont beleive that. the time results are too good.
 
 \begin{table}[!htbp]
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline 
-\textbf{Datasets\textbackslash Evaluations} & \textbf{100} & \textbf{200} & \textbf{300} & \textbf{400} \\[0.5ex]
+\textbf{Datasets\textbackslash Evaluations} & \textbf{100} & \textbf{200} & \textbf{300} &
+\textbf{500} \\[0.5ex]
 \hline
-PitsA & 0.9 & 0.9 & 1.0 & 1.0\\ [0.5ex]
+PitsA & 0.9 & 0.9 & 1.0 & 1.0\\ 
 \hline
-PitsB & 0.9 & 0.9 & 0.9 & 1.0 \\ [0.5ex]
+PitsB & 0.9 & 0.9 & 0.9 & 1.0 \\
 \hline
-PitsC & 0.9 & 1.0 & 1.0 & 1.0\\ [0.5ex]
+PitsC & 0.9 & 1.0 & 1.0 & 1.0\\ 
 \hline
-PitsD & 0.9 & 1.0 & 1.0 & 1.0\\ [0.5ex]
+PitsD & 0.9 & 1.0 & 1.0 & 1.0\\ 
 \hline
-PitsE & 0.9 & 0.9 & 1.0 & 1.0\\[0.5ex]
+PitsE & 0.9 & 0.9 & 1.0 & 1.0\\
 \hline
-PitsF & 0.9 & 0.9 & 0.9 & 0.9\\[0.5ex]
+PitsF & 0.9 & 0.9 & 0.9 & 0.9\\
 \hline
-Ciemap & 0.67 & 0.67 & 0.77 & 0.77\\[0.5ex]
+Ciemap & 0.67 & 0.67 & 0.77 & 0.77\\
 \hline
-StackOverflow & 0.6 & 0.7 & 0.8 & 0.8\\[0.5ex]
+StackOverflow & 0.6 & 0.7 & 0.8 & 0.8\\
 \hline
 \end{tabular}
 \end{center}
