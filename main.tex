@@ -13,7 +13,8 @@
 \usepackage{float}
 \usepackage[demo]{graphicx}
 \usepackage{subfig}
-\usepackage{times}
+%\usepackage{times}
+\usepackage{cite}
 %
 \usepackage[absolute,showboxes]{textpos}
 \usepackage{paralist}
@@ -80,7 +81,7 @@
 \pagestyle{plain}
 
 \title{\textbf{What's Wrong with
-Topic Modeling?\\ (and How to Fix That Problem)}}
+Topic Modeling?\\ (and How to Fix it Using Search-based SE)}}
 
 
 \author{
@@ -106,31 +107,38 @@ wfu@ncsu.edu}
 
 \begin{abstract}
 %\boldmath
-  Topic Modeling is a method that reveals human-readable structures within large sets of unstructured SE data.
+  Topic Modeling is a method to find
+  human-readable structures in large sets of unstructured SE data.
   A widely used topic modeler is Latent Dirichlet Allocation. We show that LDA on SE data suffers
   from ``order effects''; i.e. changing the order of the input data leads to
   large changes in the generated topics.
-Such order effects introduce a systematic error
-for all prior  studies that use the contents of the generated topics to make 
-conclusions about SE. Specifically: those conclusions are unstable since they would 
-change if topic modeling is re-run on different orderings
-of the training data.
 
-To solve this problem, this paper proposes LDADE: a  combination of LDA and a search-based optimizer (differential evolution)
-that automatically tunes LDA's $<k,\alpha,\beta>$ parameters. LDADE has been applied
-to data from a programmer information exchange site (Stackoverflow), title and abstract text of
-thousands of SE papers, and software defect reports from NASA.    Results were collected across different implementations of LDA (Python+ScikiLearn, Scala+Spark); across different platforms (Linux, Macintosh) and for different kinds of LDAs (the traditional VEM method, or using  Gibbs sampling)
-  In all results, the pattern was the same:  (a)~before tuning, topic models were very unstable; and (b)~after tuning
-  the generated topics were far more stable across different orderings of the inputs. 
+ Such order effects introduce a systematic error for all prior studies that use
+ the contents of the generated topics to make conclusions about
+ SE. Specifically: those conclusions are unstable since they would change if
+ topic modeling is re-run on different orderings of the training data.
+
+To solve this problem, this paper proposes LDADE: a combination of LDA and a
+search-based software engineering method
+(differential evolution) that automatically tunes LDA's
+$<k,\alpha,\beta>$ parameters. LDADE is tested on  data from a programmer
+information exchange site (Stackoverflow); title and abstract text of thousands
+of SE papers; and software defect reports from NASA.  Results were collected
+across different implementations of LDA (Python+ScikiLearn, Scala+Spark); across
+different platforms (Linux, Macintosh) and for different kinds of LDAs (the
+traditional VEM method, or using Gibbs sampling) In all results, the pattern was
+the same: (a)~before tuning, topic models were very unstable; and (b)~after
+tuning the topics were far more stable.
   
-The implications of this study for other software analytics task is now an open and pressing issue. 
-How many other results suffer from order effects leading to unstable conclusions
-can be improved using  automatic tuning methods?
+The implications of this study for other software analytics tasks is now an open
+and pressing issue. 
+In how many domains can search-based SE dramatically improve software analytics?
+
 \end{abstract}
 
-\begin{IEEEkeywords}
-Topic modeling, Stability, LDA, tuning, differential evolution.
-\end{IEEEkeywords}
+%\begin{IEEEkeywords}
+%Topic modeling, Stability, LDA, tuning, differential evolution.
+%\end{IEEEkeywords}
 
 %\IEEEpeerreviewmaketitle
 \section{Introduction}
@@ -161,24 +169,26 @@ Figure~\cite{fig:survey2}).
 
 
 \noindent
-Researchers can use topic models in one of two ways:
-\bi
-\item
-Topics may be used as {\em feature selector} that finds useful inputs
-which are then used by, say, a classifier to characterize different kinds of software (e.g. buggy or not\foonote{LDA paper on supervised learning}).
+Researchers can use topic models in one of two ways.
+Firstly,
+topics may be used as {\em feature selector} that finds useful inputs
+which are then used by, say, a classifier to characterize different kinds of software (e.g. buggy or not\footnote{need papers her on LDA and supervised learning}).
 In this mode, no human need ever read the generated topics and instabilities
 in generated topics is less of an issue.
-\item Researchers may present and reflect on the generated topics in order to offer some insight into the structure of the data.
-  In this second mode, researchers present and discuss
-  the specifics of the generated topics in order to defend particular conclusions. 
-This paper is about a systematic error 
-that threatens  the external validity of conclusions
-made in this mode.
-\ei
-Specifically, we show that the generated topics from
-Latent Dirichlet Allocation (LDA), a widely-used topic modeling algorithm in SE,  are subject to ``order effects''.
-That is, if the order of the input examples is changed, the generated topics will also change.
-Any conclusion based on an order effect is unstable since that conclusion is the result of a (randomly selected) input ordering.
+
+Secondly, researchers may present and reflect on the generated topics in order to
+  offer some insight into the structure of the data.  In this second mode,
+  researchers present and discuss the specifics of the generated topics in order
+  to defend particular conclusions.
+
+  This paper is about a 
+  systematic error relating to this second mode.
+  Specifically, we show that the generated topics from Latent Dirichlet
+  Allocation (LDA), a widely-used topic modeling algorithm in SE, are subject to
+  ``order effects''.  That is, if the order of the input examples is changed,
+  the generated topics will also change-- often dramatically so.  Hence, any
+  conclusion based on an order effect is unstable since that conclusion is the
+  result of a (randomly selected) input ordering. 
 
 
 
@@ -291,12 +301,12 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
     thousands of SE papers\footnote{how many};
   \item And software defect reports from NASA.
     \ei
-    Using that data, we explore six research questions:  
+    Using that data, we explore these research questions:  
   %%   Results were collected across different implementations of LDA (Python+ScikiLearn, Scala+Spark); across different platforms (Linux, Macintosh) and for different kinds of LDAs (the traditional VEM method, or using  Gibbs sampling)
   %% In all results, the pattern was the same:  (a)~before tuning, topic models were very unstable; and (b)~after tuning
   %% the generated topics were far more stable across different orderings of the inputs. 
 \begin{compactitem}
-\item \textbf{RQ1}: \textit{Do the default settings of LDA lead to misleading results?} We will show that topics generated with the default settings are misleading since  stability scores start to drop after using $k=5$ terms per topic.
+\item \textbf{RQ1}: \textit{Are the default settings of LDA misleading?} We will show that topics generated with the default settings are misleading since  stability scores start to drop after using $k=5$ terms per topic.
     \item \textbf{RQ2}: \textit{Does tuning with DE improve the stability scores of LDA?} In our work, we will show dramatic improvement in the stability scores with the tuned parameters found automatically by DE.
     \item \textbf{RQ3}: \textit{Do different data sets
       need different configurations to make LDA stable?} We will show that DE finds different ``best''
@@ -309,17 +319,11 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
       speed reduction given modern cloud computing environments\footnote{this comes from fig10,11 am i reading it right?}.
     \item \textbf{RQ6}: \textit{Should topic modeling be used “off-the-shelf” with their default tunings?}
       Based on these findings, our answer to this question an emphatic ``no''.
-    \item \textbf{RQ7}: \textit{What are the more general implications of this study for software analytics?}
-      This is the second time we have applied DE to automatically
-      adjusting the control parameters of an algorithm. Previously~\cite{fu2016tuning},
-      we showed  that (a)~tuning software defect predictors can lead to large improvements of the performance
-      of those predictors; and that (b)~those tunings are different in different data sets; so (c)~it is important to apply
-      automatic tuning as part of the analysis of any new data set. Note that those old conclusions are the same
-      as for this paper. These two results make the following an  open and urgent issue: just
-      how poorly have we been using software analytics
-      in the past? And how much better can we improve future results using automatic tuning?
+      \ei
+    
 \end{compactitem}
-Before proceeding, we offer the following caveat.  As
+Before proceeding, we offer two clarifications.
+Firstly, as
 witnessed by the central columns of Table~\ref{tbl:survey2},
 many prior papers have
 commented that the results of a topic modeling analysis can be effected by
@@ -330,6 +334,25 @@ to find ways to better control tunings.
 To the best of our knowledge, apart from this paper, there are no reports in the SE literature
 of simple reproducible automatic methods that can resolve the problem of unstable topics.
 
+Secondly, while this specifics of this paper are about taming instability in topic modeling,
+we also think that this work makes a more general point.
+      This is the second time we have applied DE to automatically
+      adjusting the control parameters of an algorithm
+      usied in software analytics. Previously~\cite{fu2016tuning},
+      we showed  that (a)~tuning software defect predictors can lead to large improvements of the performance
+      of those predictors; and that (b)~those tunings are different in different data sets; so (c)~it is important to apply
+      automatic tuning as part of the analysis of any new data set. Note that those old conclusions are the same
+      as for this paper. These two results suggests that is time to revisit
+      past results to check:
+      \bi
+    \item
+       Just
+      how poorly have we been using software analytics
+      in the past?
+    \item
+      And how much better can we improve future results using methods taken from search-based
+      software engineering?
+      \ei
 
 
 %% only two authors acknowledged the impact of
@@ -650,6 +673,110 @@ We seek stability and LDA-GA uses stochastics. But we found tuning
 This section describes our evaluation methods for measuring instability as well as the optimization
 methods used to reduce that instability.
 
+
+\begin{table}[!t]
+\begin{center}
+\begin{tabular}{c|r|r}
+  \begin{tabular}[c]{@{}c@{}}\multicolumn{2}{c}{\textbf{~}}\end{tabular} & \multicolumn{2}{c}{\textbf{Size}} \\
+    \cline{2-3}
+         & \textbf{Before} & \textbf{After}\\ 
+  \textbf{Data set}      & \textbf{Preprocessing} & \textbf{Preprocessing}\\ 
+        \hline
+        PitsA & 1.2 MB & 292 KB \\ 
+        \hline
+        PitsB & 704 KB & 188 KB \\
+        \hline
+        PitsC & 143 KB & 37 KB \\ 
+        \hline
+        PitsD & 107 KB & 26 KB \\ 
+        \hline
+        PitsE & 650 KB & 216 KB \\
+        \hline
+        PitsF & 549 KB & 217 KB \\ 
+        \hline
+        Ciemap & 8.6 MB & 3.7 MB \\ 
+        \hline
+        StackOverflow & 7 GB & 527 MB \\ 
+\end{tabular}
+\end{center}
+\caption{Statistics on our datasets. PitsA, PitsB, etc refer to the issues
+from six different NASA projects.}
+\label{tbl:dataset}
+\end{table}
+\begin{figure*}[!t]
+  \begin{center}
+    \includegraphics[width=13cm]{./fig/jaccard.png}
+    \end{center}
+  \caption{Example of terms overlap off size $n=4$ across multiple runs.}
+  \label{fig:jaccard}
+\end{figure*}
+
+\subsection{Data Sets}
+To answer our research questions, and to enable reproducibility of our results,
+we use the three open source datasets summarized in Table~\ref{tbl:dataset} and described
+below.
+
+\textbf{PITS} is a text mining data set generated from NASA software project
+and issue tracking system (PITS) reports~\cite{menzies2008improving,
+  menzies2008automated}. This text discusses
+bugs and changes found in big reports and  review patches.
+Such issues are used
+to manage quality assurance, to support communication
+between developers. Topic modeling in PITS can be used
+to identify the top topics which can
+identify each severity separately. The dataset can be downloaded from the
+PROMISE
+repository~\cite{promiserepo}. Note that that data comes from six different
+NASA projects, which we label as PitsA, PitsB, etc.
+    
+ \textbf{StackOverflow} is the flagship site of the Stack Exchange Network which
+ features questions and answers on a wide range of topics in computer
+ programming.
+Topic modeling on StackOverflow is useful for finding patterns in programmer knowledge\footnote{no SO restructions? python? we did it all?}
+ This data can be downloaded from various
+ sources\footnote{http://data.stackexchange.com.
+   http://blog.stackoverflow.com/tags/cc-wiki-dump/}. 
+    
+  \textbf{Citemap} contains titles and abstracts of papers from a
+ database of 11 senior software engineering conferences from 1993-2013. from 1993-2013. This data was
+ obtained in the form of an SQL dump from the work of Vasilescu et
+ al.~\cite{vasilescu2013historical}.  This dataset can be downloaded
+ from our website\footnote{https://github.com/ai-se/citemap/blob/master/citemap.csv}.
+
+  For this study, all  datasets were preprocessed using the usual text mining filters~\cite{Feldman2007}:
+\bi
+\item
+  Stop words removal: ignore very common short words such as  ``and'' or ``the'' \footnote{AA: got a url for the stop list you used}
+\item
+  Porter's stemming filter~\cite{Porter1980}: delete uniformative word endings; e.g. after stemming, all the following words would be rewritten
+  to ``connect'': ``connection'', ``connections'',
+``connective'',          
+``connected'',
+  ``connecting''.
+\item
+  Tf-idf feature selection: focus on the 5\% of words that occur frequently,
+  but only in small numbers of documents. If a word occours $w$ times
+  and is found in $d$ documents  and there
+  are $W,D$ total number of words and documents, then Tf-idf is scored
+  as follows:
+  \[
+  \mathit{tfidf}(w,d)=   \frac{w}{W} *\log{\frac{D}{d}}\]
+  \ei
+
+  Table~\ref{tbl:dataset} shows the sizes of our data before and after pre-processing.
+  These datasets are of different sizes and so are processed using different tools:
+  \bi
+\item PITS and Citemap is small enough to process on a single (four core) deskop machine
+  using Scikit-Learn and Python.
+  \item StackOverflow is so large (7GB) that its  processing requires extra hardware support.
+ This study used a Spark and Mllib on a cluster of 50 nodes to
+ reduce the runtime.
+ \ei
+  
+
+
+
+
 \subsection{Similarity Scoring}
 %YY this apra makes no sense
 %% To evaluate the topics coherence or the cluster stability using LDA, there has
@@ -661,51 +788,55 @@ methods used to reduce that instability.
 %% approach, due to resource limitation to ask an expert for the type of datasets
 %% we used.
 
-For this work, we assess topic model stability via a variation of {\em Jaccard
-  similarity}~\cite{o2015analysis, galvis2013analysis}:
+For this work, we assess topic model stability via the {\em median number overlaps of size $n$ words}, which we denote  $\Re_n$.
+
+For this measurement, we first determine the maximum number of topics we will study. For that purpose,
+we will study the $k=10$ most likely topics since that is standard in
+the LDA literature~\cite{panichella2013effectively, lukins2010bug}.
+
+Next, for $1 \le n \le k$, we will calculate the median size of the overlap,
+computed as follows:
 \bi
-\item One {\em run} of our rig takes the training data, shuffles the order, then builds topic models using the data;
+\item Let one {\em run} of our rig shuffle the order of the training data, then builds topic models using the data;
   \item $m$ runs of our rig executes $m$ copies of one run, each time using a different random number beet,
 \item We say topics are stable,
 when there are $x$ occurrences of  $n$ terms appearing in all the topics seen in the $m$ runs.
 \ei
-\begin{figure}[!b]
-  \captionsetup{justification=centering}
-  \includegraphics[width=\linewidth]{./fig/jaccard.png}
-  \caption{Example of 5 terms overlap across 4 runs and its stability score}
-  \label{fig: jaccard}
-\end{figure}
+
+
 For example, consider the topics shown in Figure~\ref{fig:jaccard}. These are generated via four {\em runs} of our system.
 For $n=4$, we note that Topic~0 of run1 scores $\frac{2}{4}=0.5$ since it shares 2 words with topics in all four runs.
 Repeating that calculation for the other run1 topics shows that:
 \bi
-\item 
 \item Topic~1 of run1 scores $\frac{3}{4}=0.75$;
 \item Topic~2 or run1 scores $\frac{1}{4}=0.25$;
 \item Topic~3 of run1 scores $\frac{4}{4}=1$.
-  \item The {\em median similarity score} of all topics is hence $\frac{0.5+0.75+0.25+1}{4}=0.625$
- \ei
- For the following analysis:
+  \ei
+  From this information, we can calculate
+  $\Re_4$  (the
+  {\em median number overlaps of size $n=4$ words}) as:
+  \[
+   \mathit{median}(0.5, 0.75, 0.25, 1) =0.625\]
+  %YYY need an example of Fig5 here using the data of Figure4.
+  Figure~\ref{fig:alln}
+  shows the $\Re_n$ scores of 
+  Figure~\ref{fig:jaccard} for $1 \le n \le 10$. 
+  
+ For the following analysis,
  %YYY do our graphs really use this terminology?
+we distinguish between the \textbf{\textit{Raw  scores}} and the \textbf{\textit{Delta  score}}:
  \bi
- \item We report the {\em median similarity score} seen for ten topics that LDA reports are most probable.
-   This threshold of ten topics is standard in the LDA literature~\cite{panichella2013effectively, lukins2010bug}.
- \item
-  Recall how the above example used $n=4$ as the denominator of its calculations. All the following results
-  are reported for  $1 \le n \le 10$.
-  \item We distinguish between the \textbf{\textit{Raw  scores}} and the \textbf{\textit{Delta  score}}:
- \bi
-\item The two \textbf{\textit{Raw  scores}} are the median similarity scores seen {\em before} and {\em after} tuning LDA;
+\item The two \textbf{\textit{Raw  scores}} are the $\Re_n$ median similarity scores seen {\em before} and {\em after} tuning LDA;
 \item The \textbf{\textit{Delta score}} is the difference between the two
-  \textbf{\textit{Raw scores}}.  \ei \ei
+  \textbf{\textit{Raw scores}}.  \ei 
   The pseudocode for these calculations
   is shown in Algorithm 1 with the default set of parameters). In the following
-  description, superscript numbers denote lines in the pseudocode. The data is
-  shuffled everytime LDA is run$^{5}$. Data is in the form of term frequency
+  description, superscript numbers denote lines in the pseudocode. The data ordering is
+  shuffled every time LDA is run$^{5}$. Data is in the form of term frequency
   scores of each word per document. Shuffling is done in order to induce maximum
   variance among the ordering of data with  different runs of LDA. Topics$^{6}$ are a list of list which
   contains topics from all the different runs. A stability score is evaluated on
-  every 10 runs, and this process is continued 10 times. At the end, median
+  every 10 runs, and this process is continued 10 times. At the end, the median
   score is selected as the untuned final score$^{3-11}$.
 
 %YYY this is weird. you use terminology different below. Finmal score. unify with the above terminology
@@ -717,10 +848,10 @@ Repeating that calculation for the other run1 topics shows that:
 \makeatother
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
-\begin{algorithm}[!htbp]
+\begin{algorithm}[!t]
     %\scriptsize
     %\label{algo: untuned}
-    \caption{Pseudocode for untuned LDA with Default Parameters}
+    
     \begin{algorithmic}[1]
     %\label{algo: untuned}
     \Require $no. of terms$, $Data$, $\k$, $\alpha$, $\beta$, 
@@ -738,9 +869,31 @@ Repeating that calculation for the other run1 topics shows that:
         \State \textbf{return} $Final\_Score$
     \EndFunction
     %\medskip
+    \caption{Pseudocode for untuned LDA with Default Parameters}
     \end{algorithmic}
 \end{algorithm}
-\begin{table}[!htbp]
+
+
+%YYY: who first proposed LDA... need a referece first time we mention if
+\subsection{Tuning Topic Modeling with LDADE}
+\label{sect: tuning}
+LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
+the parameters of LDA in order to optimize (i.e. maximize) similarity scores.
+
+We choose to use DE after a literature search on search-based SE methods.
+That literature mentions many optimizers: simulated
+annealing~\cite{feather2002converging, menzies2007business}; various genetic
+algorithms~\cite{goldberg1979complexity} augmented by techniques such as
+differential evolution~\cite{storn1997differential}, tabu search and scatter
+search~\cite{glover1986general, beausoleil2006moss, molina2007sspmo,
+  nebro2008abyss}; particle swarm optimization~\cite{pan2008particle}; numerous
+decomposition approaches that use heuristics to decompose the total space into
+small problems, then apply a response surface methods~\cite{krall2015gale,
+  zuluaga2013active}. Of these, the simplest ones are simulated annealing (SA)
+and differential evolution (DE) and  our reading of the current literature is
+that there are more advocates for differential evolution than SA. 
+
+\begin{table}[!b]
     \begin{center}
 {\scriptsize
 \begin{tabular}{|l|l|l|p{3.5cm}|}
@@ -765,32 +918,10 @@ Repeating that calculation for the other run1 topics shows that:
 \caption{List of parameters tuned by this paper}
 \label{tb:tuned}
 \end{table}
-%YYY: who first proposed LDA... need a referece first time we mention if
-\subsection{Tuning Topic Modeling with LDADE}
-\label{sect: tuning}
-LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
-the parameters of LDA in order to optimize (i.e. maximize) similarity scores.
 
-We choose to use DE after a literature search on search-based SE methods.
-That literature mentions many optimizers: simulated
-annealing~\cite{feather2002converging, menzies2007business}; various genetic
-algorithms~\cite{goldberg1979complexity} augmented by techniques such as
-differential evolution~\cite{storn1997differential}, tabu search and scatter
-search~\cite{glover1986general, beausoleil2006moss, molina2007sspmo,
-  nebro2008abyss}; particle swarm optimization~\cite{pan2008particle}; numerous
-decomposition approaches that use heuristics to decompose the total space into
-small problems, then apply a response surface methods~\cite{krall2015gale,
-  zuluaga2013active}. Of these, the simplest ones are simulated annealing (SA)
-and differential evolution (DE) and  our reading of the current literature is
-that there are more advocates for differential evolution than SA. For example,
-Vesterstrom and Thomsen~\cite{vesterstrom2004comparative} found DE to be
-competitive with particle swarm optimization and other GAs. DEs have been
-applied before for parameter tuning (e.g. see~\cite{omran2005differential,
-  chiha2012tuning, fu2016tuning} ) but this is the first time they have been
-applied to tune the configurations of LDA.
-
-LDADE  adjusts the parameters of   LDA  shown in
-Table~\ref{tb:tuned}. Most of the terms in this figure were explained above. As to the rest:
+\newpage
+LDADE  adjusts the parameters of
+Table~\ref{tb:tuned}. Most of the parameters were explained above. As to the rest:
 \bi
 \item VEM is the deterministic {\em variational EM} method that computes $\alpha,\beta$ via
   expectation maximization.
@@ -800,18 +931,17 @@ Table~\ref{tb:tuned}. Most of the terms in this figure were explained above. As 
 %YYY Does the layman reference does not appear in table1?
 %YYY Why does LDAscore appear in algorithm2 and algorithm1
 
+
   
-
-Algorithm 2 shows LDADE's version of DE.  DE evolves a \textit{NewGeneration} of
-candidates from a current Population. Our DE will terminate after a certain
-number of evaluations. Each candidate solution in the Population is a pair of
-(Tunings, Scores). Tunings are selected from Table \ref{tb:tuned} and Scores
-come from the stability score after running our LDA experiment$^{23-30}$.
-
+%YYY why do you only iteratre 3 times? surely you iterate till no improvement?
+%YYY why is LDAScore here?
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
-\begin{algorithm}[!htbp]
-    \caption{Pseudocode for DE with a constant number of evaluations}
+\begin{algorithm}[!t]
+
+
+ 
+  
     \begin{algorithmic}[1]
     \Require np$=10$, f$=0.7$, cr$=0.3$, iter$=3$, Goal $\in$ Finding maximum score
     \Ensure $S_{best}, final\_generation$
@@ -837,14 +967,16 @@ come from the stability score after running our LDA experiment$^{23-30}$.
         \State  $final\_generation \leftarrow Cur\_Gen$
         \State \textbf{return} $S_{best}, final\_generation$
     \EndFunction
-    \Function{ldascore}{$l$, $term$, $Data$}
-        \State $Topics \leftarrow \emptyset$
-        \For{$i = 0$ to 10}
-            \State $data \leftarrow$ \textbf{shuffle}($Data$)
-            \State $Topics$.append(lda($k=l[0]$,$\alpha=l[1]$,$\beta=l[2]$)) 
-        \EndFor
-        \State \textbf{return} $Overlap$(Topics, $term$,$l[0]$ )
-    \EndFunction
+
+    %YYY line numbers have changed
+    %% \Function{ldascore}{$l$, $term$, $Data$}
+    %%     \State $Topics \leftarrow \emptyset$
+    %%     \For{$i = 0$ to 10}
+    %%         \State $data \leftarrow$ \textbf{shuffle}($Data$)
+    %%         \State $Topics$.append(lda($k=l[0]$,$\alpha=l[1]$,$\beta=l[2]$)) 
+    %%     \EndFor
+    %%     \State \textbf{return} $Overlap$(Topics, $term$,$l[0]$ )
+    %% \EndFunction
     \Function{Extrapolate}{$old, pop, cr, f,np$}
         \State $a,b,c \leftarrow threeOthers$(pop, old)
         \State $newf \leftarrow \emptyset$
@@ -861,119 +993,134 @@ come from the stability score after running our LDA experiment$^{23-30}$.
         \EndFor
         \State \textbf{return} $newf$ 
     \EndFunction
+    \caption{Pseudocode for DE with a constant number of evaluations}
     \end{algorithmic}
 \end{algorithm}
 
-The premise of DE is that the best way to mutate the existing tunings is to
-Extrapolate$^{31}$ between current solutions. Three solutions a, b, c are
+
+
+Algorithm 2 shows LDADE's version of DE.  DE evolves a \textit{NewGeneration} of
+candidates from a current Population.   Each candidate solution in the Population is a pair of
+(Tunings, Scores). Tunings are selected from Table \ref{tb:tuned} and Scores
+come from the stability score after running our LDA experiment$^{23-30}$.
+
+
+
+The main loop of DE$^{9}$ runs over the Population, replacing old items with new Candidates (if new candidate is better).
+DE generates new Candidates via 
+extrapolating$^{31}$ between current solutions in the frontier.. Three solutions a, b, c are
 selected at random. For each tuning parameter i, at some probability cr, we
 replace the old tuning $x_i$ with $y_i$. For booleans, we use $y_i = x_i$ (see
 line 39). For numerics, $y_i = a_i + f \times (b_i - c_i)$ where f is a
 parameter controlling crossover. The trim function$^{41}$ limits the new value
 to the legal range min..max of that parameter.
 
-The main loop of DE$^{9}$ runs over the Population, replacing old items with new Candidates (if new candidate is better). This means that, as the loop progresses, the Population is full of increasingly more valuable solutions. This, in turn, also improves the candidates, which are Extrapolated from the Population.
+The loop invariant of DE is that, after the zero-th iteration$^7$, the Population
+contains examples that are better than at least one other candidate.
+As the looping progresses, the Population is full of increasingly more valuable solutions
+which, in turn, also improves the candidates, which are Extrapolated from the Population.
+Hence, Vesterstrom and Thomsen~\cite{vesterstrom2004comparative} found DE to be
+competitive with particle swarm optimization and other GAs.
+
+Note that DEs have been
+applied before for parameter tuning (e.g. see~\cite{omran2005differential,
+  chiha2012tuning, fu2016tuning} ) but this is the first time they have been
+applied to tune the configurations of LDA.
 
 \section{Experimentation}
 
-\subsection{Data Sets}
-To answer our research questions, we will be working on couple of open source datasets to verify that tuning does help the stability scores. All these datasets have been preprocessed using the normal steps of stopwords removal, stemming, and then considering the top 5\% of tf-idf scores. More details about the statistics of datasets can be found in the table \ref{tb:dataset}. The datasets used are:-
 
-\begin{compactitem}
-    \item \textbf{PITS}: This is a text mining data set generated from project and issue tracking system (PITS) reports~\cite{menzies2008improving, menzies2008automated}. This data is about the bugs and changes in the code, to submit and review patches, to manage quality assurance, to support communication between developers, etc. The aim is to identify the top topics which can identify each severity separately. The dataset can be downloaded from this repository~\cite{promiserepo}. 
-    
-    \item \textbf{StackOverflow}: StackOverflow is a privately held website, the flagship site of the Stack Exchange Network which features questions and answers on a wide range of topics in computer programming. The data can be downloaded from various sources \footnote{http://data.stackexchange.com} \footnote{http://blog.stackoverflow.com/tags/cc-wiki-dump/}. This dataset is so big that it can only be run on Spark with a cluser of nodes to reduce the runtime. Results of this dataset is only coming from Spark mllib implementation.
-    
-    \item \textbf{Citemap}: Citemap dataset contains titles and abstracts of papers from a database of 11 conferences from 1993-2013. from 1993-2013. This data was obtained in the form of a sql dump from the work of Vasilescu et al.~\cite{vasilescu2013historical}. Dataset can be downloaded from \footnote{https://github.com/ai-se/citemap/blob/master/citemap.csv}. 
-\end{compactitem}
+In this section,
+ any result
+from the smaller data sets (Pits and Citemap) come
+from a Python implementation based on Scikit-Learn running on a single 4-core machine.
+Also,
+  any results from the larger data (StackOverflow) comes from a Scala implementation
+  based on Mllib running on a 50 node Spark system (8 cores per node).
+  
+  Note that, for the most part, we defer the StackOverflow results to the {\em Threats to Validity}
+  section where we will show that (a)~topic modeling instability
+  exists across multiple platforms and  implementation languages; (b)~tuning
+  can improve stabilities for different platforms and languages.
 
-\begin{table}[!htbp]
-\begin{center}
-\begin{tabular}{|c|c|c|}
-        \hline 
-         \begin{tabular}[c]{@{}c@{}}\multicolumn{2}{c}{\textbf{Datasets}}\end{tabular} & \multicolumn{2}{|c|}{\textbf{Size}} \\ [0.5ex]
-        \cline{2-3}
-        & \textbf{Before Preprocessing} & \textbf{After Preprocessing}\\ [0.5ex]
-        \hline
-        PitsA & 1.2MB & 292 KB \\ [0.5ex]
-        \hline
-        PitsB & 704KB & 188KB \\ [0.5ex]
-        \hline
-        PitsC & 143KB & 37KB \\ [0.5ex]
-        \hline
-        PitsD & 107KB & 26KB \\ [0.5ex]
-        \hline
-        PitsE & 650KB & 216KB \\ [0.5ex]
-        \hline
-        PitsF & 549KB & 217KB \\ [0.5ex]
-        \hline
-        Ciemap & 8.6MB & 3.7MB \\ [0.5ex]
-        \hline
-        Stackoverflow & 7GB & 527MB \\ [0.5ex]
-        \hline
-\end{tabular}
+  
+
+
+
+  %% YY legends hard to read . make none-bold
+  %% why do they stop at X=9
+  %% x-axis has to have the term \Re_n as well as the text ``number of topics overlaps``
+\begin{figure}[!t]
+  \begin{center}
+  \includegraphics[width=\linewidth]{./fig/Vem_untuned.png}
+
+  {\bf Figure~\ref{fig:delta}a:}  {\em Before} tuning: uses LDA's default parameters.
+
+  \includegraphics[width=\linewidth]{./fig/raw_graph.png}
+
+  {\bf Figure~\ref{fig:delta}b:}  {\em After} tuning: uses parameters learned by DE.
+
+  
+
+  \includegraphics[width=\linewidth]{./fig/tuned_delta_vem.eps}
+
+  {\bf Figure~\ref{fig:delta}c:}  {\em Delta = After - Before}. 
+  
 \end{center}
-\caption{Statistics on the datasets}
-\label{tb:dataset}
-\end{table}
+  \caption{{\bf RQ1, RQ2} stability results over ten repeated runs. In these figures, {\em larger} numbers
+    are {\em better}.}\label{fig:delta}
+\end{figure}
+\subsection{\textbf{RQ1: Are the default settings of LDA misleading?}}
 
-\section{Experimental Results}
 
-Note in the following, we report these results after running on Local machine just for PITS and Citemap datasets. These results are implemented using VEM method of LDA in Python (Scikit-learn). The StackOverflow dataset is so large that it can only be run on Spark cluster. We have specifically mentioned if any of the other results are coming from Gibbs Implementation or Spark platgorm.
+This first research question checks the core premise of this article-- that changes
+in the order of training data dramatically effects the topics learned via LDA.
+Note that if this is {\em not true}, then there would be no value-added to this paper.
 
-\subsection{\textbf{RQ1: Do the default settings lead to misleading results?}}
 
-In figure \ref{fig:raw_untuned}, X-axis represents number of terms overlap. Y-axis represents the $\Re$ scores. For definition of $\Re$ and \textit{Delta Scores}, you can refer to Section \ref{sect: evaluation}. Different lines are for the different datasets. From the figure \ref{fig:raw_untuned}, it can be clearly seen that instability occurs in the untuned results. Researchers~\cite{panichella2013effectively, lukins2010bug} said that, 10 terms per topic are ideal to define a topic of interest but we can see $\Re$ scores start dropping after 5 terms. With default settings, it can surely lead to misleading results.
-
+Figure~\ref{fig:delta}a   plots $n$ vs $\Re_n$ for untuned  LDA.
+Note that the  stability collapses after $n=5$ words. This means
+  that any report of LDA topics that uses more than five words per topic will
+  be changed, just be changing the order of the inputs. This is a significant result
+  since the standard advice in the LDA papers~\cite{panichella2013effectively, lukins2010bug}
+  is to report the top 10 words per topic. As shown in Figure~\ref{fig:delta}a, it would
+  be rare that any such 10 word topic would be found across multiple rules.
+  
+ 
 \begin{lesson}
-There exists systematic errors in prior LDA results.
+  Using the default settings of LDA for SE data can lead to systematic errors due to topic
+  modeling instability. 
 \end{lesson}
 
 
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=\linewidth]{./fig/Vem_untuned.png}
-  \caption{Terms vs Raw Scores between tuning and default parameters}
-  \label{fig:raw_untuned}
-\end{figure}
+
 
 \subsection{\textbf{RQ2: Does tuning improve the stability scores of LDA?}}
 
-In figure \ref{fig:raw}, x-axis represents number of terms overlap and y-axis represents the $\Re$ scores. Different lines are for the different datasets. We can see that tuning results are either always above the default settings (untuned) or stayed the same. Since figure \ref{fig:raw} is hard to read, we are reporting delta improvement in figure \ref{fig:delta}. In figure \ref{fig:delta}, x-axis represents number of terms overlap and y-axis represents the delta improvement which is ($tuning - untuned$) results. If the lines are above x-axis, that means tuning performed better than the untuned. Different lines are for the different datasets. It clearly shows that the answer to RQ2 is “yes” - tuning has a positive effect on stability scores. Tuning either helped it or remained the same but it never had any negative effect. The dramatic improvement started showing after 5 terms overlap. The most improvement which we observed was in PitsD dataset for 8 terms overlap of about 80\%. Delta improvement remained 0 till 5 terms overlap for most number of datasets. That is why we recommend that we shouldn't list more than 5 terms per topic, as stability starts dropping.
+ Figure~\ref{fig:delta}b and Figure~\ref{fig:delta}c shows the stability improvement
+ generated by tuning.
+   Tuning never
+  has a negative effect (reduces stability) band often has a large positive effect--
+  particular  after 5 terms overlap.
+   The largest improvement  we
+   was  in PitsD dataset which for up to 8 terms overlap was 100\% (i.e. was always
+   found in all runs).
+   Overall, after reporting topics of up to 7 words, in the majority case (66\%),
+  those topics can be found in models generated using different input orderings.
+  Accordingly, our answer to {\bf RQ2} is:
 
 \begin{lesson}
-Based on Figure \ref{fig:delta}, we highly recommend tuning in future LDA.
+Based on Figure \ref{fig:delta}, we strongly recommend tuning for future LDA studies.
 \end{lesson}
 
-\begin{center}
-\begin{figure}[!htbp]
-  \includegraphics[width=\linewidth]{./fig/raw_graph.png}
-  \caption{Terms vs Raw Scores between tuning and default parameters}
-  \label{fig:raw}
-\end{figure}
-\end{center}
-
-\begin{center}
-\begin{figure}[!htbp]
-  \includegraphics[width=\linewidth]{./fig/tuned_delta_vem.eps}
-  \caption{Terms vs Delta Improvement between tuning and default parameters}
-  \label{fig:delta}
-\end{figure}
-\end{center}
-
-\subsection{\textbf{RQ3: Does different data need different configurations to make LDA stable? Does it change some predefined parameter values of lda?}}
-
-Figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b}, x-axis represents different datasets and y-axis represents values of median and IQR. Each figure shows the variation in the values of number of topics (\textit{k}), alpha ($\alpha$) and beta ($\beta$). These results are for 5 terms overlap. From these figures, it clearly shows how tuning selects the different ranges of values of parameters. These figures represent a very high Median Score and as well as very high interquartile range (IQR) for different datasets. This means that tuning helped us to arrive at different sets of configurations making the topic generation more constant. In figure \ref{RQ3:k} for pitsB dataset, we are seeing 0 IQR, that means tuning helped us to find only 1 set of configurations which got us to that Stable score. We found many such similar numbers throughout the results. (Refer this link at \href{https://goo.gl/Nin5pV}{\textit{https://goo.gl/Nin5pV}} for elaborate results).
-
-The other result which we found is in the citemap dataset. If we look in the spreadsheet, from Row 121-129, we see that we are getting good stable scores within 30 topic size. But in the~\cite{garousi2016citations} paper, they found that we will need a topic size of 67. Definitely, it can change predefined parameters of LDA.
-We also observed the similar trend for other term overlaps as well as other sampling methods.
 
 \begin{figure*}[!htbp]
     \centering
     \begin{minipage}{.33\textwidth}
         \captionsetup{justification=centering,singlelinecheck=off}
         \includegraphics[width=\linewidth]{./fig/Parameters_variation_k.png}
-        \caption{Datasets vs Parameter (k) variation}
+        \caption{Datasets vs Parameter (k) variation.  Note that IQR=0 for  PitsB dataset where tuning
+          always converged on the same final value. }
         \label{RQ3:k}
     \end{minipage}%
     \begin{minipage}{.33\textwidth}
@@ -990,31 +1137,69 @@ We also observed the similar trend for other term overlaps as well as other samp
     \end{minipage}
 \end{figure*}
 
+
+
+\subsection{\textbf{RQ3: Do different data sets
+      need different configurations to make LDA stable?}}
+
+Figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b} show the results of tuning the $k,\alpha,\beta$
+values within LDA. On display in each set of vertical bars are:
+\bi
+\item The median values generated across 10 tunings;
+\item The inter-quartile range (IQR) of those tunings (the IQR is the 75th-25th percentile values and is a non-parametric measure of variation
+  around the median value).
+  \ei
+  From these figures, it
+clearly shows how tuning selects the different ranges of values of
+parameters.
+Some of the above numbers are far from the standard values recommended in the literature.
+For example, Garousi et al. ~\cite{garousi2016citations} recommend using $k=67$ topics
+yet in our data sets, best results were seen using $10 \ke k \le 24$.
+Clearly:
+
 \begin{lesson}
-Tuning the parameters of LDA needs to be repeated whenever data or goals are changed.
+  Do not  reuse tunings suggested by other researchers from other data sets.
+  Instead, use automatic tuning methods to find the best tuning parameters for the current data set.
 \end{lesson}
+
+
 
 \begin{figure*}[!t]
     \centering
-    \begin{minipage}{.5\textwidth}
+  \begin{minipage}{.5\textwidth}
+        \captionsetup{labelsep=space,justification=centering,singlelinecheck=off}
+        \includegraphics[width=\linewidth]{./fig/Run_VEM_sci.png}
+  \caption{VEM: Datasets vs Runtimes}
+  \label{RQ5 VEM}
+  \end{minipage}
+  \begin{minipage}{.5\textwidth}
         \captionsetup{justification=centering,singlelinecheck=off}
         \includegraphics[width=\linewidth]{./fig/Run_gibbs_sci.png}
   \caption{Gibbs: Datasets vs Runtimes}
   \label{RQ5 Gibbs}
     \end{minipage}%
-    \begin{minipage}{.5\textwidth}
-        \captionsetup{labelsep=space,justification=centering,singlelinecheck=off}
-        \includegraphics[width=\linewidth]{./fig/Run_VEM_sci.png}
-  \caption{VEM: Datasets vs Runtimes}
-  \label{RQ5 VEM}
-    \end{minipage}
+    
 \end{figure*}
 
 \subsection{\textbf{RQ4: Is  tuning  easy?}}
 
-In terms of the search space explored via tuning, it is much smaller. To see this, recall from Algorithm 2 that DE explores a Population of size np = 10. This is a very small population size since Rainer Storn (one of the inventors of DE) recommends setting np to be ten times larger than the number of parameters being optimized. We also ran experiments with different sets of F, CR, and population size (\textit{np}), and we see that it didn't change much.
 
-We have shown results only for Citemap dataset which can be referred in Figure \ref{fig:RQ4}. For other datsets, we can refer at \href{https://goo.gl/HQNASF}{\textit{https://goo.gl/HQNASF}}. In Figure \ref{fig:RQ4}, different lines show different combinations of F, CR and Population size. F is selected either 0.3 or 0.7, and similarly CR is selected 0.3 or 0.7, and population size is selected either 10 or 30 (which is 10 times the number of parameters being optimized). These numbers are according to the original Rainer Storn~\cite{storn1997differential} recommended settings.
+The DE literature
+recommends using a population size $np$ that is ten times larger than the number of parameters being
+optimized~\cite{storn1997differential}.  For example, when tuning $k,\alpha,\beta$,
+the DE literature is recommending $np=30$.
+Figure~\ref{fig:RQ4} explores $np=30$ vs the $np=10$ we use in Algorithm 2
+(as well as some other variants of DE's F and CR parameters).
+That figure shows results jsut for Citemap and, for space reasons, results
+relating to other data sets are shown at 
+https://goo.gl/HQNASF.
+After reviewing the results from all the datasets, we can say that there isn't much of an improvement by using different F, CR, and Population size. So our all other experiments used $F=0.7$, $CR=0.3$ and $np = 10$.
+Also:
+
+\begin{lesson}
+  In terms of the search space explored via tuning, finding stable parameters for
+  topic models is easier that standard optimization tasks.
+\end{lesson}
 
 \begin{figure}[!htbp]
   \includegraphics[width=\linewidth]{./fig/citemap.png}
@@ -1022,23 +1207,66 @@ We have shown results only for Citemap dataset which can be referred in Figure \
   \label{fig:RQ4}
 \end{figure}
 
-After reviewing the results from all the datasets, we can say that there isn't much of an improvement by using different F, CR, and Population size. So our all other experiments used $F=0.7$, $CR=0.3$ and $Pop size = 10$.
-
 \subsection{\textbf{RQ5: Is tuning impractically slow?}}
 
-Figure \ref{RQ5 Gibbs} and \ref{RQ5 VEM}, x-axis represents different datasets and y-axis represents the runtimes in seconds (\textit{Log scale}). From the table \ref{tb:tablename1}, we will show that we just need 300 evaluations to do tuning. Using this criteria, we can see that tuning runtimes is only about 5 times the runtimes without tuning. Figure \ref{RQ5 Gibbs} is with Gibbs implemented in Python, and Figure \ref{RQ5 VEM} is with VEM implemented in Python.
+Search-based SE methods can be very slow. Harman et al. once needed 15 years of CPU time to find and verify
+the tunings required for software clone detectors~\cite{Wang:Harman13}. Sayyad et al. routinely used $10^6$ evaluations (or more)
+  of their models in order to extract products from highly constrained product lines~\cite{Sayyad2013}. Hence, before recommending
+  any search-based method, it is wise to consider the runtime cost of that recommendation.
 
-\begin{lesson}
-These tuning runtimes are consistent with Wei et al.~\cite{fu2016tuning} which makes tuning feasible.
+%YYY why so fast? io bound?
+  Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} and  shows in blue,red the runtimes required to run LDA untuned,tuned (respectively).
+  The longer runtimes (in red) include the times required for DE to find the tunings. Overall, tuning slows down LDA by a factor of up to seven,
+  but often less than five. Note that this is much less than we might expect from Algorithm 2 which contains multiple loops across Populations of different parameters.
+  On investigation, we found that much of this inference is I/O bound (reading data and/or swapping memory from RAM to virtual disk).
+
+  Hence, while tuning certain slows down LDA, the overall slowdown is not dramatic. Given the added benefit of tuning (stable topics),
+  we conclude that:
+
+  \begin{lesson}
+    Tuning LDA is not impractically slow.
 \end{lesson}
 
 \subsection{\textbf{RQ6: Should data miners be used “off-the-shelf” with their  default  tunings?}}
 
-From figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b}, we can easily see that for different datasets, we need different parameters. Such large IQRs show that we get quite varied ranges of parameters. Hence, we answer RQ6 as “no” since, to achieve the improvements seen in this paper, tuning has to be repeated whenever the goals or data sets are changed. Given this requirement to repeatedly run tuning, it is fortunate that (as shown above) tuning is so easy and so fast.
+
+  Figure~\ref{fig:deltas} shows that there is much benefit in tuning.
+\item
+  Figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b} show that
+  the range of ``best'' tunings is very dataset-specific. Hence, for a new dataset,
+  the off-the-shelf tunings
+  may often fall far from the useful range.
+\item
+  Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} show that tuning is definitely
+  slower than otherwise, but the overall cost is not prohibative.
+  \ei
+  Hence:
+  \begin{lesson}
+    Overall, we can see little reason  to use ``off-the-shelf'' LDA.
+    \end{lesson}
+  %YYY check that the text for the lessons matches the text on p2
+  
+  %YYY why not a,b,k for fig6,7,8
+ 
+ 
 
 \section{Threats to Validity}
 \label{sect: validity}
+The usual software analytics threats to validity hold for this paper:
+\bi
+\item
+  Our conclusions assume that the goal of topic modeling is to produce stable topics
+  that humans will browse and reflect on. As mentioned in the introduction, there are
+  a class of papers that do {\em not} do that. Rather, they use LDA as part of some internal
+  process where the topics are intermediaries used to generate some other goal\footnote{amrith: apper)
 
+\item
+Its conclusions are based on a finite number of data sets and it is possible
+that other data might invalidate our conclusions. As with all analytics papers,
+all any researcher can do is make their conclusions and materials public, then encourage
+other researchers to repeat/ refute/ improve their conclusions.
+  \ei
+Our first threat to validity for these conclusions
 \textit{\textbf{Is it a quirk of the implementation?}} This instability problem remained the same across any implementation of LDA. Figure \ref{python_spark}, is with VEM method implemented in Spark. In this figure, x-axis represents different term overlaps and y-axis represents the $\Re$ scores. Dashed lines represents the untuned results and the solid lines represents the tuned results. We can see that tuning helped in achieving stable topic generation. The results of other datasets, can be referred at \href{https://goo.gl/UVaql1}{\textit{https://goo.gl/UVaql1}}. So it is not a quirk of implementation.
 
 \begin{figure}[!htbp]
@@ -1080,7 +1308,7 @@ PitsF & 0.9 & 0.9 & 0.9 & 0.9\\[0.5ex]
 \hline
 Ciemap & 0.67 & 0.67 & 0.77 & 0.77\\[0.5ex]
 \hline
-Stackoverflow & 0.6 & 0.7 & 0.8 & 0.8\\[0.5ex]
+StackOverflow & 0.6 & 0.7 & 0.8 & 0.8\\[0.5ex]
 \hline
 \end{tabular}
 \end{center}
