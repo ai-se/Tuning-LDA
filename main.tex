@@ -1231,15 +1231,12 @@ the tunings required for software clone detectors~\cite{Wang:Harman13}. Sayyad e
 
 
   Figure~\ref{fig:deltas} shows that there is much benefit in tuning.
-\item
   Figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b} show that
   the range of ``best'' tunings is very dataset-specific. Hence, for a new dataset,
   the off-the-shelf tunings
   may often fall far from the useful range.
-\item
   Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} show that tuning is definitely
   slower than otherwise, but the overall cost is not prohibative.
-  \ei
   Hence:
   \begin{lesson}
     Overall, we can see little reason  to use ``off-the-shelf'' LDA.
@@ -1259,7 +1256,7 @@ The usual software analytics threats to validity hold for this paper:
   that humans will browse and reflect on. As mentioned in the introduction, there are
   a class of papers that do {\em not} do that. Rather, they use LDA as part of some internal
   process where the topics are intermediaries
-  used to generate some other goal\footnote{amrith: apper). As we said at the start
+  used to generate some other goal\footnote{amrith: paper?}. As we said at the start
     of this paper, our results do not effect that kind of paper.
 \item
 The conclusions of this paper are based on a finite number of data sets and it is possible
@@ -1321,7 +1318,8 @@ little difference across that range. Also, Table~V explores another choice withi
 many evaluations to execute before terminating DEs. All the results in this paper use an
 evaluation budget of 300 evaluations\footnote{amrit? true?}.  Table~V
 compares results across different numbers of evaluations. While clearly,
-the more evaluations the better, there is little improvement after 300 evalautions.
+the more evaluations the better, there is little improvement after the
+300 evaluations used in this paper.
 
 %YYY dont beleive that. the time results are too good.
 
@@ -1372,7 +1370,7 @@ StackOverflow & 0.6 & 0.7 & 0.8 & 0.8\\
 
 \section{Conclusion and Future Work}
 
-Our exploration of the six research questions listed in the introduction shows that when doing topic modeling, analytics without parameter tuning are considered harmful and misleading. As more data getting generated day by day, it is really necessary to do accurate topic modeling. Now, with the help of tuning, we can generate stable topics to quite a good extent. Now we can delve into prior papers to improve their work. We can use the more stable LDA to find features and fed into a classifer to get improved precision and recall~\cite{chen2016topic,restificar2012inferring}
+Our exploration of the the research questions listed in the introduction shows that when doing topic modeling, analytics without parameter tuning are considered harmful and misleading. As more data getting generated day by day, it is really necessary to do accurate topic modeling. Now, with the help of tuning, we can generate stable topics to quite a good extent. Now we can delve into prior papers to improve their work. We can use the more stable LDA to find features and fed into a classifer to get improved precision and recall~\cite{chen2016topic,restificar2012inferring}
 
 This paper showed that tuning improved the stability scores of LDA, sometimes the improvement is quite dramatic (about 80\%). This paper also highlighted that we can now select the right set of parameters for different datasets to get stable topics. This paper combined with Wei et al.~\cite{fu2016tuning} suggests that data miners should not be used off-the-shell with their default tunings.
 
