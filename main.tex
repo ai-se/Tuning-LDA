@@ -884,66 +884,6 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
     \end{algorithmic}
 \end{algorithm}
 
-
-%YYY: who first proposed LDA... need a referece first time we mention if
-\subsection{Tuning Topic Modeling with LDADE}
-\label{sect: tuning}
-LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
-the parameters of LDA in order to optimize (i.e. maximize) similarity scores.
-
-We choose to use DE after a literature search on search-based SE methods.
-That literature mentions many optimizers: simulated
-annealing~\cite{feather2002converging, menzies2007business}; various genetic
-algorithms~\cite{goldberg1979complexity} augmented by techniques such as
-differential evolution~\cite{storn1997differential}, tabu search and scatter
-search~\cite{glover1986general, beausoleil2006moss, molina2007sspmo,
-  nebro2008abyss}; particle swarm optimization~\cite{pan2008particle}; numerous
-decomposition approaches that use heuristics to decompose the total space into
-small problems, then apply a response surface methods~\cite{krall2015gale,
-  zuluaga2013active}. Of these, the simplest ones are simulated annealing (SA)
-and differential evolution (DE) and  our reading of the current literature is
-that there are more advocates for differential evolution than SA. 
-
-\begin{table}[!b]
-    \begin{center}
-{\scriptsize
-\begin{tabular}{|l|l|l|p{3.5cm}|}
-        \hline 
-        \textbf{Parameters} & \textbf{Defaults} & \textbf{Tuning Range} & \textbf{Description}\\
-        \hline
-        $k$ & 10 & [10,100] & Number of topics or cluster size \\ 
-        \hline
-       $\alpha$ & None & [0,1] & Prior of document topic distribution. This is called alpha \\ 
-        \hline
-        $\beta$ & None & [0,1] & Prior of topic word distribution. This is called  beta \\
-
-        \hline
-        inferences  & VEM & VEM    & Sampling methods \\
-                  &     & Gibbs Sampling &\\
-        \hline
-\end{tabular}
-}
-\end{center}
-\caption{List of parameters tuned by this paper}
-\label{tb:tuned}
-\end{table}
-
-\newpage
-LDADE  adjusts the parameters of
-Table~\ref{tb:tuned}. Most of the parameters were explained above. As to the rest:
-\bi
-\item VEM is the deterministic {\em variational EM} method that computes $\alpha,\beta$ via
-  expectation maximization~\cite{minka2002expectation}.
-\item Gibbs sampling~\cite{wei2006lda, griffiths2004finding} which is a Markov Chain Monte Carlo algorithm, is an approximate stochastic process for computing and updating $\alpha,\beta$.
-  Topic modeling researchers in SE have argued that Gibbs leads to stabler models~\cite{layman16a,layman2016topic} (a claim which we test, below).
-  \ei
-
-We manually adjust these inference techniques according to different implementations across different platforms.
-%YYY Does the layman reference does not appear in table1?
-%YYY Why does LDAscore appear in algorithm2 and algorithm1
-
-
-  
 %YYY why do you only iteratre 3 times? surely you iterate till no improvement?
 %YYY why is LDAScore here?
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -1007,6 +947,63 @@ We manually adjust these inference techniques according to different implementat
     \caption{Pseudocode for DE with a constant number of evaluations}
     \end{algorithmic}
 \end{algorithm}
+
+%YYY: who first proposed LDA... need a referece first time we mention if
+\subsection{Tuning Topic Modeling with LDADE}
+\label{sect: tuning}
+LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
+the parameters of LDA in order to optimize (i.e. maximize) similarity scores.
+
+We choose to use DE after a literature search on search-based SE methods.
+That literature mentions many optimizers: simulated
+annealing~\cite{feather2002converging, menzies2007business}; various genetic
+algorithms~\cite{goldberg1979complexity} augmented by techniques such as
+differential evolution~\cite{storn1997differential}, tabu search and scatter
+search~\cite{glover1986general, beausoleil2006moss, molina2007sspmo,
+  nebro2008abyss}; particle swarm optimization~\cite{pan2008particle}; numerous
+decomposition approaches that use heuristics to decompose the total space into
+small problems, then apply a response surface methods~\cite{krall2015gale,
+  zuluaga2013active}. Of these, the simplest ones are simulated annealing (SA)
+and differential evolution (DE) and  our reading of the current literature is
+that there are more advocates for differential evolution than SA. 
+
+\begin{table}[!htbp]
+    \begin{center}
+{\scriptsize
+\begin{tabular}{|l|l|l|p{3.5cm}|}
+        \hline 
+        \textbf{Parameters} & \textbf{Defaults} & \textbf{Tuning Range} & \textbf{Description}\\
+        \hline
+        $k$ & 10 & [10,100] & Number of topics or cluster size \\ 
+        \hline
+       $\alpha$ & None & [0,1] & Prior of document topic distribution. This is called alpha \\ 
+        \hline
+        $\beta$ & None & [0,1] & Prior of topic word distribution. This is called  beta \\
+
+        \hline
+        inferences  & VEM & VEM    & Sampling methods \\
+                  &     & Gibbs Sampling &\\
+        \hline
+\end{tabular}
+}
+\end{center}
+\caption{List of parameters tuned by this paper}
+\label{tb:tuned}
+\end{table}
+
+%\newpage
+LDADE  adjusts the parameters of
+Table~\ref{tb:tuned}. Most of the parameters were explained above. As to the rest:
+\bi
+\item VEM is the deterministic {\em variational EM} method that computes $\alpha,\beta$ via
+  expectation maximization~\cite{minka2002expectation}.
+\item Gibbs sampling~\cite{wei2006lda, griffiths2004finding} which is a Markov Chain Monte Carlo algorithm, is an approximate stochastic process for computing and updating $\alpha,\beta$.
+  Topic modeling researchers in SE have argued that Gibbs leads to stabler models~\cite{layman16a,layman2016topic} (a claim which we test, below).
+  \ei
+
+We manually adjust these inference techniques according to different implementations across different platforms.
+%YYY Does the layman reference does not appear in table1?
+%YYY Why does LDAscore appear in algorithm2 and algorithm1
 
 
 
@@ -1104,27 +1101,6 @@ Note that the  stability collapses after $n=5$ words. This means
 \end{lesson}
 
 
-
-
-\subsection{\textbf{RQ2: Does tuning improve the stability scores of LDA?}}
-
- Figure~\ref{fig:delta}b and Figure~\ref{fig:delta}c shows the stability improvement
- generated by tuning.
-   Tuning never
-  has a negative effect (reduces stability) band often has a large positive effect--
-  particular  after 5 terms overlap.
-   The largest improvement  we
-   was  in PitsD dataset which for up to 8 terms overlap was 100\% (i.e. was always
-   found in all runs).
-   Overall, after reporting topics of up to 7 words, in the majority case (66\%),
-  those topics can be found in models generated using different input orderings.
-  Accordingly, our answer to {\bf RQ2} is:
-
-\begin{lesson}
-Based on Figure \ref{fig:delta}, we strongly recommend tuning for future LDA studies.
-\end{lesson}
-
-
 \begin{figure*}[!htbp]
     \centering
     \begin{minipage}{.33\textwidth}
@@ -1147,6 +1123,27 @@ Based on Figure \ref{fig:delta}, we strongly recommend tuning for future LDA stu
         \label{RQ3:b}
     \end{minipage}
 \end{figure*}
+
+\subsection{\textbf{RQ2: Does tuning improve the stability scores of LDA?}}
+
+ Figure~\ref{fig:delta}b and Figure~\ref{fig:delta}c shows the stability improvement
+ generated by tuning.
+   Tuning never
+  has a negative effect (reduces stability) band often has a large positive effect--
+  particular  after 5 terms overlap.
+   The largest improvement  we
+   was  in PitsD dataset which for up to 8 terms overlap was 100\% (i.e. was always
+   found in all runs).
+   Overall, after reporting topics of up to 7 words, in the majority case (66\%),
+  those topics can be found in models generated using different input orderings.
+  Accordingly, our answer to {\bf RQ2} is:
+
+\begin{lesson}
+Based on Figure \ref{fig:delta}, we strongly recommend tuning for future LDA studies.
+\end{lesson}
+
+
+
 
 
 
@@ -1173,25 +1170,6 @@ Clearly:
   Instead, use automatic tuning methods to find the best tuning parameters for the current data set.
 \end{lesson}
 
-
-
-\begin{figure*}[!t]
-    \centering
-  \begin{minipage}{.49\textwidth}
-        \captionsetup{labelsep=space,justification=centering,singlelinecheck=off}
-        \includegraphics[width=\linewidth]{./fig/Run_VEM_sci.png}
-  \caption{VEM: Datasets vs Runtimes}
-  \label{RQ5 VEM}
-  \end{minipage}
-  \begin{minipage}{.49\textwidth}
-        \captionsetup{justification=centering,singlelinecheck=off}
-        \includegraphics[width=\linewidth]{./fig/Run_gibbs_sci.png}
-  \caption{Gibbs: Datasets vs Runtimes}
-  \label{RQ5 Gibbs}
-    \end{minipage}%
-    
-\end{figure*}
-
 \subsection{\textbf{RQ4: Is  tuning  easy?}}
 
 
@@ -1211,11 +1189,28 @@ Also:
   topic models is easier that standard optimization tasks.
 \end{lesson}
 
-\begin{figure}[!htbp]
+\begin{figure}[!b]
   \includegraphics[width=\linewidth]{./fig/citemap.png}
   \caption{Terms vs Delta Improvement using Different settings of DE}
   \label{fig:RQ4}
 \end{figure}
+
+\begin{figure*}[!t]
+    \centering
+  \begin{minipage}{.49\textwidth}
+        \captionsetup{labelsep=space,justification=centering,singlelinecheck=off}
+        \includegraphics[width=\linewidth]{./fig/Run_VEM_sci.png}
+  \caption{VEM: Datasets vs Runtimes}
+  \label{RQ5 VEM}
+  \end{minipage}
+  \begin{minipage}{.49\textwidth}
+        \captionsetup{justification=centering,singlelinecheck=off}
+        \includegraphics[width=\linewidth]{./fig/Run_gibbs_sci.png}
+  \caption{Gibbs: Datasets vs Runtimes}
+  \label{RQ5 Gibbs}
+    \end{minipage}%
+    
+\end{figure*}
 
 \subsection{\textbf{RQ5: Is tuning impractically slow?}}
 
@@ -1236,6 +1231,7 @@ the tunings required for software clone detectors~\cite{wang2013searching}. Sayy
   \begin{lesson}
     Tuning LDA is not impractically slow.
 \end{lesson}
+
 
 \subsection{\textbf{RQ6: Should data miners be used “off-the-shelf” with their  default  tunings?}}
 
@@ -1289,6 +1285,14 @@ To check this, it is insightful to compare our results with:
 \item Sometimes use VEM sampling;
 \item Sometimes use Gibbs sampling;
   \ei
+
+\begin{figure}[!b]
+  \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{./fig/gibbs_vem1.png}
+  \caption{GIBBS vs VEM}
+  \label{gibbs_vem}
+\end{figure}
+
   Figure~\ref{gibbs_vem} compares the  VEM vs Gibbs sampling.
   and Figure
    \ref{python_spark} shows tuning results for StackOverflow, Citemap, and PitsA
@@ -1308,12 +1312,6 @@ To check this, it is insightful to compare our results with:
    
 \begin{figure}[!htbp]
   \captionsetup{justification=centering}
-  \includegraphics[width=\linewidth]{./fig/gibbs_vem1.png}
-  \caption{GIBBS vs VEM}
-  \label{gibbs_vem}
-\end{figure}
-\begin{figure}[!htbp]
-  \captionsetup{justification=centering}
   \includegraphics[width=\linewidth]{./fig/spark.png}
   \caption{Spark Results}
   \label{python_spark}
@@ -1323,7 +1321,7 @@ Another threat to validity of this work is that it is a quirk of the control
 parameters used within our DE optimizer.
 We have some evidence that this is not the case.
 Figure~\ref{fig:RQ4} and https://goo.gl/HQNASF explored a range of DE tunings and found
-little difference across that range. Also, Table~V explores another choice within DE-- how
+little difference across that range. Also, Table~V explores another choice within DE -- how
 many evaluations to execute before terminating DEs. All the results in this paper use an
 evaluation budget of 300 evaluations. Table~V
 compares results across different numbers of evaluations. While clearly,
