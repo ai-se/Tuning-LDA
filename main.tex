@@ -296,7 +296,7 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
 \bi
 \item Data from a programmer information exchange site (StackOverflow);
   \item Title and abstract text of
-    9291 of SE papers;
+    9291 SE papers;
   \item And software defect reports from NASA.
     \ei
     Using that data, we explore these research questions:  
@@ -304,18 +304,16 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
   %% In all results, the pattern was the same:  (a)~before tuning, topic models were very unstable; and (b)~after tuning
   %% the generated topics were far more stable across different orderings of the inputs. 
 \begin{compactitem}
-\item \textbf{RQ1}: \textbf{Are the default settings of LDA misleading?} We will show that using the default settings of LDA for SE data can lead to systematic errors due to topic modeling instability since  stability scores start to drop after using $n=5$ terms per topic.
-    \item \textbf{RQ2}: \textbf{Does tuning with DE improve the stability scores of LDA?} In our work, we will show dramatic improvement in the stability scores with the tuned parameters found automatically by DE. We would strongly recommend tuning for future LDA studies.
+\item \textbf{RQ1}: \textbf{Are the default settings of LDA misleading?} We will show that using the default settings of LDA for SE data can lead to systematic errors since stability scores start to drop after $n=5$ terms per topic.
+    \item \textbf{RQ2}: \textbf{Does tuning with DE improve the stability scores of LDA?} In our work, we will show dramatic improvement in the stability scores with the parameters found automatically by DE. We would strongly recommend tuning for future LDA studies.
     \item \textbf{RQ3}: \textbf{Do different data sets
-      need different configurations to make LDA stable?} We will show that DE finds different ``best''
-      parameter settings for different data sets. This means that tuning needs to be repeated each time topic
-      modeling is applied to  each new data set.
+      need different configurations to make LDA stable?} We will show that DE finds different ``best'' parameter settings for different data sets. Do not reuse  tunings  suggested  by  other  researchers  from other  data  sets.  Instead,  use  automatic  tuning  methods  to find the best tuning parameters for the current data set.
     \item \textbf{RQ4}: \textbf{Is tuning easy?} We have seen that one of the simplest multiobjective optimizers (differential evolution~\cite{storn1997differential}) works the same with the frontier size of 10 other than the recommended {\em10 times the number of tuned parameters (here, 3)}. In  terms  of  the  search  space  explored  via  tuning,  finding stable  parameters  for  topic  models  is  easier  that  standard optimization tasks.
     \item \textbf{RQ5}: \textbf{Is tuning impractically slow?}
       Tuning with DE makes LDA around five times slower- which is not an alarming
       speed reduction given modern cloud computing environments.
     \item \textbf{RQ6}: \textbf{Should topic modeling be used “off-the-shelf” with their default tunings?}
-      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use “off-the-shelf ” LDA
+      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use “off-the-shelf” LDA
 \end{compactitem}
 Before proceeding, we offer two clarifications.
 Firstly, as
@@ -337,7 +335,7 @@ we also think that this work makes a more general point.
       we showed  that (a)~tuning software defect predictors can lead to large improvements of the performance
       of those predictors; and that (b)~those tunings are different in different data sets; so (c)~it is important to apply
       automatic tuning as part of the analysis of any new data set. Note that those old conclusions are the same
-      as for this paper. These two results suggests that is time to revisit
+      as for this paper. These two results suggests that it is time to revisit
       past results to check:
       \bi
     \item
@@ -433,9 +431,8 @@ parts of the data are similar. It learns the various distributions (the set of
 topics, their associated word probabilities, the topic of each word, and the
 particular topic mixture of each document).
 What makes topic modeling interesting is that these algorithms scale to very
-large text corpuses.  For example, in this paper, we apply to all of Wikipedia,
+large text corpuses.  For example, in this paper, we apply to all of StackOverflow,
 as well as two other large text corpuses in software engineering.
-
 
 Figure~\ref{fig:lda} illustrates topic generation from StackOverflow.
 From these words, LDA explores two probability distributions:
@@ -455,7 +452,7 @@ are:
 %\item $u$ = number of update iterations;
 \item $k$ = number of topics.
 \ei
-Researchers have suggested that the important parameters which affect LDA the most are those above mentioned. But there is $u$, which is number of update iterations. Since this one does not affect much, we have not used it to tune. 
+Researchers have suggested that the important parameters which affect LDA the most are those above mentioned. But there is $u$, which is number of update iterations. Since this one does not affect much, we have not used it for tuning.
 
 
 \begin{figure}[!t]
@@ -823,7 +820,7 @@ Repeating that calculation for the other run1 topics shows that:
 \item Topic~3 of run1 scores $\frac{4}{4}=1$.
   \ei
   From this information, we can calculate
-  $\Re_4$  (the
+  $\Re_5$  (the
   {\em median number overlaps of size $n=5$ words}) as:
   \[
    \mathit{median}(0.5, 0.75, 0.25, 1) =0.625\]
@@ -847,7 +844,7 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
   variance among the ordering of data with  different runs of LDA. Topics$^{6}$ are a list of list which
   contains topics from all the different runs. A stability score is evaluated on
   every 10 runs (Fixed), and this process is continued 10 (Fixed) times. At the end, the median
-  score is selected as the untuned final score$^{3-11}$.
+  score is selected as the untuned raw score ($\Re_n$ ) $^{3-11}$.
 
 %YYY this is weird. you use terminology different below. Finmal score. unify with the above terminology
 % and werre is ``n''
@@ -894,7 +891,7 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
   
     \begin{algorithmic}[1]
     \Require np$=10$, f$=0.7$, cr$=0.3$, iter$=3$, Goal $\in$ Finding maximum score
-    \Ensure $S_{best}, final\_generation$
+    \Ensure $Raw\_Score, final\_generation$
     \Function{DE}{$np,f,cr,iter, Goal$}
         \State  $Cur\_Gen \leftarrow \emptyset$
         \State $Population \leftarrow $InitializePopulation(np)
@@ -913,9 +910,9 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
             \State  $Cur\_Gen \leftarrow NewGeneration$
             \EndFor
         \EndFor
-        \State $S_{best} \leftarrow$ GetBestSolution($Cur\_Gen$)
+        \State $Raw\_Score \leftarrow$ GetBestSolution($Cur\_Gen$)
         \State  $final\_generation \leftarrow Cur\_Gen$
-        \State \textbf{return} $S_{best}, final\_generation$
+        \State \textbf{return} $Raw\_Score, final\_generation$
     \EndFunction
 
     %YYY line numbers have changed
@@ -1045,8 +1042,7 @@ Also,
   any results from the larger data (StackOverflow) comes from a Scala implementation
   based on Mllib running on a 45 node Spark system (8 cores per node).
   
-  Note that, for the most part, we defer the StackOverflow results to the {\em Threats to Validity}
-  section where we will show that (a)~topic modeling instability
+  Note that, for the most part, we defer the StackOverflow results to the \S\ref{sect: validity} {\em Threats to Validity} where we will show that (a)~topic modeling instability
   exists across multiple platforms and  implementation languages; (b)~tuning
   can improve stabilities for different platforms and languages.
 
@@ -1091,7 +1087,7 @@ Note that the  stability collapses after $n=5$ words. This means
   be changed, just by changing the order of the inputs. This is a significant result
   since the standard advice in the LDA papers~\cite{panichella2013effectively, lukins2010bug}
   is to report the top 10 words per topic. As shown in Figure~\ref{fig:delta}a, it would
-  be rare that any such 10 word topic would be found across multiple rules.
+  be rare that any such 10 word topic would be found across multiple runs.
   
  
 \begin{lesson}
@@ -1128,7 +1124,7 @@ Note that the  stability collapses after $n=5$ words. This means
  Figure~\ref{fig:delta}b and Figure~\ref{fig:delta}c shows the stability improvement
  generated by tuning.
    Tuning never
-  has a negative effect (reduces stability) band often has a large positive effect--
+  has any negative effect (reduces stability) band often has a large positive effect--
   particular  after 5 terms overlap.
    The largest improvement  we
    was  in PitsD dataset which for up to 8 terms overlap was 100\% (i.e. was always
@@ -1160,8 +1156,8 @@ values within LDA. On display in each set of vertical bars are:
 clearly shows how tuning selects the different ranges of values of
 parameters.
 Some of the above numbers are far from the standard values recommended in the literature.
-For example, Garousi et al. ~\cite{garousi2016citations} recommend using $k=67$ topics
-yet in our data sets, best results were seen using $10 \ke k \le 24$.
+For example, Garousi et al.~\cite{garousi2016citations} recommend using $k=67$ topics
+yet in our data sets, best results were seen using $\ke k \le 24$.
 Clearly:
 
 \begin{lesson}
@@ -1219,7 +1215,7 @@ the tunings required for software clone detectors~\cite{wang2013searching}. Sayy
   any search-based method, it is wise to consider the runtime cost of that recommendation.
 
 %YYY why so fast? io bound?
-  Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} and  shows in blue,red the runtimes required to run LDA untuned,tuned (respectively).
+  Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} and  shows in blue, red the runtimes required to run LDA untuned, tuned (respectively).
   The longer runtimes (in red) include the times required for DE to find the tunings. Overall, tuning slows down LDA by a factor of up to seven,
   but often less than five. Note that this is much less than we might expect from Algorithm 2 which contains multiple loops across Populations of different parameters.
   On investigation, we found that much of this inference is I/O bound (reading data and/or swapping memory from RAM to virtual disk).
