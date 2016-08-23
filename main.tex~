@@ -634,9 +634,9 @@ under-explained limited exploration of tunings based on ``engineering judgment''
 Only 3 of the authors acknowledge that tuning might have a large impact
 on the results.
 \ei
-Apart from tuning, there are several other workarounds explored in the literature
-in order to handle LDA instability. Overall, there was little systematic exploration of tuning and LDA in the SE literature.
-Instead, researchers relied on other methods that are less suited to automatic reproduction of prior results.
+Overall, there was little systematic exploration of tuning and LDA in the SE literature.
+Instead, researchers relied on other methods that are less suited to automatic reproduction
+of prior results.
 
 %YYY dont understand this
 In the literature, Researchers ~\cite{maskeri2008mining, martin2015app, guzman2014users}
@@ -798,9 +798,8 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
 %% details of it which made us to not use this measure. We could not use direct
 %% approach, due to resource limitation to ask an expert for the type of datasets
 %% we used.
-To evaluate topics coherence in LDA, there is a direct approach, by asking people about topics, and an indirect approach by evaluating \textit{pointwise mutual information (PMI)}~\cite{lau2014machine, o2015analysis} between the topic words. {\em We could not use any of these criteria, as it requires experts to have domain knowledge}. \textit{Perplexity} is  the inverse of the geometric mean per-word likelihood. The smaller the perplexity, the better (less uniform) is the LDA model. The usual trend is that as the value of perplexity drops, the number of topics should grow~\cite{koltcov2014latent}. Researchers caution that the value of perplexity doesn't remain constant with different topic size and with dictionary sizes~\cite{koltcov2014latent, zhao2015heuristic}. A lot depend on the code implementation of perplexity and the type of datasets used. Since, we are using different implementations of LDA across different platforms on various datasets, we are not using Perplexity as evaluation measure.
 
-Another approach researchers have used is \textit{Jaccard Similarity}~\cite{o2015analysis, galvis2013analysis}. We define our measure similar to it. For this work, we assess topic model stability via the {\em median number overlaps of size $n$ words}, which we denote  $\Re_n$.
+For this work, we assess topic model stability via the {\em median number overlaps of size $n$ words}, which we denote  $\Re_n$.
 
 For this measurement, we first determine the maximum number of topics we will study. For that purpose,
 we will study the $\mathit{size of topic}=9$ but the standard in the LDA literature~\cite{panichella2013effectively, lukins2010bug} says that top 10 terms per topic are ideal. We did not select $\mathit{size of topic}=10$ just because our results showed that the $\Re_9$ is negligible.
@@ -835,7 +834,7 @@ Repeating that calculation for the other run1 topics shows that:
   
  For the following analysis,
  %YYY do our graphs really use this terminology?
-we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{Delta  score}}:
+we distinguish between the \textbf{\textit{Raw  scores}} and the \textbf{\textit{Delta  score}}:
  \bi
 \item The two \textbf{\textit{Raw  scores}} are the $\Re_n$ median similarity scores seen {\em before} and {\em after} tuning LDA;
 \item The \textbf{\textit{Delta score}} is the difference between the two
@@ -866,7 +865,7 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
     \begin{algorithmic}[1]
     %\label{algo: untuned}
     \Require $Data$, $\mathit{size of topic}$, $k$, $\alpha$, $\beta$ (Defaults) 
-    \Ensure $Raw\_Score$    
+    \Ensure $Final\_Score$    
     \Function{ldascore}{ $\mathit{size of topic}$, $Data$}
         \State $Score \leftarrow \emptyset$
         \For{$j = 0$ to 10}
@@ -876,8 +875,8 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
             \EndFor
             \State $Score$.append($Overlap$(Topics, $\mathit{size of topic}$, $l[0]$))
         \EndFor
-        \State $Raw\_Score \leftarrow $ median(Score)
-        \State \textbf{return} $Raw\_Score$
+        \State $Final\_Score \leftarrow $ median(Score)
+        \State \textbf{return} $Final\_Score$
     \EndFunction
     %\medskip
     \caption{Pseudocode for untuned LDA with Default Parameters}
