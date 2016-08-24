@@ -117,10 +117,10 @@ wfu@ncsu.edu}
  SE. Specifically: those conclusions are unstable since they would change if
  topic modeling is re-run on different orderings of the training data.
 
-To solve this problem, this paper proposes LDADE: a combination of LDA and a
+To solve this problem, this paper proposes LDA-DE: a combination of LDA and a
 Search-Based Software Engineering method
 (Differential Evolution) that automatically tunes LDA's
-$<k,\alpha,\beta>$ parameters. LDADE is tested on  data from a programmer
+$<k,\alpha,\beta>$ parameters. LDA-DE is tested on  data from a programmer
 information exchange site (Stackoverflow), title and abstract text of thousands
 of SE papers, and software defect reports from NASA.  Results were collected
 across different implementations of LDA (Python+Scikit-Learn, Scala+Spark); across
@@ -291,8 +291,8 @@ ESE                                 & Empirical Software Engineering            
 
 
 To fix this problem,
-we proposes LDADE: a  combination of LDA and a search-based optimizer (differential evolution, or DE)~\cite{storn1997differential})
-that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper tests LDADE on:
+we proposes LDA-DE: a  combination of LDA and a search-based optimizer (differential evolution, or DE)~\cite{storn1997differential})
+that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper tests LDA-DE on:
 \bi
 \item Data from a programmer information exchange site (StackOverflow);
   \item Title and abstract text of
@@ -945,9 +945,9 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
 \end{algorithm}
 
 %YYY: who first proposed LDA... need a referece first time we mention if
-\subsection{Tuning Topic Modeling with LDADE}
+\subsection{Tuning Topic Modeling with LDA-DE}
 \label{sect: tuning}
-LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
+LDA-DE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
 the parameters of LDA in order to optimize (i.e. maximize) similarity scores.
 
 We choose to use DE after a literature search on search-based SE methods.
@@ -988,7 +988,7 @@ that there are more advocates for differential evolution than SA.
 \end{table}
 
 %\newpage
-LDADE  adjusts the parameters of
+LDA-DE  adjusts the parameters of
 Table~\ref{tb:tuned}. Most of the parameters were explained above. As to the rest:
 \bi
 \item VEM is the deterministic {\em variational EM} method that computes $\alpha,\beta$ via
@@ -1003,7 +1003,7 @@ We manually adjust these inference techniques according to different implementat
 
 
 
-Algorithm 2 shows LDADE's version of DE.  DE evolves a \textit{NewGeneration} of
+Algorithm 2 shows LDA-DE's version of DE.  DE evolves a \textit{NewGeneration} of
 candidates from a current Population.   Each candidate solution in the Population is a pair of
 (Tunings, Scores). Tunings are selected from Table \ref{tb:tuned} and Scores
 come similarly from Alogrithm 1$^{3-11}$. In Algorithm 2, LDA is only run as 1 rig$^{11 \& 12}$.
