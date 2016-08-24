@@ -135,6 +135,10 @@ In how many domains can search-based SE dramatically improve software analytics?
 
 \end{abstract}
 
+\begin{IEEEkeywords}
+Topic modeling, Stability, LDA, tuning, differential evolution.
+\end{IEEEkeywords}
+ 
 %\begin{IEEEkeywords}
 %Topic modeling, Stability, LDA, tuning, differential evolution.
 %\end{IEEEkeywords}
@@ -796,10 +800,10 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
 %% we used.
 To evaluate topics coherence in LDA, there is a direct approach, by asking people about topics, and an indirect approach by evaluating \textit{pointwise mutual information (PMI)}~\cite{lau2014machine, o2015analysis} between the topic words. {\em We could not use any of these criteria, as it requires experts to have domain knowledge}. \textit{Perplexity} is  the inverse of the geometric mean per-word likelihood. The smaller the perplexity, the better (less uniform) is the LDA model. The usual trend is that as the value of perplexity drops, the number of topics should grow~\cite{koltcov2014latent}. Researchers caution that the value of perplexity doesn't remain constant with different topic size and with dictionary sizes~\cite{koltcov2014latent, zhao2015heuristic}. A lot depend on the code implementation of perplexity and the type of datasets used. Since, we are using different implementations of LDA across different platforms on various datasets, we are not using perplexity as evaluation measure.
 
-Another approach researchers have used is \textit{Jaccard Similarity}~\cite{o2015analysis, galvis2013analysis}. We define our measure similar to it. For this work, we assess topic model stability via the {\em median number overlaps of size $n$ words}, which we denote  $\Re_n$.
+Another approach researchers have used is \textit{Jaccard Similarity}~\cite{o2015analysis, galvis2013analysis}. We define our measure similar to it. For this work, we assess topic model stability via the {\em median number overlaps of size $n$ words $\mathit{(size\_of\_topic)}$}, which we denote  $\Re_n$.
 
 For this measurement, we first determine the maximum number of topics we will study. For that purpose,
-we will study the $\mathit{size\_of\_topic}=9$ but the standard in the LDA literature~\cite{panichella2013effectively, lukins2010bug} says that top 10 terms per topic are ideal. We did not select $\mathit{size\_of\_topic}=10$ just because our results showed that the $\Re_9$ is negligible.
+we will study the $n=9$ which we call but the standard in the LDA literature~\cite{panichella2013effectively, lukins2010bug} says that top 10 terms per topic are ideal. We did not select $n=10$ just because our results showed that the $\Re_9$ is negligible.
 
 Next, for $1 \le n \le 9$, we will calculate the median size of the overlap,
 computed as follows:
@@ -844,7 +848,7 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
   variance among the ordering of data with  different runs of LDA. Topics$^{6}$ are a list of list which
   contains topics from all the different runs. A stability score is evaluated on
   every 10 runs (Fixed), and this process is continued 10 (Fixed) times. At the end, the median
-  score is selected as the untuned raw score ($\Re_n$ ) $^{3-11}$.
+  score is selected as the untuned raw score ($\Re_n$ ) $^{3-11}$. Here, the runtimes comes from $10 * 10$ evaluations of untuned experiment.
 
 %YYY this is weird. you use terminology different below. Finmal score. unify with the above terminology
 % and werre is ``n''
@@ -861,16 +865,16 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
     
     \begin{algorithmic}[1]
     %\label{algo: untuned}
-    \Require $Data$, $\mathit{size\_of\_topic}$, $k$, $\alpha$, $\beta$ (Defaults) 
+    \Require $Data$, $n$, $k$, $\alpha$, $\beta$ (Defaults) 
     \Ensure $Raw\_Score$    
-    \Function{ldascore}{ $\mathit{size\_of\_topic}$, $Data$}
+    \Function{ldascore}{ $n$, $Data$}
         \State $Score \leftarrow \emptyset$
         \For{$j = 0$ to 10}
             \For{$i = 0$ to 10}
                 \State $data \leftarrow$ \textbf{shuffle}($Data$)
                 \State $Topics$.append(lda($k$,$\alpha$,$\beta$ ))
             \EndFor
-            \State $Score$.append($Overlap$(Topics, $\mathit{size\_of\_topic}$, $l[0]$))
+            \State $Score$.append($Overlap$(Topics, $n$, $l[0]$))
         \EndFor
         \State $Raw\_Score \leftarrow $ median(Score)
         \State \textbf{return} $Raw\_Score$
@@ -896,14 +900,14 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
         \State  $Cur\_Gen \leftarrow \emptyset$
         \State $Population \leftarrow $InitializePopulation(np)
         \For{$i = 0$ to $np-1$}
-            \State $Cur\_Gen$.append($Population$[i],ldascore($Population$[i], $\mathit{size\_of\_topic}$, $Data$)
+            \State $Cur\_Gen$.append($Population$[i],ldascore($Population$[i], $n$, $Data$)
         \EndFor
         \For{$i = 0$ to $iter$}
             \State $NewGeneration \leftarrow \emptyset$
             \For{$j = 0$ to $np-1$}
                 \State $S_i \leftarrow $Extrapolate($Population$[j],Population,cr,f,np)
                 \If{ldascore($S_i$) $\geq$ $Cur\_Gen$[j][1]}
-                    \State $NewGeneration$.append($S_i$,ldascore($S_i$,$\mathit{size\_of\_topic}$, $Data$))
+                    \State $NewGeneration$.append($S_i$,ldascore($S_i$,$n$, $Data$))
                 \Else
                     \State $NewGeneration$.append($Cur\_Gen$[j])
                 \EndIf
@@ -998,15 +1002,13 @@ Table~\ref{tb:tuned}. Most of the parameters were explained above. As to the res
   \ei
 
 We manually adjust these inference techniques according to different implementations across different platforms.
-%YYY Does the layman reference does not appear in table1?
-%YYY Why does LDAscore appear in algorithm2 and algorithm1
 
 
 
 Algorithm 2 shows LDA-DE's version of DE.  DE evolves a \textit{NewGeneration} of
 candidates from a current Population.   Each candidate solution in the Population is a pair of
 (Tunings, Scores). Tunings are selected from Table \ref{tb:tuned} and Scores
-come similarly from Alogrithm 1$^{3-11}$. In Algorithm 2, LDA is only run as 1 rig$^{11 \& 12}$.
+come similarly from Alogrithm 1$^{3-11}$. But there is not any outer loop$^{3}$. In Algorithm 2, LDA is only run as 1 rig$^{11 \& 12}$. Here the runtimes comes from $\mathit{iter} * np * 10$ evaluations of tuned experiment.
 
 
 
@@ -1047,11 +1049,6 @@ Also,
 
   
 
-
-
-  %% YY legends hard to read . make none-bold
-  %% why do they stop at X=9
-  %% x-axis has to have the term \Re_n as well as the text ``number of topics overlaps``
 \begin{figure}[!t]
   \begin{center}
   \includegraphics[width=\linewidth]{./fig/Vem_untuned.png}
@@ -1241,9 +1238,7 @@ the tunings required for software clone detectors~\cite{wang2013searching}. Sayy
   \begin{lesson}
     Overall, we can see little reason  to use ``off-the-shelf'' LDA.
     \end{lesson}
-  %YYY check that the text for the lessons matches the text on p2
-  
-  %YYY why not a,b,k for fig6,7,8
+
  
  
 
@@ -1370,13 +1365,27 @@ StackOverflow & 0.6 & 0.7 & 0.8 & 0.8\\
 
 \section{Conclusion and Future Work}
 
-Our exploration of the the research questions listed in the introduction shows that when doing topic modeling, analytics without parameter tuning are considered harmful and misleading. As more data getting generated day by day, it is really necessary to do accurate topic modeling. Now, with the help of tuning, we can generate stable topics to quite a good extent. Now we can delve into prior papers to improve their work. We can use the more stable LDA to find features and fed into a classifer to get improved precision and recall~\cite{chen2016topic,restificar2012inferring}.
+Based on the above, we offer a specific and general conclusion. Most specifically, we recommend 
+\bi
+\item  
+Any study that shows the topics learned from LDA, then uses that display to make a particular
+conclusion, needs to first tune LDA. We say this since the topics learned from untuned LDA are unstable, i.e. different input orderings will lead to different conclusions.
+However, after tuning, stability can be greatly increased.
+\item Unlike the advise of Stacy et al.~\cite{lukins2010bug}, LDA topics should not be reported as the top ten words.
+Our results show that before tuning, after 5 words, that report is misleading.
+After tuning, it is legitimate to report up to after around eight words per topic.
+\item Do not download someone else's pre-tuned LDA since, as shown here,  the best LDA tunings vary from data set to data set.
+\ei
+Our experience is that this recommendation is not an arduous demand since tuning adds less than a factor of ten to the total run times of an LDA study.
 
-This paper shows that tuning improves the stability scores of LDA, sometimes the improvement is quite dramatic (about 80\%). This paper also highlighted that we can now select the right set of parameters for different datasets to get stable topics. This paper combined with Wei et al.~\cite{fu2016tuning} suggests that data miners should not be used off-the-shell with their default tunings.
 
-As to future work, it is now important to explore the implications of these stable topics generated by LDA in a product development. We can now actually work with other workarounds mentioned in the section \ref{sub:supervised} with classified datasets. To improve stability, we can even try to improve the actual clusters to get better results.
+More generally, we comment that the field of software analytics needs to make far more use of search-based software engineering in order
+to tune their learners. In other work, we have shown that tuning significantly helps defect prediction~\cite{fu2016tuning} (a result that has also been reported by
+other reseachers~\cite{panichella2013effectively}). In this work, we have shown that tuning significantly helps topic modeling by mitigating a systematic error in LDA  (order effects that lead to unstable topics). The implications of this study for other software analytics tasks is now an open
+and pressing issue. 
+In how many domains can search-based SE dramatically improve software analytics?
 
-This paper just investigated on stability of LDA using one optimizer. Hence, we can make no claim that DE is the best optimizer for all data miners. Rather, our point is that there exists at least some learners whose performance can be dramatically improved by at least one simple optimization scheme. And there are already claims of other unstable data miners like Decision Tree, Neural Networks, and Bayesian Learners~\cite{zhang2005machine} where optimizers can mitigate instability into all these miners. We also hope that this work inspires much future work as this community develops and debugs best practices for tuning software analytics.
+
 
 
 % Can use something like this to put references on a page
