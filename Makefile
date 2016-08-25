@@ -42,7 +42,7 @@ view:
 abe :  $(D)_a.pdf $(D)_b.pdf $(D)_e.pdf
 
 $(D).pdf : $(Src).tex $(Bib)
-	pdflatex -interaction nonstopmode -output-directory=$(HOME)/tmp $(Src)
+	pdflatex -output-directory=$(HOME)/tmp $(Src)
 
 $(D)_a.pdf : $(D).pdf; $(call grab,1,1)		
 $(D)_b.pdf : $(D).pdf; $(call grab,2,16)		
