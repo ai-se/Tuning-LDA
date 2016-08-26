@@ -46,7 +46,6 @@
 }
 \makeatother
 
-\usepackage{times}
 \usepackage{amsmath}
 \usepackage[svgnames]{xcolor}
 \usepackage[framed]{ntheorem}
@@ -79,8 +78,8 @@
 \begin{document}
 \pagestyle{plain}
 
-\title{\textbf{What's Wrong with
-Topic Modeling?\\ (and How to Fix it Using Search-based SE)}}
+\title{What's Wrong with
+Topic Modeling?\\ (and How to Fix it Using Search-based SE)}
 
 
 \author{
@@ -158,13 +157,6 @@ and many papers in recent years have reported  topic modeling results at numerou
 
 %% LDA takes certain set of parameters which try to take us closer to cluster distributions. But it is an art to find the right parameters setting that control the choices within a data miner. But it is very impractical to get the right parameters settings due to larger search space of configurations. Nevertheless, we rarely tuned LDA since we reasoned that a LDA’s default tunings have been well-explored by the developers of those algorithms (in which case tuning would not lead to stable topic models). Due to larger search space of configurations, it is not even feasible to find such tunings. And that is why, LDA is usually used with off-the-shell default parameters. Many researchers have agreed to the idea of using different configurations in LDA. But, we have seen rare work done when it comes to tune the important parameters of LDA.
 
-
-\begin{figure}[!b]
-  \captionsetup{justification=centering}
-  \includegraphics[width=3in]{./fig/data.png}
-  \caption{Data Growth 2005-2015. From~\cite{nadkarni2014structured}.}
-  \label{fig: data}
-\end{figure}
 %\rule{\textwidth}{0.4mm}
 
 
@@ -204,15 +196,13 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
   \item Software defect reports from NASA.
     \ei
 
-
-    
-
 \begin{figure}[!b]
-  \centering
-  \resizebox{0.4\textwidth}{!}{\includegraphics[width=\linewidth]{./fig/survey.png}}
-  \caption{Topic modeling in SE: recent papers since 2007.}
-  \label{fig:survey1}
+  \captionsetup{justification=centering}
+  \includegraphics[width=3in]{./fig/data.png}
+  \caption{Data Growth 2005-2015. From~\cite{nadkarni2014structured}.}
+  \label{fig: data}
 \end{figure}
+    
 
 \renewcommand\arraystretch{1.2}
 \begin{table*}[!t]
@@ -296,10 +286,13 @@ ESE                                 & Empirical Software Engineering            
 \caption{SE Venues that publish  on Topic Modeling.}
 \label{tab:venues}
 \end{table}
-%\rule{\textwidth}{0.4mm}
 
-%\begin{figure}[!b]
-%  \centering
+\begin{figure}[!htb]
+  \centering
+  \resizebox{0.4\textwidth}{!}{\includegraphics[width=\linewidth]{./fig/survey.png}}
+  \caption{Topic modeling in SE: recent papers since 2007.}
+  \label{fig:survey1}
+\end{figure}
 
 
 
@@ -309,25 +302,25 @@ Using these datasets, we explore these research questions:
   %% In all results, the pattern was the same:  (a)~before tuning, topic models were very unstable; and (b)~after tuning
   %% the generated topics were far more stable across different orderings of the inputs. 
 \begin{compactitem}
-\item \textbf{RQ1}: \textbf{Are the default settings of LDA misleading?} We will show that using the default settings of LDA for SE data can lead to systematic errors since stability scores start to drop after $n=5$ terms per topic.
-    \item \textbf{RQ2}: \textbf{Does tuning with DE improve the stability scores of LDA?} In our work, we will show dramatic improvement in the stability scores with the parameters found automatically by DE. We would strongly recommend tuning for future LDA studies.
+\item \textbf{RQ1}: \textbf{Are the default settings of LDA incorrect?} We will show that using the default settings of LDA for SE data can lead to systematic errors since stability scores start to drop after $n=5$ terms per topic. \\ \\ \\ \\
+    \item \textbf{RQ2}: \textbf{Does LDADE improve the stability scores?} In our work, we will show dramatic improvement in the stability scores with the parameters found automatically by DE. We would strongly recommend tuning for future LDA studies.
     \item \textbf{RQ3}: \textbf{Do different data sets
-      need different configurations to make LDA stable?} We will show that DE finds different ``best'' parameter settings for different data sets. Do not reuse  tunings  suggested  by  other  researchers  from other  data  sets.  Instead,  use  automatic  tuning  methods  to find the best tuning parameters for the current data set.
+      need different configurations to make LDA stable?} We will show that DE finds different ``best'' parameter settings for different data sets. Hence reusing tunings  suggested  by  other  researchers  from other  data  sets.  Instead,  use  automatic  tuning  methods  to find the best tuning parameters for the current data set.
     \item \textbf{RQ4}: \textbf{Is tuning easy?} We show that, measured
       in the terms of the internal search space of the optimizer,
       tuning LDA is much simpler than standard optimization methods.
-    \item \textbf{RQ5}: \textbf{Is tuning impractically slow?}
+    \item \textbf{RQ5}: \textbf{Is tuning slow who are making conclusions out of these topics?}
       Tuning with DE makes LDA around five times slower- which is not an alarming
-      speed reduction given modern cloud computing environments.
+      speed reduction given modern cloud computing environments. Tuning LDA is not slow for those who are making conclusions out of these topics.
     \item \textbf{RQ6}: \textbf{Should topic modeling be used “off-the-shelf” with their default tunings?}
-      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use “off-the-shelf” LDA.
+      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use “off-the-shelf” LDA by those who are making conclusions out of these topics.
 \end{compactitem}
 Before proceeding, we offer three caveats.
 Firstly, having mitigated for unstable topics in LDA, the reader may be asking ``ok, but what useful
 conclusions can you
 draw from this new kind of stabler LDA?''. In a companion paper submitted to ICSE'17~\cite{mathews17}
-we apply LDADE to 9291 SE conference publications to find trends in topics between
-  1993 to 2013\footnote{Available on-line at tiny.cc/trendsSE.}.
+we apply LDADE to 9291 SE papers to find trends in topics between
+  1993 to 2013.
 That paper reports (a) what topics that are
  becoming more/less prominent; (b) what topics  are most frequently
  accepted to what conferences; (c) which conferences mostly
@@ -419,7 +412,7 @@ The impact of tuning are well understood in the theoretical machine learning lit
 data miner, what we are really doing is changing how a learner applies its
 heuristics. This means tuned data miners use different heuristics, which means
 they ignore different possible models, which means they return different models;
-i.e. how we learn changes what we learn.
+i.e. \textit{how} we learn changes \textit{what} we learn.
 
 Yet issues relating to
 tuning are poorly addressed in the software analytics literature.  Wei et al.~\cite{fu2016tuning} surveyed hundreds of recent SE papers in the area
@@ -435,7 +428,7 @@ of software defect prediction from static code attributes. They found that most 
   new data sets.
 
 
-Accordingly,  we are now engaged in an on-going research project that explored tuning for software analytics.
+Accordingly,  we are now engaged in an on-going research project that explores tuning for software analytics.
 \bi
 \item Find some data mining widely used in SE;
 \item Check the conclusions of that data miner under different parameter tunings;
@@ -475,7 +468,7 @@ are:
 %\item $u$ = number of update iterations;
 \item $k$ = number of topics.
 \ei
-Various work done by researchers from Table~\ref{tbl:survey2} have suggested that the important parameters which affect LDA the most are those above mentioned. But there is $u$, which is number of update iterations. Since no one has cared about this parameter, we have not used it for tuning.
+%Various studies done by researchers given in Table~\ref{tbl:survey2} have suggested that the important parameters which affect LDA the most are those above mentioned. But there is $u$, which is number of update iterations. Since no one has cared about this parameter, we have not used it for tuning.
 
 
 \begin{figure}[!t]
@@ -582,7 +575,7 @@ effects might be tamed:
   In the above description, $k$, $\alpha,\beta$ are initialized at random
 then updated via an incremental re-sampling process. Such incremental updates are prone to order effects.
 \item
-  One technique to reduce the effect of different data orderings is to not initialize, $k$, $\alpha,\beta$ to some
+  One technique to reduce the effect of different data orderings is to initialize, $k$, $\alpha,\beta$ to some
   large value. The trick when applying this technique is that different data sets will requiring different
   initializations; i.e. the tuning process will have to be repeated for each new data set.
 \ei
@@ -933,7 +926,7 @@ decomposition approaches that use heuristics to decompose the total space into
 small problems, then apply a response surface methods~\cite{krall2015gale,
   zuluaga2013active}. Of these, the simplest ones are simulated annealing (SA)
 and differential evolution (DE) and  our reading of the current literature is
-that there are more advocates for differential evolution than SA. 
+that there are more advocates for differential evolution than SA. We use DE here, since it was successful in our study also.
 
 %\newpage
 LDADE  adjusts the parameters of
@@ -1072,10 +1065,10 @@ Also,
   
   Note that, for the most part, we defer the Stackoverflow results to the \S\ref{sect: validity} {\em Threats to Validity} where we will show that (a)~topic modeling instability
   exists across multiple platforms and  implementation languages; (b)~tuning
-  can improve stabilities for different platforms and languages.
+  can improve stabilities for different platforms and implements for LDA.
 
 
-\subsection{\textbf{RQ1: Are the default settings of LDA misleading?}}
+\subsection{\textbf{RQ1: Are the default settings of LDA correct?}}
 
 
 This first research question checks the core premise of this article-- that changes
@@ -1084,7 +1077,7 @@ Note that if this is {\em not true}, then there would be no value-added to this 
 
 
 Figure~\ref{fig:delta11}   plots $n$ vs $\Re_n$ for untuned  LDA.
-Note that the  stability collapses after $n=5$ words. This means
+Note that the  stability collapses the most after $n=5$ words. This means
   that any report of LDA topics that uses more than five words per topic will
   be changed, just by changing the order of the inputs. This is a significant result
   since the standard advice in the LDA papers~\cite{panichella2013effectively, lukins2010bug}
@@ -1221,13 +1214,6 @@ Also:
   \label{fig:RQ4}
 \end{figure}
 
-\begin{lesson}
-  Finding stable parameters for
-  topic models is easier that standard optimization tasks.
-\end{lesson}
-
-\subsection{\textbf{RQ5: Is tuning impractically slow?}}
-
 \begin{figure*}[!t]
     \centering
   \begin{minipage}{.49\textwidth}
@@ -1245,6 +1231,13 @@ Also:
     
 \end{figure*}
 
+\begin{lesson}
+  Finding stable parameters for
+  topic models is easier than standard optimization tasks.
+\end{lesson}
+
+\subsection{\textbf{RQ5: Is tuning slow who are making conclusions out of these topics?}}
+
 Search-based SE methods can be very slow. Harman et al. once needed 15
 years of CPU time to find and verify the tunings required for software
 clone detectors~\cite{wang2013searching}. Sayyad et al. routinely used
@@ -1256,9 +1249,9 @@ recommendation.
 
 %YYY why so fast? io bound?
 
-To understand our timing results, recall that untuned/tuned LDA use
-Algorithm~1/ Algorithm~2 respectively. In general, the number of evaluations taken by tuning is 3 times more than 
-untuned experiments. 
+To understand our timing results, recall that untuned, tuned LDA use
+Algorithm~1, Algorithm~2 respectively. In general, the number of evaluations taken by tuning is 3 times more than 
+untuned experiments.
 
 %To understand our timing results, recall that untuned/tunes LDA use
 %Algorithm~1/ Algorithm~2 respectively. In turns out that some of the
@@ -1270,20 +1263,19 @@ untuned experiments.
   runtimes required to run LDA untuned, tuned (respectively).  The
   longer runtimes (in red) include the times required for DE to find
   the tunings. Overall, tuning slows down LDA by a factor of up to
-  seven, but often less than five. Why is this slow down less than our expected value of ten?
-  The answer is in the relative times required for LDA and DE: the latter is much slower
+  seven, but often less than five. The answer is in the relative times required for LDA and DE: the latter is much slower
   than the former which means variances in the performance of LDA dominate these timing results.
 
-  Regardless of whether or not the slow down is a factor of five or seven or ten,
+  Regardless of whether or not the slow down is a factor of five or seven,
   the main result here is that
   the overall slowdown is not dramatic. Given the added benefit of tuning (stable topics),
   we conclude that:
 
   \begin{lesson}
-    Tuning LDA is not impractically slow.
+    Tuning LDA is not slow for those who are making conclusions out of these topics.
 \end{lesson}
 
-\subsection{\textbf{RQ6: Should data miners be used “off-the-shelf” with their  default  tunings?}}
+\subsection{\textbf{RQ6: Should data miners be used “off-the-shelf” with their default tunings?}}
 
 
   Figure~\ref{fig:delta} shows that there is much benefit in tuning.
@@ -1295,7 +1287,7 @@ untuned experiments.
   slower than otherwise, but the overall cost is not prohibative.
   Hence:
   \begin{lesson}
-    Overall, we can see little reason  to use ``off-the-shelf'' LDA.
+    Overall, we can see little reason  to use ``off-the-shelf'' LDA by those who are making conclusions out of these topics.
     \end{lesson}
 
  
@@ -1432,7 +1424,7 @@ Any study that shows the topics learned from LDA, then uses that display to make
 conclusion, needs to first tune LDA. We say this since the topics learned from untuned LDA are unstable, i.e. different input orderings will lead to different conclusions.
 However, after tuning, stability can be greatly increased.
 \item Unlike the advise of Stacy et al.~\cite{lukins2010bug}, LDA topics should not be reported as the top ten words.
-  Due to order effects, such a report can be highly misleading.
+  Due to order effects, such a report can be highly incorrect.
   Our results show that up to eight words can be reliably reported, but only
   after tuning for stability using tools like LDADE.
 \item Do not download someone else's pre-tuned LDA since, as shown here,  the best LDA tunings vary from data set to data set.
