@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage{float}
+\usepackage{balance}
 \usepackage[demo]{graphicx}
 \usepackage{subfig}
 %\usepackage{times}
@@ -78,7 +79,7 @@
 \begin{document}
 \pagestyle{plain}
 
-\title{What's Wrong with
+\title{What is  Wrong with
 Topic Modeling?\\ (and How to Fix it Using Search-based SE)}
 
 
@@ -88,15 +89,15 @@ Topic Modeling?\\ (and How to Fix it Using Search-based SE)}
 Raleigh, North Carolina\\
 aagrawa8@ncsu.edu}
 \and
-\IEEEauthorblockN{Tim Menzies}
-\IEEEauthorblockA{Computer Science, NCSU\\
-Raleigh, North Carolina\\
-tim.menzies@gmail.com}
-\and
 \IEEEauthorblockN{Wei Fu}
 \IEEEauthorblockA{Computer Science, NCSU\\
 Raleigh, North Carolina\\
 wfu@ncsu.edu}
+\and
+\IEEEauthorblockN{Tim Menzies}
+\IEEEauthorblockA{Computer Science, NCSU\\
+Raleigh, North Carolina\\
+tim.menzies@gmail.com}
 }
 
 % make the title area
@@ -196,7 +197,7 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
   \item Software defect reports from NASA.
     \ei
 
-\begin{figure}[!b]
+\begin{figure}[!t]
   \captionsetup{justification=centering}
   \includegraphics[width=3in]{./fig/data.png}
   \caption{Data Growth 2005-2015. From~\cite{nadkarni2014structured}.}
@@ -309,11 +310,13 @@ Using these datasets, we explore these research questions:
     \item \textbf{RQ4}: \textbf{Is tuning easy?} We show that, measured
       in the terms of the internal search space of the optimizer,
       tuning LDA is much simpler than standard optimization methods.
-    \item \textbf{RQ5}: \textbf{Is tuning slow who are making conclusions out of these topics?}
-      Tuning with DE makes LDA around five times slower- which is not an alarming
-      speed reduction given modern cloud computing environments. Tuning LDA is not slow for those who are making conclusions out of these topics.
+    \item \textbf{RQ5}: \textbf{What is the runtime cost of tuning?}
+      The advantages of  LDADE come at some cost:
+      tuning with DE makes LDA three to seven times slower.
+      While this is definitely more than not using LDA, this may not be an arduous increase
+      given modern cloud computing environments. 
     \item \textbf{RQ6}: \textbf{Should topic modeling be used “off-the-shelf” with their default tunings?}
-      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use “off-the-shelf” LDA by those who are making conclusions out of these topics.
+      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use ``off-the-shelf''  LDA by those who are making conclusions out of these topics.
 \end{compactitem}
 Before proceeding, we offer three caveats.
 Firstly, having mitigated for unstable topics in LDA, the reader may be asking ``ok, but what useful
@@ -708,7 +711,10 @@ methods used to reduce that instability.
 \begin{table}[!t]
 \begin{center}
 \begin{tabular}{c|r|r}
-  \begin{tabular}[c]{@{}c@{}}\multicolumn{2}{c}{\textbf{~}}\end{tabular} & \multicolumn{2}{c}{\textbf{Size}} \\
+  \begin{tabular}{cc@{}c@{}}
+    \multicolumn{2}{c}{\textbf{~}}
+  \end{tabular}
+  & \multicolumn{2}{c}{\textbf  Size} \\
     \cline{2-3}
          & \textbf{Before} & \textbf{After}\\ 
   \textbf{Data set}      & \textbf{Preprocessing} & \textbf{Preprocessing}\\ 
@@ -821,8 +827,17 @@ To evaluate topics coherence in LDA, there is a direct approach, by asking peopl
 
 Another approach researchers have used is \textit{Jaccard Similarity}~\cite{o2015analysis, galvis2013analysis}. We define our measure similar to it. For this work, we assess topic model stability via the {\em median number overlaps of size $n$ words $\mathit{(size\_of\_topic)}$}, which we denote  $\Re_n$.
 
+%XXX  The magical number seven plus or minus two: some limits on our capacity for processing information.
+%by: G. A. MILLER
+%Psychological review, Vol. 63, No. 2. (March 1956), pp. 81-97  Key: citeulike:1089248
+ 
+
+
 For this measurement, we first determine the maximum size of topics we will study. For that purpose,
-we will study the $n=9$ which we call but the standard in the LDA literature~\cite{panichella2013effectively, lukins2010bug} says that top 10 terms per topic are ideal. We did not select $n=10$ just because our results showed that the $\Re_9$ is negligible.
+we will study the case of $n \le 9$ (we use 9 as a our maximum size since the cognitive
+science literature tells us that $7\pm 2$ is a useful upper size for artifacts to be browsed by humans~\cite{miller56}).
+.
+
 
 Next, for $1 \le n \le 9$, we will calculate the median size of the overlap,
 computed as follows:
@@ -834,7 +849,8 @@ when there are $x$ occurrences of  $n$ terms appearing in all the topics seen in
 \ei
 
 
-For example, consider the topics shown in Figure~\ref{fig:jaccard}. These are generated via four {\em runs} of our system.
+For example, consider the topics shown in Figure~\ref{fig:jaccard}. These are generated via four {\em runs} of our system. In this hypothetical example, we will assume that the runs of
+ Figure~\ref{fig:jaccard} were generated by an LDA suffering from topic instability.
 For $n=5$, we note that Topic~0 of run1 scores $\frac{2}{4}=0.5$ since it shares 5 words with topics in only two out of four runs.
 Repeating that calculation for the other run1 topics shows that:
 \bi
@@ -919,14 +935,15 @@ We choose to use DE after a literature search on search-based SE methods.
 The literature mentions many optimizers: simulated
 annealing~\cite{feather2002converging, menzies2007business}; various genetic
 algorithms~\cite{goldberg1979complexity} augmented by techniques such as
-differential evolution~\cite{storn1997differential}, tabu search and scatter
+DE (differential evolution~\cite{storn1997differential}), tabu search and scatter
 search~\cite{glover1986general, beausoleil2006moss, molina2007sspmo,
   nebro2008abyss}; particle swarm optimization~\cite{pan2008particle}; numerous
 decomposition approaches that use heuristics to decompose the total space into
 small problems, then apply a response surface methods~\cite{krall2015gale,
-  zuluaga2013active}. Of these, the simplest ones are simulated annealing (SA)
-and differential evolution (DE) and  our reading of the current literature is
-that there are more advocates for differential evolution than SA. We use DE here, since it was successful in our study also.
+  zuluaga2013active}.
+Of these, we use DE for two reasons. Firsly, it has proved useful in prior SE tuning
+studies~\cite{wei2006lda}. Secondly,   our reading of the current literature is
+that there are many advocates for differential evolution.
 
 %\newpage
 LDADE  adjusts the parameters of
@@ -1236,7 +1253,7 @@ Also:
   topic models is easier than standard optimization tasks.
 \end{lesson}
 
-\subsection{\textbf{RQ5: Is tuning slow who are making conclusions out of these topics?}}
+\subsection{\textbf{RQ5: What is the runtime cost of tuning?}}
 
 Search-based SE methods can be very slow. Harman et al. once needed 15
 years of CPU time to find and verify the tunings required for software
@@ -1250,8 +1267,9 @@ recommendation.
 %YYY why so fast? io bound?
 
 To understand our timing results, recall that untuned, tuned LDA use
-Algorithm~1, Algorithm~2 respectively. In general, the number of evaluations taken by tuning is 3 times more than 
-untuned experiments.
+Algorithm~1, Algorithm~2 respectively. Based on the psuedocode
+shown above, our pre-experimental expectation is that
+tuning will be three times shower than not tuning.
 
 %To understand our timing results, recall that untuned/tunes LDA use
 %Algorithm~1/ Algorithm~2 respectively. In turns out that some of the
@@ -1259,21 +1277,23 @@ untuned experiments.
 %spread over Algorithm~2, after which we expect that Algorithm~2 will
 %run ten times about slower that Algorithm~1. 
 
-  Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} are shown in blue, red the
+Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} check if that theoretical
+holds true in practice. Shown in blue and red are the
   runtimes required to run LDA untuned, tuned (respectively).  The
   longer runtimes (in red) include the times required for DE to find
   the tunings. Overall, tuning slows down LDA by a factor of up to
-  seven, but often less than five. The answer is in the relative times required for LDA and DE: the latter is much slower
-  than the former which means variances in the performance of LDA dominate these timing results.
+  seven, but often less than five (which is very close to our theoreteical prediction).
+  Hence, we say:
 
-  Regardless of whether or not the slow down is a factor of five or seven,
-  the main result here is that
-  the overall slowdown is not dramatic. Given the added benefit of tuning (stable topics),
-  we conclude that:
-
+  
   \begin{lesson}
-    Tuning LDA is not slow for those who are making conclusions out of these topics.
-\end{lesson}
+    Theoretically and emoirically, tuning LDA costs three to seven times more runtime
+    as much as using untuned LDA.
+  \end{lesson}
+
+  While this is definitely more than not using LDA, this may not be an arduous increase
+  given given modern cloud computing environments.
+  
 
 \subsection{\textbf{RQ6: Should data miners be used “off-the-shelf” with their default tunings?}}
 
@@ -1287,8 +1307,11 @@ untuned experiments.
   slower than otherwise, but the overall cost is not prohibative.
   Hence:
   \begin{lesson}
-    Overall, we can see little reason  to use ``off-the-shelf'' LDA by those who are making conclusions out of these topics.
-    \end{lesson}
+    If the goal is to let humans browse the learned topics,
+    then we cannot recommend using  ``off-the-shelf'' LDA.
+  \end{lesson}
+  Note that, as said above, this conclusion holds for unsupervised clustering applications.
+  For other kinds of supervised classification applications, off-the-shelf LDA may suffice.
 
  
  
@@ -1439,6 +1462,9 @@ and pressing issue.
 In how many domains can search-based SE dramatically improve software analytics?
 
 
+	\section*{Acknowledgements}
+		The work is partially funded by NSF  awards \#1506586.
+		
 
 
 % Can use something like this to put references on a page
@@ -1446,7 +1472,7 @@ In how many domains can search-based SE dramatically improve software analytics?
 \bibliographystyle{abbrv}
 \medskip
 \bibliography{sigproc}
-
+\balance
 
 % that's all folks
 \end{document}
