@@ -232,7 +232,7 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
         \hline
         ~\cite{thomas2014static} &2014& 31 &ESE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Testing\end{tabular}\\ [0.5ex]
         \hline
-        ~\cite{bajracharya2009mining} &2009 &29 & MSR& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation and accepted to the fact their results were better \\because of the corpus they used.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software History Comprehenion\end{tabular}\\ [0.5ex]
+        ~\cite{bajracharya2009mining} &2009 &29 & MSR& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation and accepted to the fact their results were better \\because of the corpus they used.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software History Comprehension\end{tabular}\\ [0.5ex]
         \hline
         ~\cite{lohar2013improving} &2013& 27 &ESEC/FSE &Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Explored Configurations using LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Traceability Link recovery\end{tabular}\\ [0.5ex]
         \hline
@@ -246,7 +246,7 @@ that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper 
         \hline
         ~\cite{fu2015automated} &2015& 6 & IST & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software re-factoring\end{tabular}\\ [0.5ex]
         \hline
-        ~\cite{garousi2016citations} &2016& 5 &\begin{tabular}[c]{@{}c@{}}CS Review\end{tabular}& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bibiliometric and citation analysis\end{tabular}\\ [0.5ex]
+        ~\cite{garousi2016citations} &2016& 5 &\begin{tabular}[c]{@{}c@{}}CS Review\end{tabular}& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bibliometrics and citations analysis\end{tabular}\\ [0.5ex]
         \hline
         ~\cite{le2014predicting} &2014& 5 & ISSRE& N & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bug Localisation\end{tabular}\\ [0.5ex]
         \hline
@@ -669,7 +669,7 @@ In the literature, researchers~\cite{maskeri2008mining, martin2015app, guzman201
     handle different kinds of knowledge such as word correlation,
     document correlation, document label and so on. Using such user
     knowledge, while certainly valuable, is somewhat subjective.
-    Hence, for reasons of reproducability, we prefer fully
+    Hence, for reasons of reproducibility, we prefer fully
     automated methods.
 
 %UYY need to sort this
@@ -784,7 +784,7 @@ Topic modeling on Stackoverflow is useful for finding patterns in programmer kno
 \item
   Stop words removal using NLTK toolkit\footnote{http://www.nltk.org/book/ch02.html}~\cite{bird2006nltk} : ignore very common short words such as  ``and'' or ``the''.
 \item
-  Porter's stemming filter~\cite{Porter1980}: delete uniformative word endings; e.g. after stemming, all the following words would be rewritten
+  Porter's stemming filter~\cite{Porter1980}: delete uninformative word endings; e.g. after stemming, all the following words would be rewritten
   to ``connect'': ``connection'', ``connections'',
 ``connective'',          
 ``connected'',
@@ -802,7 +802,7 @@ Topic modeling on Stackoverflow is useful for finding patterns in programmer kno
   Table~\ref{tbl:dataset} shows the sizes of our data before and after pre-processing.
   These datasets are of different sizes and so are processed using different tools:
   \bi
-\item PITS and Citemap is small enough to process on a single (four core) deskop machine
+\item PITS and Citemap is small enough to process on a single (four core) desktop machine
   using Scikit-Learn~\cite{pedregosa2011scikit} and Python.
   \item StackOverflow is so large (7GB) that its  processing requires extra hardware support.
  This study used a Spark and Mllib on a cluster of 45 nodes to
@@ -834,8 +834,8 @@ Another approach researchers have used is \textit{Jaccard Similarity}~\cite{o201
 
 
 For this measurement, we first determine the maximum size of topics we will study. For that purpose,
-we will study the case of $n \le 9$ (we use 9 as a our maximum size since the cognitive
-science literature tells us that $7\pm 2$ is a useful upper size for artifacts to be browsed by humans~\cite{miller56}).
+we will study the case of $n \le 9$ (we use 9 as our maximum size since the cognitive
+science literature tells us that $7\pm 2$ is a useful upper size for artifacts to be browsed by humans~\cite{miller1956magical}).
 .
 
 
@@ -941,7 +941,7 @@ search~\cite{glover1986general, beausoleil2006moss, molina2007sspmo,
 decomposition approaches that use heuristics to decompose the total space into
 small problems, then apply a response surface methods~\cite{krall2015gale,
   zuluaga2013active}.
-Of these, we use DE for two reasons. Firsly, it has proved useful in prior SE tuning
+Of these, we use DE for two reasons. Firstly, it has proved useful in prior SE tuning
 studies~\cite{wei2006lda}. Secondly,   our reading of the current literature is
 that there are many advocates for differential evolution.
 
@@ -984,7 +984,7 @@ We manually adjust these inference techniques according to different implementat
 Algorithm 2 shows LDADE's version of DE.  DE evolves a \textit{NewGeneration} of
 candidates from a current Population.   Each candidate solution in the Population is a pair of
 (Tunings, Scores). Tunings are selected from Table \ref{tb:tuned} and Scores
-come similarly from Alogrithm 1$^{3-11}$. Note that there is not any outer loop$^{3}$: in Algorithm 2, LDA is only run as 1 rig$^{11 \& 12}$. Here, the runtimes comes from $\mathit{iter} * np * 10$ evaluations of tuned experiment.
+come similarly from Algorithm 1$^{3-11}$. Note that there is not any outer loop$^{3}$: in Algorithm 2, LDA is only run as 1 rig$^{11 \& 12}$. Here, the runtimes comes from $\mathit{iter} * np * 10$ evaluations of tuned experiment.
 
 
 
@@ -1064,8 +1064,7 @@ Hence, Vesterstrom and Thomsen~\cite{vesterstrom2004comparative} found DE to be
 competitive with particle swarm optimization and other GAs.
 
 Note that DEs have been
-applied before for parameter tuning (e.g. see~\cite{panichella2013effectively, lohar2013improving, sun2015msr4sm,%
-omran2005differential,chiha2012tuning, fu2016tuning} ) but this is the first time they have been
+applied before for parameter tuning (e.g. see~\cite{panichella2013effectively, lohar2013improving, sun2015msr4sm,omran2005differential,chiha2012tuning, fu2016tuning} ) but this is the first time they have been
 applied to tune LDA to increase stability.
 
 
@@ -1082,7 +1081,7 @@ Also,
   
   Note that, for the most part, we defer the Stackoverflow results to the \S\ref{sect: validity} {\em Threats to Validity} where we will show that (a)~topic modeling instability
   exists across multiple platforms and  implementation languages; (b)~tuning
-  can improve stabilities for different platforms and implements for LDA.
+  can improve stability for different platforms and implementations for LDA.
 
 
 \subsection{\textbf{RQ1: Are the default settings of LDA correct?}}
@@ -1269,7 +1268,7 @@ recommendation.
 To understand our timing results, recall that untuned, tuned LDA use
 Algorithm~1, Algorithm~2 respectively. Based on the psuedocode
 shown above, our pre-experimental expectation is that
-tuning will be three times shower than not tuning.
+tuning will be three times slower than not tuning.
 
 %To understand our timing results, recall that untuned/tunes LDA use
 %Algorithm~1/ Algorithm~2 respectively. In turns out that some of the
@@ -1282,17 +1281,17 @@ holds true in practice. Shown in blue and red are the
   runtimes required to run LDA untuned, tuned (respectively).  The
   longer runtimes (in red) include the times required for DE to find
   the tunings. Overall, tuning slows down LDA by a factor of up to
-  seven, but often less than five (which is very close to our theoreteical prediction).
+  seven, but often less than five (which is very close to our theoretical prediction).
   Hence, we say:
 
   
   \begin{lesson}
-    Theoretically and emoirically, tuning LDA costs three to seven times more runtime
+    Theoretically and empirically, tuning LDA costs three to seven times more runtime
     as much as using untuned LDA.
   \end{lesson}
 
   While this is definitely more than not using LDA, this may not be an arduous increase
-  given given modern cloud computing environments.
+  given modern cloud computing environments.
   
 
 \subsection{\textbf{RQ6: Should data miners be used “off-the-shelf” with their default tunings?}}
@@ -1304,11 +1303,11 @@ holds true in practice. Shown in blue and red are the
   the off-the-shelf tunings
   may often fall far from the useful range.
   Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} show that tuning is definitely
-  slower than otherwise, but the overall cost is not prohibative.
+  slower than otherwise, but the overall cost is not prohibitive.
   Hence:
   \begin{lesson}
     If the goal is to let humans browse the learned topics,
-    then we cannot recommend using  ``off-the-shelf'' LDA.
+    then we cannot recommend using ``off-the-shelf'' LDA.
   \end{lesson}
   Note that, as said above, this conclusion holds for unsupervised clustering applications.
   For other kinds of supervised classification applications, off-the-shelf LDA may suffice.
@@ -1457,7 +1456,7 @@ Our experience is that this recommendation is not an arduous demand since tuning
 
 More generally, we comment that the field of software analytics needs to make far more use of search-based software engineering in order
 to tune their learners. In other work, we have shown that tuning significantly helps defect prediction~\cite{fu2016tuning} (a result that has also been reported by
-other reseachers~\cite{panichella2013effectively}). In this work, we have shown that tuning significantly helps topic modeling by mitigating a systematic error in LDA  (order effects that lead to unstable topics). The implications of this study for other software analytics tasks is now an open
+other researchers~\cite{panichella2013effectively}). In this work, we have shown that tuning significantly helps topic modeling by mitigating a systematic error in LDA  (order effects that lead to unstable topics). The implications of this study for other software analytics tasks is now an open
 and pressing issue. 
 In how many domains can search-based SE dramatically improve software analytics?
 
@@ -1467,12 +1466,13 @@ In how many domains can search-based SE dramatically improve software analytics?
 		
 
 
+\balance
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
 \bibliographystyle{abbrv}
 \medskip
 \bibliography{sigproc}
-\balance
+
 
 % that's all folks
 \end{document}
