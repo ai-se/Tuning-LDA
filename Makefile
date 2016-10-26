@@ -1,7 +1,6 @@
 Src=main#
 Bib=$(shell ls *.bib)#
 D=$(HOME)/tmp/$(Src)#
-
 define grab
    gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
        -dFirstPage=$(1) -dLastPage=$(2) \
