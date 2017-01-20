@@ -142,7 +142,6 @@ Topic modeling, Stability, LDA, tuning, differential evolution.
 The current great challenge in software analytics is understanding unstructured data. As shown in Figure~\ref{fig: data}, most of the planet's 1600 Exabytes of data does not appear in structured sources (databases, etc)~\cite{nadkarni2014structured}. Rather it is {\em unstructured} data, often in free text, and found in word processing files, slide presentations, comments, etc etc. 
 
 Such unstructured data does not have a pre-defined data model and is typically text-heavy. Finding insights among unstructured text is  difficult unless we can search, characterize, and classify the textual data in a meaningful way. One of the common techniques for finding related topics within unstructured text (an area called topic modeling) is Latent Dirichlet Allocation (LDA)~\cite{blei2003latent}.
-Topic modeling is widely used in Software Engineering and many papers in recent years have reported  topic modeling results at numerous SE venues (see  Table~\ref{tab:venues} and ~\ref{tbl:survey2}). These two tables show how important LDA has been in various SE tasks and most of them are recently published.
 
 \begin{figure}[!t]
   \captionsetup{justification=centering}
@@ -155,8 +154,141 @@ Topic models built by LDA are non-deterministic in behaviour. Due to non-determi
 
 LDA takes certain set of parameters which try to take us closer to good cluster distributions. But it is an art to find the right parameters setting that control the choices within a data miner. But it is very impractical to get the right parameters settings due to larger search space of configurations. Nevertheless, we rarely tuned LDA since we reasoned that a LDA’s default tunings have been well-explored by the developers of those algorithms (in which case tuning would not lead to stable topic models). Due to larger search space of configurations, it is not even feasible to find such tunings. And that is why, LDA is usually used with off-the-shell default parameters. Many researchers have agreed to the idea of using different configurations in LDA. But, we have seen rare work done when it comes to tune the important parameters of LDA.
 
-\begin{table}[!t]
-\renewcommand\arraystretch{0.8}
+Researchers use topic models mostly in either of two ways.
+Firstly,
+topics may be used as {\em feature selector} that finds useful inputs
+which are then used by, say, a classifier to characterize different kinds of software (e.g. buggy or not~\cite{chen2016topic}).
+In this mode, no human ever need to read the generated topics but the cluster distribution still suffers from instabilities and they pose problem in classification tasks. 
+
+Secondly, researchers may present and reflect on the generated topics in order to
+  offer some insight into the structure of the data.  In this second mode,
+  researchers present and discuss the specifics of the generated topics in order
+  to defend particular conclusions. 
+
+%\begin{figure}[!htb]
+%  \centering
+%  \resizebox{0.4\textwidth}{!}{\includegraphics[width=\linewidth]{./fig/survey.png}}
+%  \caption{Topic modeling in SE: recent papers since 2007.}
+%  \label{fig:survey1}
+%\end{figure}
+
+
+This paper talks about the collective 
+  systematic error that occur to instability in LDA.
+  Specifically, we show that the generated topics from Latent Dirichlet
+  Allocation (LDA), a widely-used topic modeling algorithm in SE, are subject to
+  ``order effects''.  That is, if the order of the input examples is changed,
+  the generated topics will also change-- often dramatically so.  Hence, any
+  conclusion based on an order effect is unstable since that conclusion is the
+  result of a (randomly selected) input ordering. 
+
+To fix this problem,
+we proposes LDADE: a  combination of LDA and a search-based optimizer (differential evolution, or DE)~\cite{storn1997differential})
+that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper tests LDADE on:
+\begin{itemize}
+\item Data from a programmer information exchange site (Stackoverflow);
+  \item Title and abstract text of
+    15121 SE papers;
+  \item Software defect reports from NASA.
+\end{itemize}
+    
+\noindent
+Using these datasets, we explore these research questions:  
+   
+\begin{itemize}
+
+\item \textbf{RQ1}: \textbf{Are the default settings of LDA incorrect?} We will show that using the default settings of LDA for SE data can lead to systematic errors since stability scores start to drop after $n=5$ terms per topic.
+    \item \textbf{RQ2}: \textbf{Does LDADE improve the stability scores?} In our work, we will show dramatic improvement in the stability scores with the parameters found automatically by DE. And we also found that the most important parameters which affect cluster stability are $\alpha$ and $\beta$.
+    \item \textbf{RQ3}: \textbf{Does LDADE improve the classification F2 accuracy scores?} We will show improvement in the F2 scores with the parameters found automatically by DE. We found that for classification, $k$, number of topics matters the most.
+    \item \textbf{RQ4}: \textbf{Do different data sets
+      need different configurations to make LDA stable?} We will show that DE finds different ``best'' parameter settings for different data sets. Hence reusing tunings  suggested  by  other  researchers  from other  data  sets are a bad idea.  Instead,  use  automatic  tuning  methods  to find the best tuning parameters for the current data set.
+      \item \textbf{RQ5}: \textbf{Using different kinds of LDA or with different implementations, are our findings consistent?} Results were collected across different implementations of LDA (Python+Scikit-Learn, Scala+Spark); across different platforms (Linux, Macintosh) and for different kinds of LDAs (the traditional VEM method, or using Gibbs sampling). Our results found out to be quite consistent and all our above research questions results hold valid in these scenarios as well. Instability is not due to any quirk in the implementation of LDA. Instability is consistent and LDADE can stabilize. 
+
+    \item \textbf{RQ6}: \textbf{Is tuning easy?} We show that, measured
+      in the terms of the internal search space of the optimizer,
+      tuning LDA is much simpler than standard optimization methods.
+    \item \textbf{RQ7}: \textbf{What is the runtime cost of tuning?}
+      The advantages of  LDADE come at some cost:
+      tuning with DE makes LDA three to five times slower.
+      While this is definitely more than not using LDA, this may not be an arduous increase
+      given modern cloud computing environments. 
+    \item \textbf{RQ8}: \textbf{Should topic modeling be used ``off-the-shelf'' with their default tunings?}
+      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use ``off-the-shelf'' LDA for any kind of SE data mining applications.
+\end{itemize}
+
+\section{Motivation}
+\label{sect: motivate}
+
+\subsection{LDA Widely Used}
+
+Topic modeling is widely used in Software Engineering and many papers in recent years have reported  topic modeling results at numerous SE venues (see  Table~\ref{tab:venues} and ~\ref{tbl:survey2}). These two tables show how important LDA has been in various SE tasks and most of them are recently published.
+
+As witnessed by the central columns of Table~\ref{tbl:survey2},
+many prior papers have commented that the results of a topic modeling analysis can be affected by
+tuning the control parameters of LDA.  Yet a repeated pattern in the literature
+is that, despite these stated concerns, researchers rarely take the next step
+to find ways to better control tunings. Many researchers did try to find optimal parameter settings using Genetic Algorithms~\cite{panichella2013effectively,lohar2013improving,sun2015msr4sm}. But none of them have considered the most important aspect of LDA which is data input ``order effects''. To the best of our knowledge, apart from this paper, there are no reports in the SE literature of simple reproducible automatic methods that can resolve the problem of unstable topic models. 
+
+\renewcommand\arraystretch{1.2}
+\begin{table*}[!t]
+\scriptsize
+\centering
+    \begin{tabular}{|c@{~}|c@{~}|c@{~}|c@{~}|c@{~}|c@{~}|c@{~}|p{6.4cm}@{~}|p{3.5cm}|}
+        \hline 
+        \begin{tabular}[c]{@{}c@{}}\textbf{ID}\end{tabular} & \textbf{Year} & \textbf{Citations} & \textbf{Venues} & \begin{tabular}[c]{@{}c@{}}\textbf{Mentions} \\\textbf{instability} \\\textbf{in LDA?} \end{tabular} &\begin{tabular}[c]{@{}c@{}} \textbf{Uses} \\\textbf{Default} \\\textbf{Parameters}\end{tabular}&\begin{tabular}[c]{@{}c@{}} \textbf{Does} \\\textbf{tuning?}\end{tabular} & \multicolumn{1}{c|}{Conclusion}  & \multicolumn{1}{c|}{Tasks / Use cases}\\ \hline
+        ~\cite{rao2011retrieval} & 2011 & 112 & WCRE & Y & Y & N & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. \end{tabular} & \begin{tabular}[c]{@{}l@{}}Bug Localisation\end{tabular}\\ [0.5ex]\hline
+        ~\cite{oliveto2010equivalence} & 2010 & 108 &MSR& Y & Y & N & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\\ Reported their results using multiple experiments.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Traceability Link recovery\end{tabular}\\ [0.5ex]\hline
+        ~\cite{barua2014developers} &2014& 96 & ESE & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\\ Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}StackOverflow Q\&A data analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{panichella2013effectively} & 2013&75&ICSE & Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Uses GA to tune parameters. They determine\\ the near-optimal configuration for LDA in the \\context of only some important SE tasks.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Finding near-optimal configurations\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{galvis2013analysis} &2013& 61 &ICSE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Requirements Analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{hindle2011automated} &2011& 45 & MSR & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}They validated the topic labelling techniques \\using multiple experiments.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Artifacts Analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{guzman2014users} & 2014 & 44 &RE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Requirements Engineering\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{thomas2011mining} &2011& 44 &ICSE & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Open issue to choose optimal parameters.\end{tabular}& \begin{tabular}[c]{@{}l@{}}A review on LDA\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{thomas2014studying} & 2014 & 35 &SCP& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Artifacts Analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{chen2012explaining} &2012& 35 &MSR & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Choosing the optimal number of topics is difficult.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Defects Prediction\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{thomas2014static} &2014& 31 &ESE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Testing\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{bajracharya2009mining} &2009 &29 & MSR& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation \\and accepted to the fact their results were better \\because of the corpus they used.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software History Comprehension\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{lohar2013improving} &2013& 27 &ESEC/FSE &Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Explored Configurations using LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Traceability Link recovery\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{binkley2014understanding} &2014& 20 &ICPC& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Use heuristics to find right set of parameters.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Source Code Comprehension\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{linares2013exploratory} &2013& 20 &MSR& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}In Future, they planned to use LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}StackOverflow Q\&A data analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{koltcov2014latent} & 2014 & 15 & WebSci& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Social Software Engineering\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{grant2013using} & 2013 & 13 &SCP& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Their work focused on optimizing LDA’s topic count parameter.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Source Code Comprehension\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{hindle2012relating} & 2012 & 13 &ICSM& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Requirements Analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{fu2015automated} &2015& 6 & IST & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. \\Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software re-factoring\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{garousi2016citations} &2016& 5 &\begin{tabular}[c]{@{}c@{}}CS Review\end{tabular}& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bibliometrics and citations analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{le2014predicting} &2014& 5 & ISSRE& N & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bug Localisation\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{nikolenko2015topic} & 2015 &3 &JIS& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}They improvised LDA into ISLDA which gave stability\\ across different runs.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Social Software Engineering\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{sun2015msr4sm} &2015& 2 &IST& Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Explored Configurations using LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Artifacts Analysis\end{tabular}\\ [0.5ex]
+        \hline
+        ~\cite{chen2016topic} &2016& 0 &JSS& N & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. \\Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Defects Prediction\end{tabular}\\ [0.5ex]
+        \hline
+\end{tabular}
+\caption{A sample of the recent literature on using topic modeling in SE. Note that some of these papers are widely-cited. }
+\label{tbl:survey2}
+\end{table*}
+
+\begin{table}[!htbp]
+\renewcommand\arraystretch{1.0}
 \begin{center}
 \scriptsize
 \begin{tabular}{|c|l|c|}
@@ -181,246 +313,133 @@ ESE                                 & Empirical Software Engineering            
 \label{tab:venues}
 \end{table}
 
-Researchers use topic models mostly in either of two ways.
-Firstly,
-topics may be used as {\em feature selector} that finds useful inputs
-which are then used by, say, a classifier to characterize different kinds of software (e.g. buggy or not~\cite{chen2016topic}).
-In this mode, no human ever need to read the generated topics but the cluster distribution still suffers from instabilities and they pose problem in classification tasks. 
+\subsection{Previously Used Methods Have Unreported Instabilities}
 
-Secondly, researchers may present and reflect on the generated topics in order to
-  offer some insight into the structure of the data.  In this second mode,
-  researchers present and discuss the specifics of the generated topics in order
-  to defend particular conclusions. A case study related to this problem is performed which was similar to Barua et al \cite{barua2014developers}. 
+A case study related to instability is performed which was similar to Barua et al \cite{barua2014developers}. Barua et al analysed topics and trends in StackOverflow. And they presented 40 topics with 9 words in each topic. We couldn't replicate the exact topics since they performed LDA on the data dump of StackOverflow available before 2012. We ran LDA twice with different input orderings keeping all other parameter settings intact and recorded 40 topics. The idea was since they are making conclusions based on their 40 topics with 1 input ordering. Their results could be greatly affected. Our recorded topics can be seen in Table \ref{tbl:run}. It was observed that only 22 topics were found in both the runs. We say 2 topics are same when there is minimum of 5 words overlap between them. Matched topics are marked with bold in the table. This tells us how much important is to have stable distributions. This says wherever there are studies done using ``off-the-shelf'' default LDA parameters need to be re-run again to get rid of any possible errors due to instability in LDA clusters.
 
 \renewcommand\arraystretch{1.2}
 \begin{table*}[!t]
-\tiny
-  \centering
-    \begin{tabular}{|c@{~}|c@{~}|c@{~}|c@{~}|c@{~}|c@{~}|c@{~}|p{7.5cm}@{~}|p{2.5cm}|}
-        \hline 
-        \begin{tabular}[c]{@{}c@{}}\textbf{Reference} \\\textbf{ID}\end{tabular} & \textbf{Year} & \textbf{Citations} & \textbf{Venues} & \begin{tabular}[c]{@{}c@{}}\textbf{Mentions} \\\textbf{instability} \\\textbf{in LDA?} \end{tabular} &\begin{tabular}[c]{@{}c@{}} \textbf{Talks about} \\\textbf{using-off-the} \\\textbf{shell parameters?}\end{tabular}&\begin{tabular}[c]{@{}c@{}} \textbf{Does} \\\textbf{tuning?}\end{tabular} & \multicolumn{1}{c|}{Conclusion}  & \multicolumn{1}{c|}{Tasks / Use cases}\\ \hline
-        ~\cite{rao2011retrieval} & 2011 & 112 & WCRE & Y & Y & N & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. \end{tabular} & \begin{tabular}[c]{@{}l@{}}Bug Localisation\end{tabular}\\ [0.5ex]\hline
-        ~\cite{oliveto2010equivalence} & 2010 & 108 &MSR& Y & Y & N & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. Reported their results using multiple experiments.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Traceability Link recovery\end{tabular}\\ [0.5ex]\hline
-        ~\cite{barua2014developers} &2014& 96 & ESE & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}StackOverflow Q\&A data analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{panichella2013effectively} & 2013&75&ICSE & Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Uses GA to tune parameters. They determine the near-optimal configuration for LDA in the context \\of only some important SE tasks.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Finding near-optimal configurations\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{galvis2013analysis} &2013& 61 &ICSE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Requirements Analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{hindle2011automated} &2011& 45 & MSR & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}They validated the topic labelling techniques using multiple experiments.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Artifacts Analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{guzman2014users} & 2014 & 44 &RE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Requirements Engineering\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{thomas2011mining} &2011& 44 &ICSE & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Open issue to choose optimal parameters.\end{tabular}& \begin{tabular}[c]{@{}l@{}}A review on LDA\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{thomas2014studying} & 2014 & 35 &SCP& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Artifacts Analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{chen2012explaining} &2012& 35 &MSR & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Choosing the optimal number of topics is difficult.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Defects Prediction\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{thomas2014static} &2014& 31 &ESE& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Testing\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{bajracharya2009mining} &2009 &29 & MSR& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation and accepted to the fact their results were better \\because of the corpus they used.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software History Comprehension\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{lohar2013improving} &2013& 27 &ESEC/FSE &Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Explored Configurations using LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Traceability Link recovery\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{binkley2014understanding} &2014& 20 &ICPC& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Use heuristics to find right set of parameters.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Source Code Comprehension\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{linares2013exploratory} &2013& 20 &MSR& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}In Future, they planned to use LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}StackOverflow Q\&A data analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{koltcov2014latent} & 2014 & 15 & WebSci& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Social Software Engineering\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{grant2013using} & 2013 & 13 &SCP& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Their work focused on optimizing LDA’s topic count parameter.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Source Code Comprehension\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{hindle2012relating} & 2012 & 13 &ICSM& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation (Just with no. of topics).\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Requirements Analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{fu2015automated} &2015& 6 & IST & Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software re-factoring\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{garousi2016citations} &2016& 5 &\begin{tabular}[c]{@{}c@{}}CS Review\end{tabular}& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bibliometrics and citations analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{le2014predicting} &2014& 5 & ISSRE& N & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Bug Localisation\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{nikolenko2015topic} & 2015 &3 &JIS& Y & Y & N  & \begin{tabular}[c]{@{}l@{}}They improvised LDA into ISLDA which gave stability across different runs.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Social Software Engineering\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{sun2015msr4sm} &2015& 2 &IST& Y & Y & Y  & \begin{tabular}[c]{@{}l@{}}Explored Configurations using LDA-GA.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Artifacts Analysis\end{tabular}\\ [0.5ex]
-        \hline
-        ~\cite{chen2016topic} &2016& 0 &JSS& N & Y & N  & \begin{tabular}[c]{@{}l@{}}Explored Configurations without any explanation. Choosing right set of parameters is a difficult task.\end{tabular}& \begin{tabular}[c]{@{}l@{}}Software Defects Prediction\end{tabular}\\ [0.5ex]
-        \hline
-\end{tabular}
-\caption{A sample of the recent literature on using topic modeling in SE. Note that some of these papers are widely-cited. }
-\label{tbl:survey2}
-\end{table*}
-
-\renewcommand\arraystretch{1.2}
-
-\begin{table*}[!htbp]
 \begin{center}
-
-
-    \begin{minipage}{.51\textwidth}
-        \tiny
-  
-    \begin{tabular}{|p{6.7cm}@{~}|}
+    \begin{minipage}{.5\textwidth}
+\scriptsize  
+\centering
+    \begin{tabular}{|p{8.5cm}@{~}|}
         \hline 
-        \multicolumn{1}{|c|}{Top LDA words} \\ \hline
-       \begin{tabular}[c]{@{}l@{}}\textbf{Topic Java Programming}: ~string new public int null return privat void java \\ 
-\textbf{Topic Socket Communications}: ~thread process run connect start time socket send task \\ 
-\textbf{Topic Android Main Activity}: ~android activ intent new public view context void import \\ 
-\textbf{Topic API Requests}: ~request servic http facebook respons client api use server \\ 
-\textbf{Topic Flex4 Development}: ~item event list var function new click flash sub \\ 
-\textbf{Topic OO Programming}: ~class public method object new type void instanc return \\ 
-\textbf{Topic HTML Links}: ~page http html com url link content www site \\ 
-\textbf{Topic Compiling}: ~error test compil librari command includ file lib usr \\ 
-\textbf{Topic Media Player}: ~object video play game player obj use data audio \\ 
-\textbf{Topic Q and A}: use like way need question want know make time \\ 
-\textbf{Topic iOS App Development}: app use applic want like develop iphon need user \\ 
-\textbf{Topic HTML Form}: user session password login usernam action control form page \\ 
-\textbf{Topic XML}: xml encod string data pars element json attribut use \\ 
-\textbf{Topic Android User View}: android layout content width view parent height wrap textview \\ 
-\textbf{Topic Scripting Language}: python self print django modul line import def templat \\ 
-\textbf{Topic C\#}: model set public entiti class product new object properti \\ 
-\textbf{Topic MVC}: java org apach com bean servlet springframework http sun \\ 
-\textbf{Topic Database}: tabl select column queri row null group order join \\ 
-\textbf{Topic Testing}: work use test tri code problem chang like set \\ 
-\textbf{Topic Display}: imag img png jpg height width src size color \\ 
-\textbf{Topic Git Operations}: file path upload folder read use directori git open \\ 
-\textbf{Topic Xaml Binding}: bind grid properti wpf window valu control silverlight xaml \\ 
-\textbf{Topic Web Development}: function jqueri javascript var script type input form ajax \\ 
-\textbf{Topic Website Design}: div class css style width left text color span \\ 
-\textbf{Topic Ruby on Rails}: amp valu key true fals nbsp return case param \\ 
-\textbf{Topic Android Debugging}: error java androidruntim android info com debug method lang \\ 
-\textbf{Topic Date/Time Format}: option date valu select time day year month format \\ 
-\textbf{Topic Email Message}: email messag valid form field address contact error send \\ 
-\textbf{Topic Float number Manipulation}: number data point valu float doubl count rang length \\ 
-\textbf{Topic Function Return Types}: int char amp const std return void includ function \\ 
-\textbf{Topic Regular Expressions}: php array echo post string match replac regex function \\ 
-\textbf{Topic .NET Framework}: asp text button label form net click control checkbox \\ 
-\textbf{Topic Google Map}: map search locat googl report document vim keyword new \\ 
-\textbf{Topic Server Provisioning}: server window instal run use log local applic set \\ 
-\textbf{Topic Windows/VS Tips}: net asp mvc web visual studio dll use control \\ 
-\textbf{Topic Ruby Version Manager}: rubi rail gem lib end user rvm app requir \\ 
-\textbf{Topic NodeJS}: list function node variabl parent tag use like express \\ 
-\textbf{Topic Objective C}: self view iphon nsstring alloc object nil cell anim \\ 
-\textbf{Topic Eclipse}: project eclips plugin build version target jar maven depend \\ 
-\textbf{Topic MySQL}: databas sql mysql data queri row connect tabl server \\  \end{tabular} \\ [0.5ex]\hline
+        \multicolumn{1}{|c|}{\textbf{Topic Name}: Top LDA words} \\ \hline
+       \begin{tabular}[c]{@{}l@{}}\textbf{Java Programming}: string new public int null return privat void java \\ 
+\textbf{Socket Communications}: thread process run connect start time socket send task \\ 
+Android Main Activity: android activ intent new public view context void import \\ 
+API Requests: request servic http facebook respons client api use server \\ 
+ Flex4 Development: item event list var function new click flash sub \\ 
+\textbf{OO Programming}: class public method object new type void instanc return \\ 
+HTML Links: page http html com url link content www site \\ 
+Compiling: error test compil librari command includ file lib usr \\ 
+Media Player: object video play game player obj use data audio \\ 
+Q and A: use like way need question want know make time \\ 
+\textbf{iOS App Development}: app use applic want like develop iphon need user \\ 
+\textbf{HTML Form}: user session password login usernam action control form page \\ 
+XML: xml encod string data pars element json attribut use \\ 
+\textbf{Android User View}: android layout content width view parent height wrap textview \\ 
+Scripting Language: python self print django modul line import def templat \\ 
+\textbf{C\# Programming}: model set public entiti class product new object properti \\ 
+\textbf{MVC}: java org apach com bean servlet springframework http sun \\ 
+\textbf{Database}: tabl select column queri row null group order join \\ 
+Testing: work use test tri code problem chang like set \\ 
+\textbf{Display}: imag img png jpg height width src size color \\ 
+Git Operations: file path upload folder read use directori git open \\ 
+\textbf{Xaml Binding}: bind grid properti wpf window valu control silverlight xaml \\ 
+\textbf{Web Development}: function jqueri javascript var script type input form ajax \\ 
+\textbf{Website Design}: div class css style width left text color span \\ 
+\textbf{Ruby on Rails}: amp valu key true fals nbsp return case param \\ 
+Android Debugging: error java androidruntim android info com debug method lang \\ 
+\textbf{Date/Time Format}: option date valu select time day year month format \\ 
+Email Message: email messag valid form field address contact error send \\ 
+Float number Manipulation: number data point valu float doubl count rang length \\ 
+\textbf{Function Return Types}: int char amp const std return void includ function \\ 
+\textbf{Regular Expressions}: php array echo post string match replac regex function \\ 
+.NET Framework: asp text button label form net click control checkbox \\ 
+\textbf{Google Map}: map search locat googl report document vim keyword new \\ 
+Server Provisioning: server window instal run use log local applic set \\ 
+Windows/VS Tips: net asp mvc web visual studio dll use control \\ 
+Ruby Version Manager: rubi rail gem lib end user rvm app requir \\ 
+\textbf{NodeJS}: list function node variabl parent tag use like express \\ 
+\textbf{Objective C}: self view iphon nsstring alloc object nil cell anim \\ 
+\textbf{Eclipse}: project eclips plugin build version target jar maven depend \\ 
+\textbf{MySQL}: databas sql mysql data queri row connect tabl server \\  \end{tabular} \\ [0.5ex]\hline
 \end{tabular}
-  {\bf Table~\ref{tbl:run}a:}  Run 1.
+  {\\ \bf Table~\ref{tbl:run}a:}  Run 1.
     \end{minipage}%
-    \begin{minipage}{.51\textwidth}
-        \tiny
-  \centering
-    \begin{tabular}{|p{6.7cm}@{~}|}
+    \begin{minipage}{.5\textwidth}
+\scriptsize
+\centering
+    \begin{tabular}{|p{8.7cm}@{~}|}
         \hline 
-        \multicolumn{1}{|c|}{Top LDA words} \\ \hline
-       \begin{tabular}[c]{@{}l@{}}\textbf{Topic Xaml Binding}: ~bind properti grid wpf window valu control silverlight xaml \\ 
-\textbf{Topic Android Programming}: ~android layout activ view button content textview intent parent \\ 
-\textbf{Topic Git-SVN}: ~debug info memori git svn error branch stack commit \\ 
-\textbf{Topic Web Development}: ~function javascript var jqueri script ajax document data load \\ 
-\textbf{Topic CSS and Jquery}: ~div class css width html span left jqueri href \\ 
-\textbf{Topic Facebook Graph Api}: ~model facebook json django api user app comment profil \\ 
-\textbf{Topic Database}: ~tabl row queri sql select column key null insert \\ 
-\textbf{Topic Website Designing}: ~amp text color html font style nbsp titl bodi \\ 
-\textbf{Topic Date/Time Format}: ~date time day datetim month year format compani hour \\ 
-\textbf{Topic SQL}: entiti sql databas data use queri string new connect \\ 
-\textbf{Topic OO Programming}: class public object string return new method set type \\ 
-\textbf{Topic Problem/Solution}: work problem tri use chang code set doesn issu \\ 
-\textbf{Topic WebUI Controls}: event asp true click button net control text server \\ 
-\textbf{Topic Hashing Function}: number data point valu use hash algorithm calcul random \\ 
-\textbf{Ambiguous Topic}: valu option select level citi countri param state dropdown \\ 
-\textbf{Topic Java Programming}: java new public error import void string int androidruntim \\ 
-\textbf{Topic Database Service}: user use data want databas applic creat store need \\ 
-\textbf{Topic Coding Style}: use like way need question know look make code \\ 
-\textbf{Topic HTML Form Validation}: form input type valu field text valid label button \\ 
-\textbf{Topic Regular Expression}: string search text match charact word replac like regex \\ 
-\textbf{Topic iOS App Development}: app iphon view tab applic video use screen window \\ 
-\textbf{Topic Google Map}: http com url googl map www html link page \\ 
-\textbf{Topic Tabular Data}: item list product group categori order price filter sort \\ 
-\textbf{Topic PhP}: page php content view post index html control titl \\ 
-\textbf{Topic Ruby on Rails}: rubi rail gem lib user end rvm app requir  \\ 
-\textbf{Topic String Manipulation}: data string read byte new write stream encod use \\ 
-\textbf{Topic Function}: self function variabl foo tag def templat class attribut \\ 
-\textbf{Topic Information Systems}: messag email log address contact send mail phone locat \\ 
-\textbf{Topic Display}: imag img height jpg width png size draw canva \\ 
-\textbf{Topic HTML Form}: request user session password login server http respons usernam \\ 
-\textbf{Topic Visual Studio}: window project file error librari compil visual build dll \\ 
-\textbf{Topic Python Programming}: line python file print command script curl output run \\ 
-\textbf{Topic Socket Communications}: thread server connect run client process socket start task \\ 
-\textbf{Topic Eclipse}: test version eclips plugin instal run use project maven \\ 
-\textbf{Topic MVC}: java org apach com http bean servlet springframework sun \\ 
-\textbf{Topic Function Return Types}: int amp return char includ const std void error \\ 
-\textbf{Topic Objective C}: self nsstring alloc object nil iphon view cell void \\ 
-\textbf{Topic C\# Programming}: net web asp servic mvc use control applic wcf \\ 
-\textbf{Topic PhP MySQ}L: php array mysql echo queri post result error row \\ 
-\textbf{Topic NodeJS}: file xml path node upload folder directori document filenam \\ 
+        \multicolumn{1}{|c|}{\textbf{Topic Name}: Top LDA words} \\ \hline
+       \begin{tabular}[c]{@{}l@{}}\textbf{Xaml Binding}: bind properti grid wpf window valu control silverlight xaml \\ 
+\textbf{Android Programming}: android layout activ view button content textview intent parent \\ 
+Git-SVN: debug info memori git svn error branch stack commit \\ 
+\textbf{Web Development}: function javascript var jqueri script ajax document data load \\ 
+CSS and Jquery: div class css width html span left jqueri href \\ 
+Facebook Graph Api: model facebook json django api user app comment profil \\ 
+\textbf{Database}: tabl row queri sql select column key null insert \\ 
+\textbf{Website Designing}: amp text color html font style nbsp titl bodi \\ 
+\textbf{Date/Time Format}: date time day datetim month year format compani hour \\ 
+SQL: entiti sql databas data use queri string new connect \\ 
+\textbf{OO Programming}: class public object string return new method set type \\ 
+Problem/Solution: work problem tri use chang code set doesn issu \\ 
+WebUI Controls: event asp true click button net control text server \\ 
+Hashing Function: number data point valu use hash algorithm calcul random \\ 
+Ambiguous Topic: valu option select level citi countri param state dropdown \\ 
+\textbf{Java Programming}: java new public error import void string int androidruntim \\ 
+Database Service: user use data want databas applic creat store need \\ 
+Coding Style: use like way need question know look make code \\ 
+HTML Form Validation: form input type valu field text valid label button \\ 
+\textbf{Regular Expression}: string search text match charact word replac like regex \\ 
+\textbf{iOS App Development}: app iphon view tab applic video use screen window \\ 
+\textbf{Google Map}: http com url googl map www html link page \\ 
+Tabular Data: item list product group categori order price filter sort \\ 
+PhP: page php content view post index html control titl \\ 
+\textbf{Ruby on Rails}: rubi rail gem lib user end rvm app requir  \\ 
+String Manipulation: data string read byte new write stream encod use \\ 
+Function: self function variabl foo tag def templat class attribut \\ 
+Information Systems: messag email log address contact send mail phone locat \\ 
+\textbf{Display}: imag img height jpg width png size draw canva \\ 
+\textbf{HTML Form}: request user session password login server http respons usernam \\ 
+Visual Studio: window project file error librari compil visual build dll \\ 
+Python Programming: line python file print command script curl output run \\ 
+\textbf{Socket Communications}: thread server connect run client process socket start task \\ 
+\textbf{Eclipse}: test version eclips plugin instal run use project maven \\ 
+\textbf{MVC}: java org apach com http bean servlet springframework sun \\ 
+\textbf{Function Return Types}: int amp return char includ const std void error \\ 
+\textbf{Objective C}: self nsstring alloc object nil iphon view cell void \\ 
+\textbf{C\# Programming}: net web asp servic mvc use control applic wcf \\ 
+\textbf{PhP MySQ}L: php array mysql echo queri post result error row \\ 
+\textbf{NodeJS}: file xml path node upload folder directori document filenam \\ 
  \end{tabular} \\ [0.5ex]\hline
 \end{tabular}
-  {\bf Table~\ref{tbl:run}b:} Run 2.
+  {\\ \bf Table~\ref{tbl:run}b:} Run 2.
   
     \end{minipage}
-    \caption{40 topics with their top 9 words discovered by LDA.}
+    \caption{40 topics with their top 9 words discovered by LDA. Matched Topics are marked in bold.}
     \label{tbl:run}
     \end{center}
 \end{table*}
 
- Barua et al analysed topics and trends in StackOverflow. And they presented 40 topics with 9 words in each topic. We couldn't replicate the exact topics since they performed LDA on the data dump of StackOverflow available before 2012. We ran LDA twice with different input orderings keeping all other parameter settings intact and recorded 40 topics. The idea was since they are making conclusions based on their 40 topics with 1 input ordering. Their results could be greatly affected. Our recorded topics can be seen in Table \ref{tbl:run}. It was observed that only 22 topics were found in both the runs. This tells us how much important is to have stable distributions. This says wherever there are studies done using ``off-the-shelf'' default LDA parameters need to be re-run again to get rid of any possible errors due to instability in LDA clusters.
-
-%\begin{figure}[!htb]
-%  \centering
-%  \resizebox{0.4\textwidth}{!}{\includegraphics[width=\linewidth]{./fig/survey.png}}
-%  \caption{Topic modeling in SE: recent papers since 2007.}
-%  \label{fig:survey1}
-%\end{figure}
-
-
-
-\noindent
-Using these datasets, we explore these research questions:  
-   
-\begin{itemize}
-
-
-\item \textbf{RQ1}: \textbf{Are the default settings of LDA incorrect?} We will show that using the default settings of LDA for SE data can lead to systematic errors since stability scores start to drop after $n=5$ terms per topic.
-    \item \textbf{RQ2}: \textbf{Does LDADE improve the stability scores?} In our work, we will show dramatic improvement in the stability scores with the parameters found automatically by DE. And we also found that the most important parameters which affect cluster stability are $\alpha$ and $\beta$.
-    \item \textbf{RQ3}: \textbf{Does LDADE improve the classification F2 accuracy scores?} We will show improvement in the F2 scores with the parameters found automatically by DE. We found that for classification, $k$, number of topics matters the most.
-    \item \textbf{RQ4}: \textbf{Do different data sets
-      need different configurations to make LDA stable?} We will show that DE finds different ``best'' parameter settings for different data sets. Hence reusing tunings  suggested  by  other  researchers  from other  data  sets are a bad idea.  Instead,  use  automatic  tuning  methods  to find the best tuning parameters for the current data set.
-      \item \textbf{RQ5}: \textbf{Using different kinds of LDA or with different implementations, are our findings consistent?} Results were collected across different implementations of LDA (Python+Scikit-Learn, Scala+Spark); across different platforms (Linux, Macintosh) and for different kinds of LDAs (the traditional VEM method, or using Gibbs sampling). Our results found out to be quite consistent and all our above research questions results hold valid in these scenarios as well. Instability is not due to any quirk in the implementation of LDA. Instability is consistent and LDADE can stabilize. 
-
-    \item \textbf{RQ6}: \textbf{Is tuning easy?} We show that, measured
-      in the terms of the internal search space of the optimizer,
-      tuning LDA is much simpler than standard optimization methods.
-    \item \textbf{RQ7}: \textbf{What is the runtime cost of tuning?}
-      The advantages of  LDADE come at some cost:
-      tuning with DE makes LDA three to five times slower.
-      While this is definitely more than not using LDA, this may not be an arduous increase
-      given modern cloud computing environments. 
-    \item \textbf{RQ8}: \textbf{Should topic modeling be used ``off-the-shelf'' with their default tunings?}
-      Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use ``off-the-shelf'' LDA for any kind of SE data mining applications.
-\end{itemize}
-
-Before proceeding, we found some other important conclusion as to why stability in LDA matters.
-Firstly, having mitigated for unstable topics in LDA, the reader may be making conclusions just like from Table~\ref{tbl:run}. And this leading to systematic errors and engineers putting in more effort at the wrong junctions. In a companion paper submitted to IST journal ~\cite{mathews17}
+And we need to mitigate for unstable topics in LDA. The reader may be making conclusions just like from Table~\ref{tbl:run}. And this leading to systematic errors and engineers putting in more effort at the wrong junctions. In a companion paper submitted to IST journal ~\cite{mathews17}
 we apply LDADE to 15121 SE papers to find trends in topics between
   1992 to 2016.
 That paper reports, what topics are
  becoming more/less prominent; what topics are most frequently accepted to what conferences; which conferences mostly  overlap with other conferences; and what topics most distinguish different
- conferences. Our stable LDADE selected optimal parameters against as selected by Garousi et al~\cite{garousi2016citations}.
- 
-Secondly, as
-witnessed by the central columns of Table~\ref{tbl:survey2},
-many prior papers have
-commented that the results of a topic modeling analysis can be affected by
-tuning the control parameters of LDA.  Yet a repeated pattern in the literature
-is that, despite these stated concerns,
-researchers rarely take the next step
-to find ways to better control tunings. Many researchers did try to find optimal parameter settings using Genetic Algorithms~\cite{panichella2013effectively,lohar2013improving,sun2015msr4sm}. But none of them have considered the most important aspect of LDA which is data input ``order effects''. To the best of our knowledge, apart from this paper, there are no reports in the SE literature of simple reproducible automatic methods that can resolve the problem of unstable topic models. 
+ conferences. Our stable LDADE selected optimal parameters of $k<24$ against as selected by Garousi et al~\cite{garousi2016citations} of $k=67$.
 
 
-Thirdly, while the specifics of this paper are about taming instability in topic modeling,
-we also think that this work makes a more general point. To automatically
-      adjust the control parameters of a data miner can lead to large improvements in the performance
-      of those predictors and that those tunings are different in different data sets. So, it is important to apply automatic tuning as part of the analysis of any new data set. These results suggests that it is time to revisit
+
+\subsection{We can do better}
+
+Rest of this paper will talk about how we can do better by using LDADE. On the other hand, while the specifics of this paper are about taming instability in topic modeling, we also think that this work makes a more general point. To automatically adjust the control parameters of a data miner can lead to large improvements in the performance and that those tunings are different in different data sets. So, it is important to apply automatic tuning as part of the analysis of any new data set. These results suggests that it is time to revisit
       past results to check:
-      \bi
+      
+      \begin{itemize}
     \item
        In the past, just
       how poorly have we been using software analytics
@@ -428,7 +447,7 @@ we also think that this work makes a more general point. To automatically
     \item
       And how much better can we improve future results using methods taken from search-based
       software engineering?
-      \ei
+      \end{itemize}
 
 
 %% only two authors acknowledged the impact of
@@ -474,7 +493,7 @@ Yet issues relating to
 tuning are poorly addressed in the software analytics literature.  Fu et al~\cite{fu2016tuning} surveyed hundreds of recent SE papers in the area
 of software defect prediction from static code attributes. They found that most SE
   authors do not take steps to explore tunings (rare exception:~\cite{tantithamthavorn2016icse}). For example, Elish et
-  al.~\cite{elish2008predicting} compared support vector machines to other data
+  al~\cite{elish2008predicting} compared support vector machines to other data
   miners for the purposes of defect prediction. That paper tested different
   ``off-the-shelf'' data miners on the same data set, without adjusting the
   parameters of each individual learner.  Yet Fu et al
@@ -509,10 +528,10 @@ as well as to two other large text corpuses in SE.
 
 Figure~\ref{fig:lda} illustrates topic generation from StackOverflow.
 To find these words, LDA explores two probability distributions:
-\bi
+\begin{itemize}
 \item $\alpha=P(k|d)$; probability of topic $k$ in  document $d$.
 \item $\beta=P(w|k)$; probability of word $w$ in topic $k$; 
-\ei
+\end{itemize}
   Initially, $\alpha,\beta$ may be set randomly as follows:
 each word in a document was generated by first randomly picking a topic (from
 the document’s distribution of topics) and then randomly picking a word (from
@@ -521,11 +540,11 @@ count the implications of prior sampling which, in turn,  incrementally updates 
 
 Binkley et al~\cite{binkley2014understanding} performed an extensive study and found that apart from $\alpha,\beta$, the other parameters that define LDA
 are:
-\bi
+\begin{itemize}
 \item $k$ = number of topics;
 \item $b$ = number of burn-in iterations;
 \item $si$ = the sampling interval
-\ei
+\end{itemize}
 
 But finally Binkley et al, with all the many researchers found the only important parameters that matters the most are $k$, $\alpha$, $\beta$. Even our results showed the same. Binkley et al didn't provide any automatic methods to find these settings. They haven't even covered  the possibility of input ordering of data samples.
 
@@ -583,7 +602,7 @@ random divisions of the data (e.g. Random Forests~\cite{Breiman2001}).
 From the description offered above in \S\ref{sect:tm},
 we can see (a)~how topic modeling might be susceptible to order effects and (b)~how such order
 effects might be tamed:
-\bi
+\begin{itemize}
 \item
   In the above description, $k$, $\alpha,\beta$ are initialized at random
 then updated via an incremental re-sampling process. Such incremental updates are prone to order effects.
@@ -591,7 +610,7 @@ then updated via an incremental re-sampling process. Such incremental updates ar
   One technique to reduce the effect of different data orderings is to initialize, $k$, $\alpha,\beta$ to some
   large value. The trick when applying this technique is that different data sets will requiring different
   initializations; i.e. the tuning process will have to be repeated for each new data set.
-\ei
+\end{itemize}
   
 %%   Apart fro order effects, another reason for instability within LDA are the random choices
 %%   made within Another reason for ins  
@@ -645,7 +664,7 @@ In order to understand how other researchers have explored LDA instability,
 in April 2016, we searched scholar.google.com for the conjunction of ``lda'' and ``topics'' or ``stable'' or
 ``unstable'' or ``coherence''. Since 2012, there are  189 such papers, 57
 of which are related to software engineering results. Table \ref{tbl:survey2} gives a broad discussion on these papers. In short, of those papers:
-\bi
+\begin{itemize}
 \item 29
 mention instability in LDA. %(more details can
 %be found at \href{https://goo.gl/Bpc6Vb}{\textit{https://goo.gl/Bpc6Vb}}).
@@ -657,7 +676,7 @@ under-explained limited exploration of tunings based on ``engineering judgment''
 \item
 Only 4 of the authors acknowledge that tuning might have a large impact
 on the results.
-\ei
+\end{itemize}
 Apart from tuning, there are several other workarounds explored in the literature
 in order to handle LDA instability. Overall, there was little systematic exploration of tuning and LDA in the SE literature.
 Instead, researchers relied on other methods that are less suited to automatic reproduction of prior results.
@@ -699,6 +718,8 @@ methods used to reduce that instability.
 
 
 \begin{table}[!t]
+\scriptsize
+
 \begin{center}
 \begin{tabular}{c|r|r}
   \begin{tabular}{cc@{}c@{}}
@@ -769,7 +790,7 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
  al.~\cite{vasilescu2013historical}.  This dataset is available on-line\footnote{https://github.com/ai-se/citemap/blob/master/citemap.csv}.
 
   For this study, all  datasets were preprocessed using the usual text mining filters~\cite{feldman2006j}:
-\bi
+\begin{itemize}
 \item
   Stop words removal using NLTK toolkit\footnote{http://www.nltk.org/book/ch02.html}~\cite{bird2006nltk} : ignore very common short words such as  ``and'' or ``the''.
 \item
@@ -786,17 +807,17 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
   as follows:
   \[
   \mathit{tfidf}(w,d)=   \frac{w}{W} *\log{\frac{D}{d}}\]
-  \ei
+  \end{itemize}
 
   Table~\ref{tbl:dataset} shows the sizes of our data before and after pre-processing.
   These datasets are of different sizes and so are processed using different tools:
-  \bi
+  \begin{itemize}
 \item PITS and Citemap is small enough to process on a single (four core) desktop machine
   using Scikit-Learn~\cite{pedregosa2011scikit} and Python.
   \item StackOverflow is so large (7GB) that its  processing requires extra hardware support.
  This study used a Spark and Mllib on a cluster of 45 nodes to
  reduce the runtime.
- \ei
+ \end{itemize}
   
 
 
@@ -829,23 +850,23 @@ science literature tells us that $7\pm 2$ is a useful upper size for artifacts t
 
 Next, for $1 \le n \le 9$, we will calculate the median size of the overlap,
 computed as follows:
-\bi
+\begin{itemize}
 \item Let one {\em run} of our rig shuffle the order of the training data, then builds topic models using the data;
   \item $m$ runs of our rig executes $m$ copies of one run, each time using a different random number seed,
 \item We say topics are stable,
 when there are $x$ occurrences of  $n$ terms appearing in all the topics seen in the $m$ runs.
-\ei
+\end{itemize}
 
 
 For example, consider the topics shown in Figure~\ref{fig:jaccard}. These are generated via four {\em runs} of our system. In this hypothetical example, we will assume that the runs of
  Figure~\ref{fig:jaccard} were generated by an LDA suffering from topic instability.
 For $n=5$, we note that Topic~0 of run1 scores $\frac{2}{4}=0.5$ since it shares 5 words with topics in only two out of four runs.
 Repeating that calculation for the other run1 topics shows that:
-\bi
+\begin{itemize}
 \item Topic~1 of run1 scores $\frac{3}{4}=0.75$;
 \item Topic~2 or run1 scores $\frac{1}{4}=0.25$;
 \item Topic~3 of run1 scores $\frac{4}{4}=1$.
-  \ei
+  \end{itemize}
   From this information, we can calculate
   $\Re_5$  (the
   {\em median number overlaps of size $n=5$ words}) as:
@@ -868,10 +889,10 @@ Repeating that calculation for the other run1 topics shows that:
  For the following analysis,
  %YYY do our graphs really use this terminology?
 we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{Delta  score}}:
- \bi
+ \begin{itemize}
 \item The two \textbf{\textit{Raw  scores}} are the $\Re_n$ median similarity scores seen {\em before} and {\em after} tuning LDA;
 \item The \textbf{\textit{Delta score}} is the difference between the two
-  \textbf{\textit{Raw scores}} (after tuning - before tuning).  \ei 
+  \textbf{\textit{Raw scores}} (after tuning - before tuning).  \end{itemize} 
   The pseudocode for these calculations
   is shown in Algorithm 1 with the default set of parameters. In the following
   description, superscript numbers denote lines in the pseudocode. The data ordering is
@@ -934,18 +955,18 @@ that there are many advocates for differential evolution.
 %\newpage
 LDADE  adjusts the parameters of
 Table~\ref{tb:tuned}. Most of these parameters were explained above. Apart from them, there are 2 different kinds of LDA implementations as well and they are:
-\bi
+\begin{itemize}
 \item VEM is the deterministic {\em variational EM} method that computes $\alpha,\beta$ via
   expectation maximization~\cite{minka2002expectation}.
 \item Gibbs sampling~\cite{wei2006lda, griffiths2004finding} is a Markov Chain Monte Carlo algorithm, which is an approximate stochastic process for computing and updating $\alpha,\beta$.
   Topic modeling researchers in SE have argued that Gibbs leads to stabler models~\cite{layman16a,layman2016topic} (a claim which we test, below).
-  \ei
+  \end{itemize}
 
 We manually run with these other inference techniques according to different implementations across different platforms. We need to make sure that these instabilities do not hold for just 1 inference technique, or 1 implementation or on 1 platform.
 
 \begin{table}[!htbp]
     \begin{center}
-{\scriptsize
+\scriptsize
 \begin{tabular}{|l|l|l|p{3.5cm}|}
         \hline 
         \textbf{Parameters} & \textbf{Defaults} & \textbf{Tuning Range} & \textbf{Description}\\
@@ -958,7 +979,7 @@ We manually run with these other inference techniques according to different imp
 
         \hline
 \end{tabular}
-}
+
 \end{center}
 \caption{List of parameters tuned by this paper}
 \label{tb:tuned}
@@ -1051,24 +1072,6 @@ Also,
     \end{algorithmic}
 \end{algorithm}
 
-\begin{figure*}[!htbp]
-    \centering
-    \begin{minipage}{.51\textwidth}
-        \begin{center}
-        \includegraphics[width=\linewidth]{./fig/raw_graph.png}
-  {\bf Figure~\ref{fig:delta}a:}  {\em After} tuning: uses parameters learned by DE.
-  \end{center}
-    \end{minipage}%
-    \begin{minipage}{.5\textwidth}
-        \begin{center}
-        \includegraphics[width=\linewidth]{./fig/tuned_delta_vem.png}
-  {\bf Figure~\ref{fig:delta}b:}  {\em Delta = After - Before}.
-  \end{center}
-    \end{minipage}
-    \caption{{\bf RQ1, RQ2} stability results over ten repeated runs. In these figures, {\em larger} numbers
-    are {\em better}.}\label{fig:delta}
-\end{figure*}
-
 \subsection{\textbf{RQ1: Are the default settings of LDA correct?}}
 
 
@@ -1097,6 +1100,23 @@ Note that the  stability collapses the most after $n=5$ words. This means
   \caption{{\em Before} tuning: uses LDA's default parameters}\label{fig:delta11}  
 \end{figure}
 
+\begin{figure*}[!htbp]
+    \centering
+    \begin{minipage}{.51\textwidth}
+        \begin{center}
+        \includegraphics[width=\linewidth]{./fig/raw_graph.png}
+  {\bf Figure~\ref{fig:delta}a:}  {\em After} tuning: uses parameters learned by DE.
+  \end{center}
+    \end{minipage}%
+    \begin{minipage}{.5\textwidth}
+        \begin{center}
+        \includegraphics[width=\linewidth]{./fig/tuned_delta_vem.png}
+  {\bf Figure~\ref{fig:delta}b:}  {\em Delta = After - Before}.
+  \end{center}
+    \end{minipage}
+    \caption{{\bf RQ1, RQ2} stability results over ten repeated runs. In these figures, {\em larger} numbers
+    are {\em better}.}\label{fig:delta}
+\end{figure*}
 
 \subsection{\textbf{RQ2: Does tuning improve the stability scores of LDA?}}
 
@@ -1122,6 +1142,17 @@ We studied some other StackExchange websites data dump for classification result
 
 In Figure \ref{fig:class}, x-axis represents different datasets as generated. Y-axis represents the F2 scores which weigh recall higher than precision~\cite{powers2011evaluation}. One legend called as ``untuned'' basically uses default parameters with $k=10$. Other legends in the graph shows tuning of $k$ for 20, 40, 80, 200 by keeping $\alpha$ and $\beta$ fixed. There is about 20\% minimum improvement than the untuned results.
 
+\begin{lesson}
+For any SE classification task, tuning is again strongly recommended. And $k$ matters the most for a good classification accuracy..
+\end{lesson}
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=\linewidth]{./fig/classification.png}
+    \end{center}
+  \caption{Tuning and Untuned results for Classification SE Task}\label{fig:class}  
+\end{figure}
+
 \begin{figure*}[!htbp]
     \centering
     \begin{minipage}{.33\textwidth}
@@ -1143,18 +1174,6 @@ In Figure \ref{fig:class}, x-axis represents different datasets as generated. Y-
         \label{RQ3:b}
     \end{minipage}
 \end{figure*}
-
-\begin{figure}[!htbp]
-  \begin{center}
-    \includegraphics[width=\linewidth]{./fig/classification.png}
-    \end{center}
-  \caption{Tuning and Untuned results for Classification SE Task}\label{fig:class}  
-\end{figure}
-
-\begin{lesson}
-For any SE classification task, tuning is again strongly recommended. And $k$ matters the most for a good classification accuracy..
-\end{lesson}
-
 
 \subsection{\textbf{RQ4: Do different data sets
       need different configurations to make LDA stable?}}
@@ -1185,11 +1204,11 @@ Clearly:
 Results were collected across different implementations of LDA (Python+Scikit-Learn, Scala+Spark); across different platforms (Linux, Macintosh) and for different kinds of LDAs (the traditional VEM method, or using Gibbs sampling). 
 
 To check this, it was insightful to compare our results with:
-\bi
+\begin{itemize}
 \item The Pits and Citemap results, executed in Scikit-Learn and Python running on
   a desktop machine.
 \item The StackOverflow data set executed in Scala using Mllib running on a Spark cluster.
-  \ei
+  \end{itemize}
 
 \begin{figure}[!htbp]
   \captionsetup{justification=centering}
@@ -1202,10 +1221,10 @@ Figure \ref{python_spark} shows tuning results for StackOverflow, Citemap, and P
    using Scala/Spark cluster (for results on other data sets, see https://goo.gl/UVaql1).
    
   Another useful comparison is to change the internal of the LDA:
-  \bi
+  \begin{itemize}
 \item Sometimes using VEM sampling;
 \item Sometimes using Gibbs sampling;
-  \ei
+  \end{itemize}
 
 
 \begin{figure}[!htbp]
@@ -1215,6 +1234,29 @@ Figure \ref{python_spark} shows tuning results for StackOverflow, Citemap, and P
   \label{gibbs_vem}
 \end{figure}
 
+
+  Figure~\ref{gibbs_vem} compares the  VEM vs Gibbs sampling (for results on other datasets, see https://goo.gl/faYAcg).
+   
+   When compared with the Python/desktop results of
+   Figure~\ref{fig:delta} we see the same patterns:
+   \begin{itemize}
+ \item Tuning never makes stability worse.
+ \item Sometimes, it dramatically improves it (in particular, see the Citemap results
+   of  Figure~\ref{python_spark}).
+   \end{itemize}
+   That said, there are some deltas between VEM and Gibbs where it seems tuning
+   is more important for VEM than Gibbs (evidence: the improvements seen after
+   tuning are largest for the  VEM results of  Figure~\ref{gibbs_vem} and at  https://goo.gl/faYAcg).
+
+\begin{lesson}
+  Instability is not due to any quirk in the implementation of LDA. Instability is consistent and LDADE can stabilize. 
+\end{lesson}
+
+\begin{figure}[!htbp]
+  \includegraphics[width=\linewidth]{./fig/citemap.png}
+  \caption{Terms vs Delta Improvement using Different settings of DE}
+  \label{fig:RQ4}
+\end{figure}
 
 \begin{figure*}[!t]
     \centering
@@ -1232,30 +1274,6 @@ Figure \ref{python_spark} shows tuning results for StackOverflow, Citemap, and P
     \end{minipage}%
     
 \end{figure*}
-
-
-  Figure~\ref{gibbs_vem} compares the  VEM vs Gibbs sampling (for results on other datasets, see https://goo.gl/faYAcg).
-   
-   When compared with the Python/desktop results of
-   Figure~\ref{fig:delta} we see the same patterns:
-   \bi
- \item Tuning never makes stability worse.
- \item Sometimes, it dramatically improves it (in particular, see the Citemap results
-   of  Figure~\ref{python_spark}).
-   \ei
-   That said, there are some deltas between VEM and Gibbs where it seems tuning
-   is more important for VEM than Gibbs (evidence: the improvements seen after
-   tuning are largest for the  VEM results of  Figure~\ref{gibbs_vem} and at  https://goo.gl/faYAcg).
-
-\begin{lesson}
-  Instability is not due to any quirk in the implementation of LDA. Instability is consistent and LDADE can stabilize. 
-\end{lesson}
-
-\begin{figure}[!h]
-  \includegraphics[width=\linewidth]{./fig/citemap.png}
-  \caption{Terms vs Delta Improvement using Different settings of DE}
-  \label{fig:RQ4}
-\end{figure}
 
 \subsection{\textbf{RQ6: Is  tuning  easy?}}
 
@@ -1356,6 +1374,7 @@ the more evaluations the better, there is little improvement after the
 30 evaluations used in this paper.
 
 \begin{table}[!htbp]
+\scriptsize
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline 
@@ -1421,8 +1440,8 @@ In how many domains can search-based SE dramatically improve software analytics?
 \balance
 
 
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{abbrv}
 \medskip
-\bibliography{main}
+\bibliography{sigproc}
 
 \end{document}
