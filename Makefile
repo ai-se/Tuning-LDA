@@ -47,7 +47,7 @@ $(D)_a.pdf : $(D).pdf; $(call grab,1,1)
 $(D)_b.pdf : $(D).pdf; $(call grab,2,16)		
 $(D)_e.pdf : $(D).pdf; $(call grab,18,28)		
 
-done: embedfonts  abe
+done: embedfonts  
 	@printf "\n\n\n==============================================\n"
 	@printf       "see output in $(D).pdf\n"
 	@printf       "==============================================\n\n\n"
