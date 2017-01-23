@@ -24,8 +24,7 @@
 %%
 %% $Id: elsarticle.dtx 19 2009-12-17 07:07:52Z rishi $
 %%
-\usepackage{soul}
-\usepackage{xcolor}
+
  \def\RCSfile{elsarticle}%
  \def\RCSversion{1.20b}%
  \def\RCSdate{2009/09/17}%

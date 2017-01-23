@@ -14,7 +14,8 @@
 \usepackage{graphics}
 \usepackage{colortbl}
 \usepackage{paralist}
-
+\usepackage{soul}
+\usepackage{xcolor}
 \usepackage{caption}
 %\usepackage{times}
 \usepackage{mathptmx} 
@@ -39,7 +40,6 @@
 
 \definecolor{Gray}{gray}{0.95}
 \definecolor{LightGray}{gray}{0.975}
-
 
 %% timm tricks
 \newcommand{\tion}[1]{{\S}\ref{sect:#1}}
@@ -133,13 +133,13 @@ Results were scored via topic stability and text mining classification accuracy.
 
 \noindent
 \textbf{Results:}
-In all treatmets:
+In all treatments:
    (i)~standard LDA exhibits very large topic instability;
   (ii)~LDADE's tunings dramatically reduces cluster instability; 
   (iii)~LDADE also lead to  improved performances for supervised as well as unsupervised learning.
 
 \noindent
-\textbf{Conclusion}
+\textbf{Conclusion:}
   Due to topic instability,
   using standard LDA with its ``off-the-shelf'' settings should now be depreciated.
   Also, in future,
@@ -149,7 +149,7 @@ papers that use
 LDA
 to
 test and (if needed) mitigate LDA topic instability.
-  Finally, LDADE is a candidate technology for effectively and effeciently reducing that instability.  
+  Finally, LDADE is a candidate technology for effectively and efficiently reducing that instability.  
 \end{abstract}
 
 \begin{keyword}
@@ -161,7 +161,9 @@ Topic modeling, Stability, LDA, tuning, differential evolution.
 
 
 \section{Introduction}
-\label{sect:intro} The current great challenge in software analytics
+\label{sect:intro} 
+
+The current great challenge in software analytics
 is understanding unstructured data. As shown in Figure~\ref{fig:
 data}, most of the planet's 1600 Exabytes of data does not appear
 in structured sources (databases, etc)~\cite{nadkarni2014structured}.
@@ -247,7 +249,7 @@ research results;
  Improving LDA topic stability improves classification accuracy; 
  \ee
 Related work is revised in \tion{related} and the methods of this paper are discussed in \tion{evaluation}.
-THe above research questions are answered in
+The above research questions are answered in
 \tion{results}. This is followed by a discussion on the validity of our results and a section
 describing our conclusions.
 Note that the main conclusion
@@ -345,12 +347,14 @@ ESE                                 & Empirical Software Engineering            
 \caption{A sample of the recent literature on using topic modeling in SE. Note that some of these papers are widely-cited. }
 \label{tbl:survey2}
 \end{table*}
+
 \input{table3a}
+
 \subsection{LDA is Widely Used}
 
 We study LDA since this algorithm
 is a widely-used technique in recent research papers appearing in prominent SE venues.
-Table~\ref{tab:venues} and ~\ref{tbl:survey2} shows SE venues that publish SE appers as well
+Table~\ref{tab:venues} and ~\ref{tbl:survey2} shows SE venues that publish SE appears as well
 as a sample of those papers. 
 
 As witnessed by the central columns of Table~\ref{tbl:survey2},
@@ -366,8 +370,8 @@ to find better control tunings.
 Standard practice in papers that use LDA is to present a table showing the top, say, 40
 topics.
 This sections shows one example where, due to LDA instability,
-the contents of such tables can be only be described as  mostly illusionary.
-Later in this paper (in \tion{unstable}) we show that this example is actually representitive of
+the contents of such tables can only be described as  mostly illusionary.
+Later in this paper (in \tion{unstable}) we show that this example is actually representative of
 a general problem: changing the input ordering dramatically changes the topics
 reported by standard LDA.
 
@@ -375,10 +379,10 @@ The example of this section comes from a recent analysis
 of topics and trends in the StackOverflow programmer discussion forum.
 Barua et al.~\cite{barua2014developers}
 analysed topics and trends in StackOverflow. In their paper,
-the listed the top
+they listed the top
 40 topics found at StackOverflow.
 
-Table~\ref{tbl:run} shows our attempt to reproduce their results.
+\fig{olap} shows our attempt to reproduce their results.
 Note that we could not produce a verbatim reproduction since
 they used a 
 data dump from
@@ -397,11 +401,11 @@ from the second run.
 While
 a very few topics appear verbatim in the two runs (see the top three lines of \fig{olap}),
 most do not. In fact,
-22 of the 40 topics in that figure show  instability (have an overlap of 55\% or less).
+25 of the 40 topics in that figure show  instability (have an overlap of 55\% or less).
 
 \fig{olap} shows the results where we only
 examine the top $N=9$ words in the topic in run1 and run2. We selected $N=9$ since,
-later in this paper, we find that an analysis of $N>9$ words per topcs leads to near
+later in this paper, we find that an analysis of $N>9$ words per topics leads to near
  zero percent overlap of the topics generated in different runs (see \tion{unstable}).
 That is, the instabilities of \fig{olap} get even {\em worse} if we use {\em more} of the LDA output.
 
@@ -420,7 +424,7 @@ topics generated by LDA (see \tion{stable}).
 As to the effects on classification accuracy, 
 one way to score a classifier is via the $F_\beta$ score that combines
 {\em precision} $p$ and {\em recall} $r$ as follows:
-\begin{equation}\label{eg:f}
+\begin{equation}\label{eq:f}
 F_{\beta} = (1+\beta^2) \frac{pr}{p\beta^2 + r}
 \end{equation}
 In our lab, we work closely with industrial partners who build
@@ -489,10 +493,10 @@ are:
 \item $b$ = number of burn-in iterations;
 \item $si$ = the sampling interval
 \ei
-Binkely et al.'s study of the LDA settings was a mostly manual process
+Binkley et al.'s study of the LDA settings was a mostly manual process
 guided by their considerable background knowledge and expertise and program
 comprehension.
-In the field of program comprehension. the Binkley article
+In the field of program comprehension, the Binkley article
 is the state of the art in applications of LDA to software engineering.
 
 To that work, this paper adds a few extra conclusions.
@@ -538,7 +542,7 @@ we can see (a)~how topic modeling might be susceptible to order effects and (b)~
 effects might be tamed:
 \bi
 \item
-  In the above description, $k$, $\alpha,\beta$ are initialized at random
+  In the above description, $k$, $\alpha$, $\beta$ are initialized at random
 then updated via an incremental re-sampling process. Such incremental updates are prone to order effects.
 \item
   One technique to reduce the effect of different data orderings is to initialize, $k$, $\alpha,\beta$ to some
@@ -592,7 +596,7 @@ the key to  applying this technique is that different data sets will requiring d
 
 
 \subsection{Tuning: Important and (Mostly) Ignored}
-\label{sect:tuning}
+\label{sect:tune}
 
 The impact of tuning are well understood in the theoretical machine learning literature~\cite{bergstra2012random}.  When we tune a
 data miner, what we are really doing is changing how a learner applies its
@@ -617,7 +621,7 @@ the importance of tuning is often mentioned, but never directly address.
 
 \subsection{LDA and  Instability and Tuning}
 \label{sect:solutions}
-Within the LDA ltierature, some researchers
+Within the LDA literature, some researchers
 have explored LDA instability.
 In April 2016, we searched scholar.google.com for the conjunction of ``lda'' and ``topics'' or ``stable'' or
 ``unstable'' or ``coherence''. Since 2012, there are  189 such papers, 57
@@ -658,8 +662,8 @@ In the literature, researchers~\cite{maskeri2008mining, martin2015app, guzman201
     automated methods.
 
 %UYY need to sort this
-Some resarchers 
-use
+Some researchers 
+used
 genetic
 algorithms to learn better settings for LDA~\cite{panichella2013effectively,lohar2013improving,sun2015msr4sm}.
 Genetic algorithms are 
@@ -738,8 +742,7 @@ we use three open source datasets summarized in Table~\ref{tbl:dataset} and desc
 below.
 
 \textbf{PITS} is a text mining data set generated from NASA software project
-and issue tracking system (PITS) reports~\cite{menzies2008improving,
-  menzies2008automated}. This text discusses
+and issue tracking system (PITS) reports~\cite{menzies2008improving, menzies2008automated}. This text discusses
 bugs and changes found in big reports and  review patches.
 Such issues are used
 to manage quality assurance, to support communication
@@ -757,7 +760,7 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
  This data can be downloaded online\footnote{http://tiny.cc/SOProcess}. 
     
   \textbf{Citemap} contains titles and abstracts of 15121 papers from a
- database of 11 senior software engineering conferences from 1992-2016. This data was
+ database of 11 senior software engineering conferences from 1992-2016. Most of this data was
  obtained in the form of an SQL dump from the work of Vasilescu et
  al.~\cite{vasilescu2013historical}.  This dataset is available on-line\footnote{https://github.com/ai-se/citemap/blob/master/citemap.csv}.
 
@@ -787,7 +790,7 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
 \item PITS and Citemap is small enough to process on a single (four core) desktop machine
   using Scikit-Learn~\cite{pedregosa2011scikit} and Python.
   \item StackOverflow is so large (7GB) that its  processing requires extra hardware support.
- This study used a Spark and Mllib on a cluster of 45 nodes to
+ This study used Spark and Mllib on a cluster of 45 nodes to
  reduce the runtime.
  \ei
   
@@ -906,7 +909,6 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
     \end{algorithmic}
 \end{algorithm}
 
-%YYY: who first proposed LDA... need a referece first time we mention if
 \subsection{Tuning Topic Modeling with LDADE}
 \label{sect:tuning}
 LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
@@ -1072,12 +1074,14 @@ Note that if this is {\em not true}, then there would be no value-added to this 
     \caption{{\bf RQ1, RQ2} stability results over ten repeated runs. In these figures, {\em larger} numbers
     are {\em better}.}\label{fig:delta}
 \end{figure}
+
 \begin{figure}[!b]
   \begin{center}
     \includegraphics[width=\linewidth]{./fig/classification.png}
     \end{center}
   \caption{Tuning and Untuned results for Classification SE Task}\label{fig:class}  
 \end{figure}
+
 \begin{figure*}[!t]
     \centering
     \begin{minipage}{.33\textwidth}
@@ -1099,6 +1103,7 @@ Note that if this is {\em not true}, then there would be no value-added to this 
         \label{RQ3:b}
     \end{minipage}
 \end{figure*}
+
 Figure~\ref{fig:delta11}   plots $n$ vs $\Re_n$ for untuned  LDA.
 Note that the  stability collapses the most after $n=5$ words. This means
   that any report of LDA topics that uses more than five words per topic will
@@ -1164,7 +1169,7 @@ Clearly:
 
 \begin{lesson}
   Do not  reuse tunings suggested by other researchers from other data sets.
-  Instead, always retune for all new data.
+  Instead, always re-tune for all new data.
 \end{lesson}
 %Our results found out to be quite consistent and all our above research questions results hold valid in these scenarios as well. As to more specific threats to validity, one issue might be that our conclusions on ``LDA'' are really quirks of a specific implementation.
 
