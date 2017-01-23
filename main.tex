@@ -1,5 +1,6 @@
-\documentclass[twocolumn,5p]{elsarticle}
+\documentclass[twocolumn,5p,sort&compress]{elsarticle}
 \pdfoutput=1
+\usepackage{url}
 \usepackage{tikz}
 \usepackage{comment}
 \usepackage{framed,graphicx}
@@ -41,13 +42,17 @@
 
 
 %% timm tricks
-\newcommand{\bi}{\begin{itemize}[leftmargin=0.4cm]}
-	\newcommand{\ei}{\end{itemize}}
+\newcommand{\tion}[1]{{\S}\ref{sect:#1}}
+\newcommand{\eq}[1]{Equation~\ref{eq:#1}}
+\newcommand{\fig}[1]{Figure~\ref{fig:#1}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
 \newcommand{\be}{\begin{enumerate}}
-	\newcommand{\ee}{\end{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\usepackage{enumitem}
+\setitemize{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt}
 
-\usepackage[shortlabels]{enumitem}
-\usepackage{url}
+  \biboptions{sort&compress}
 
 \definecolor{steel}{rgb}{.11, .11, .7}
 \definecolor{Gray}{rgb}{0.88,1,1}
@@ -78,7 +83,7 @@ fill=Gray!40,  drop shadow={fill=black, opacity=1}]
 \begin{frontmatter}
 
 \title{What is  Wrong with
-Topic Modeling?\\ (and How to Fix it Using Search-based SE)}
+Topic Modeling? (and How to Fix it Using Search-based SE)}
 
 
 
@@ -128,13 +133,23 @@ Results were scored via topic stability and text mining classification accuracy.
 
 \noindent
 \textbf{Results:}
-LDA suffers from order effects and our LDADE was able to stabilize. 
-  LDADE also lead to  improved performances for supervised as well as unsupervised learning.
+In all treatmets:
+   (i)~standard LDA exhibits very large topic instability;
+  (ii)~LDADE's tunings dramatically reduces cluster instability; 
+  (iii)~LDADE also lead to  improved performances for supervised as well as unsupervised learning.
 
 \noindent
 \textbf{Conclusion}
-In all tests, the pattern was
-the same: LDADE's tunings dramatically reduces cluster instability. And in turn reduces the error in Supervised and Unsupervised machine learning problem. The implications of this study for other software analytics tasks is now an open and pressing issue. In how many domains can search-based SE dramatically improve software analytics? 
+  Due to topic instability,
+  using standard LDA with its ``off-the-shelf'' settings should now be depreciated.
+  Also, in future,
+we should require
+SE
+papers that use
+LDA
+to
+test and (if needed) mitigate LDA topic instability.
+  Finally, LDADE is a candidate technology for effectively and effeciently reducing that instability.  
 \end{abstract}
 
 \begin{keyword}
@@ -146,7 +161,7 @@ Topic modeling, Stability, LDA, tuning, differential evolution.
 
 
 \section{Introduction}
-\label{sect: intro} The current great challenge in software analytics
+\label{sect:intro} The current great challenge in software analytics
 is understanding unstructured data. As shown in Figure~\ref{fig:
 data}, most of the planet's 1600 Exabytes of data does not appear
 in structured sources (databases, etc)~\cite{nadkarni2014structured}.
@@ -159,12 +174,6 @@ is  difficult unless we can search, characterize, and classify the
 textual data in a meaningful way. One of the common techniques for
 finding related topics within unstructured text (an area called
 topic modeling) is Latent Dirichlet Allocation (LDA)~\cite{blei2003latent}.
-\begin{figure}[!t]
-  \captionsetup{justification=centering}
-  \includegraphics[width=\linewidth]{./fig/data.png}
-  \caption{Data Growth 2005-2015. From~\cite{nadkarni2014structured}.}
-  \label{fig: data}
-\end{figure}
 
 This paper explores systematic errors in LDA analysis.
 LDA is a non-deterministic algorithm since its internal weights are updated via a stochastic sampling process (described
@@ -183,18 +192,20 @@ the algorithm is re-run)
 \ei
 To fix this problem,
 we proposes LDADE: a  combination of LDA and a search-based optimizer (differential evolution, or DE)~\cite{storn1997differential})
-that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper tests LDADE on:
-\begin{itemize}
+that automatically tunes LDA's \mbox{$<k,\alpha,\beta>$} parameters. This paper tests LDADE 
+by applying text mining to
+three data sets:
+\be
 \item Data from a programmer information exchange site (Stackoverflow);
   \item Title and abstract text of
     15121 SE papers;
   \item Software defect reports from NASA.
-\end{itemize}
+\ee
     
 \noindent
 Using these datasets, we explore these research questions:  
    
-\begin{itemize}
+\bi
 
 \item \textbf{RQ1}: \textbf{Are the default settings of LDA incorrect?} We will show that using the default settings of LDA for SE data can lead to systematic errors since stability scores start to drop after $n=5$ terms per topic.
     \item \textbf{RQ2}: \textbf{Does LDADE improve the stability scores?} LDADE dramatically improves stability scores using
@@ -217,23 +228,66 @@ Using these datasets, we explore these research questions:
       given modern cloud computing environments. 
     \item \textbf{RQ8}: \textbf{Should topic modeling be used ``off-the-shelf'' with their default tunings?}
       Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use ``off-the-shelf'' LDA for any kind of SE data mining applications.
-\end{itemize}
-
-The rest of this paper is structured as follows XXX.
-
+      \ei
+\begin{figure}[!t]
+  \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{./fig/data.png}
+  \caption{Data Growth 2005-2015. From~\cite{nadkarni2014structured}.}
+  \label{fig: data}
+\end{figure}
+The rest of this paper is structured as follows.
+\tion{motivate} argues that stabilizing the topics generated by LDA is important for several reasons:
+\be
+\item
+LDA is widely used so it is important to study how to use it better;
+\item
+A  lack of stability  in LDA topics raises doubts about some prior
+research results;
+\item
+ Improving LDA topic stability improves classification accuracy; 
+ \ee
+Related work is revised in \tion{related} and the methods of this paper are discussed in \tion{evaluation}.
+THe above research questions are answered in
+\tion{results}. This is followed by a discussion on the validity of our results and a section
+describing our conclusions.
+Note that the main conclusion
+of this paper is that, henceforth,
+we should require
+SE
+papers that use
+LDA
+to
+test and (if needed) mitigate LDA topic instability.
 \section{Motivation}
-\label{sect: motivate}
+\label{sect:motivate}
 
-\subsection{LDA Widely Used}
+\begin{table}[!b]
+\renewcommand\arraystretch{1.0}
+\begin{center}
+\scriptsize
+\begin{tabular}{|c|l|c|}
+\hline
+\begin{tabular}[c]{@{}c@{}}\textbf{Venue}\end{tabular} & \begin{tabular}[c]{@{}c@{}}\textbf{Full Name}\end{tabular}     & \multicolumn{1}{l|}{\textbf{Count}} \\ \hline
+ICSE & International Conference on Software Engineering  & 4  \\ \hline
+\begin{tabular}[c]{@{}c@{}}CSMR-\\WCRE\\ / SANER \end{tabular}   & \begin{tabular}[c]{@{}l@{}}International Conference on Software Maintenance,\\ Reengineering, and Reverse Engineering / International \\Conference on Software Analysis,Evolution, and \\Reengineering\end{tabular} & 3  \\ \hline
+\begin{tabular}[c]{@{}c@{}}ICSM\\ / ICSME\end{tabular}   & \begin{tabular}[c]{@{}l@{}}International Conference on Software Maintenance / \\International Conference on Software Maintenance and \\Evolution \end{tabular}  & 3\\ \hline
+ICPC & International Conference on Program Comprehension  & 4  \\ \hline
+ASE      & \begin{tabular}[c]{@{}l@{}}International Conference on Automated Software\\ Engineering  \end{tabular} & 3  \\ \hline
+ISSRE      & \begin{tabular}[c]{@{}l@{}}International Symposium on Software Reliability\\ Engineering \end{tabular} & 2  \\ \hline
+MSR      & \begin{tabular}[c]{@{}l@{}}International Working Conference on Mining \\Software Repositories \end{tabular} & 8  \\ \hline
+OOPSLA  & \begin{tabular}[c]{@{}l@{}}International Conference on Object-Oriented \\Programming, Systems, Languages, and Applications \end{tabular}  & 1 \\ \hline
+FSE/ESEC  &  \begin{tabular}[c]{@{}l@{}}International Symposium on the Foundations of Software \\Engineering / European Software Engineering Conference \end{tabular}  & 1                                    \\ \hline
+TSE                                 & IEEE Transaction on Software Engineering   & 1                                     \\ \hline
+IST                                 & Information and Software Technology                                 & 3                                       \\ \hline
+SCP                                 & Science of Computer Programming                               & 2                                       \\ \hline
+ESE                                 & Empirical Software Engineering                         & 4                                       \\ \hline
+\end{tabular}
+\end{center}
+\caption{SE Venues that publish  on Topic Modeling.}
+\label{tab:venues}
+\end{table}
 
-Topic modeling is widely used in Software Engineering and many papers in recent years have reported  topic modeling results at numerous SE venues (see  Table~\ref{tab:venues} and ~\ref{tbl:survey2}). These two tables show how important LDA has been in various SE tasks and most of them are recently published.
-
-As witnessed by the central columns of Table~\ref{tbl:survey2},
-many prior papers have commented that the results of a topic modeling analysis can be affected by
-tuning the control parameters of LDA.  Yet a repeated pattern in the literature
-is that, despite these stated concerns, researchers rarely take the next step
-to find ways to better control tunings. Many researchers did try to find optimal parameter settings using Genetic Algorithms~\cite{panichella2013effectively,lohar2013improving,sun2015msr4sm}. But none of them have considered the most important aspect of LDA which is data input ``order effects''. To the best of our knowledge, apart from this paper, there are no reports in the SE literature of simple reproducible automatic methods that can resolve the problem of unstable topic models. 
-
+   
 \renewcommand\arraystretch{1.2}
 \begin{table*}[!t]
 \scriptsize
@@ -291,128 +345,99 @@ to find ways to better control tunings. Many researchers did try to find optimal
 \caption{A sample of the recent literature on using topic modeling in SE. Note that some of these papers are widely-cited. }
 \label{tbl:survey2}
 \end{table*}
+\input{table3a}
+\subsection{LDA is Widely Used}
 
-\begin{table}[!htbp]
-\renewcommand\arraystretch{1.0}
-\begin{center}
-\scriptsize
-\begin{tabular}{|c|l|c|}
-\hline
-\begin{tabular}[c]{@{}c@{}}\textbf{Venue}\end{tabular} & \begin{tabular}[c]{@{}c@{}}\textbf{Full Name}\end{tabular}     & \multicolumn{1}{l|}{\textbf{Count}} \\ \hline
-ICSE & International Conference on Software Engineering  & 4  \\ \hline
-\begin{tabular}[c]{@{}c@{}}CSMR-\\WCRE\\ / SANER \end{tabular}   & \begin{tabular}[c]{@{}l@{}}International Conference on Software Maintenance,\\ Reengineering, and Reverse Engineering / International \\Conference on Software Analysis,Evolution, and \\Reengineering\end{tabular} & 3  \\ \hline
-\begin{tabular}[c]{@{}c@{}}ICSM\\ / ICSME\end{tabular}   & \begin{tabular}[c]{@{}l@{}}International Conference on Software Maintenance / \\International Conference on Software Maintenance and \\Evolution \end{tabular}  & 3\\ \hline
-ICPC & International Conference on Program Comprehension  & 4  \\ \hline
-ASE      & \begin{tabular}[c]{@{}l@{}}International Conference on Automated Software\\ Engineering  \end{tabular} & 3  \\ \hline
-ISSRE      & \begin{tabular}[c]{@{}l@{}}International Symposium on Software Reliability\\ Engineering \end{tabular} & 2  \\ \hline
-MSR      & \begin{tabular}[c]{@{}l@{}}International Working Conference on Mining \\Software Repositories \end{tabular} & 8  \\ \hline
-OOPSLA  & \begin{tabular}[c]{@{}l@{}}International Conference on Object-Oriented \\Programming, Systems, Languages, and Applications \end{tabular}  & 1 \\ \hline
-FSE/ESEC  &  \begin{tabular}[c]{@{}l@{}}International Symposium on the Foundations of Software \\Engineering / European Software Engineering Conference \end{tabular}  & 1                                    \\ \hline
-TSE                                 & IEEE Transaction on Software Engineering   & 1                                     \\ \hline
-IST                                 & Information and Software Technology                                 & 3                                       \\ \hline
-SCP                                 & Science of Computer Programming                               & 2                                       \\ \hline
-ESE                                 & Empirical Software Engineering                         & 4                                       \\ \hline
-\end{tabular}
-\end{center}
-\caption{SE Venues that publish  on Topic Modeling.}
-\label{tab:venues}
-\end{table}
+We study LDA since this algorithm
+is a widely-used technique in recent research papers appearing in prominent SE venues.
+Table~\ref{tab:venues} and ~\ref{tbl:survey2} shows SE venues that publish SE appers as well
+as a sample of those papers. 
 
-\subsection{Previously Used Methods Have Unreported Instabilities}
-
-A case study related to instability is performed which was similar to Barua et al \cite{barua2014developers}. Barua et al analysed topics and trends in StackOverflow. And they presented 40 topics with 9 words in each topic. We couldn't replicate the exact topics since they performed LDA on the data dump of StackOverflow available before 2012. We ran LDA twice with different input orderings keeping all other parameter settings intact and recorded 40 topics. The idea was since they are making conclusions based on their 40 topics with 1 input ordering. Their results could be greatly affected. Our recorded topics can be seen in Table \ref{tbl:run}. It was observed that only 22 topics were found in both the runs. We say 2 topics are same when there is minimum of 5 words overlap between them. Matched topics are marked with bold in the table. This tells us how much important is to have stable distributions. This says wherever there are studies done using ``off-the-shelf'' default LDA parameters need to be re-run again to get rid of any possible errors due to instability in LDA clusters.
-
-\input{table3}
-
-And we need to mitigate for unstable topics in LDA. The reader may be making conclusions just like from Table~\ref{tbl:run}. And this leading to systematic errors and engineers putting in more effort at the wrong junctions. In a companion paper submitted to IST journal ~\cite{mathews17}
-we apply LDADE to 15121 SE papers to find trends in topics between
-  1992 to 2016.
-That paper reports, what topics are
- becoming more/less prominent; what topics are most frequently accepted to what conferences; which conferences mostly  overlap with other conferences; and what topics most distinguish different
- conferences. Our stable LDADE selected optimal parameters of $k<24$ against as selected by Garousi et al~\cite{garousi2016citations} of $k=67$.
+As witnessed by the central columns of Table~\ref{tbl:survey2},
+many prior papers have commented that the results of a topic modeling
+analysis can be affected by tuning the control parameters of LDA.
+Yet as reported in \tion{related},
+a repeated pattern in the literature is that, despite these
+stated concerns, researchers rarely take the next step to find ways
+to find better control tunings. 
 
 
+\subsection{Standard LDA Can Make Misleading Conclusions}
+Standard practice in papers that use LDA is to present a table showing the top, say, 40
+topics.
+This sections shows one example where, due to LDA instability,
+the contents of such tables can be only be described as  mostly illusionary.
+Later in this paper (in \tion{unstable}) we show that this example is actually representitive of
+a general problem: changing the input ordering dramatically changes the topics
+reported by standard LDA.
 
-\subsection{We can do better}
+The example of this section comes from a recent analysis
+of topics and trends in the StackOverflow programmer discussion forum.
+Barua et al.~\cite{barua2014developers}
+analysed topics and trends in StackOverflow. In their paper,
+the listed the top
+40 topics found at StackOverflow.
 
-Rest of this paper will talk about how we can do better by using LDADE. On the other hand, while the specifics of this paper are about taming instability in topic modeling, we also think that this work makes a more general point. To automatically adjust the control parameters of a data miner can lead to large improvements in the performance and that those tunings are different in different data sets. So, it is important to apply automatic tuning as part of the analysis of any new data set. These results suggests that it is time to revisit
-      past results to check:
-      
-      \begin{itemize}
-    \item
-       In the past, just
-      how poorly have we been using software analytics
-      in the past?
-    \item
-      And how much better can we improve future results using methods taken from search-based
-      software engineering?
-      \end{itemize}
+Table~\ref{tbl:run} shows our attempt to reproduce their results.
+Note that we could not produce a verbatim reproduction since
+they used a 
+data dump from
+StackOverflow using data available before 2012 while all we could access was current data.
+In that figure:
+\bi
+\item
+  We ran LDA twice with different
+randomly generated input orderings (keeping all other parameter settings intact);
+\item
+  The topics from the first run where scored and sorted
+according to the overlap of their words
+from the second run.
+\ei
+\fig{olap} shows the results.
+While
+a very few topics appear verbatim in the two runs (see the top three lines of \fig{olap}),
+most do not. In fact,
+22 of the 40 topics in that figure show  instability (have an overlap of 55\% or less).
 
+\fig{olap} shows the results where we only
+examine the top $N=9$ words in the topic in run1 and run2. We selected $N=9$ since,
+later in this paper, we find that an analysis of $N>9$ words per topcs leads to near
+ zero percent overlap of the topics generated in different runs (see \tion{unstable}).
+That is, the instabilities of \fig{olap} get even {\em worse} if we use {\em more} of the LDA output.
 
-%% only two authors acknowledged the impact of
-%% tunings. In fact  35\% papers in our 57 papers did not adjust the ``off-the-shelf''
-%% tunings  of the LDA. Of  the others 65\%, 83\% papers, explored the
-%% configurations space with brute force\footnote{u nean a grid search? or a ``engineering judgement''
-%%   to set a few param?}. Their was not an effective and faster way
-%% of choosing the right set of parameters. Those papers, which accepted the
-%% problem of instability in LDA, came to some conclusions which can be found in
-%% Table \ref{tb:survey2}. Conclusions of remaining papers are categorized in the
-%% following subsections.
+\subsection{LDA Stabilization Means Better Inference}
 
+Inference with LDA can be assessed:
+\bi
+\item
+Via topic similarities (as done in \fig{olap});
+\item
+Via the classification performance if the LDA topics are used as the features used by a classifier.
+\ei
+As shown later in this paper, we can use LDADE to increase the similarities of the LDA
+topics generated by LDA (see \tion{stable}).
 
-%% More generally
-%% Wei et al~\cite{fu2016tuning} have shown that one of the simplest \textit{\textbf{multiobjective optimizers (differential evolution}}~\cite{storn1997differential}) works very well for tuning in certain kinds of software analytics. There has been success stories where DE has helped in tuning the parameters~\cite{bazi2014differential, chiha2012tuning}. Prior to this work, our intuition was that tuning would change the behavior of LDA, to some degree. Also, we suspected that tuning would take so long time and be so CPU intensive that the benefits gained would not be worth the effort. We have now seen large instability in 2 data miners, namely, defect predictors and LDA. Results have shown that we can contain the instability to a large extent using DE. So, this makes us wonder Search-Based Software Engineering (SBSE) techniques can help us.
+As to the effects on classification accuracy, 
+one way to score a classifier is via the $F_\beta$ score that combines
+{\em precision} $p$ and {\em recall} $r$ as follows:
+\begin{equation}\label{eg:f}
+F_{\beta} = (1+\beta^2) \frac{pr}{p\beta^2 + r}
+\end{equation}
+In our lab, we work closely with industrial partners who build
+text mining
+ classifiers to report if legal documents are
+``relevant'' or ``irrelevant'' to a current case.
+These industrial partners score their classifiers using   $F_2$; i.e.
+\mbox{$5pr/(4p + r)$}. This $F_2$ score is useful when reporting classification results
+since it favors classifiers that do not waste the time of industrial clients with false positives.
 
-%% Based on answers to these questions, we can surely mitigate the instability of non-deterministic LDA. LDA should not be used with “off-the-shelf” default tunings. Any future paper on LDA should include a tuning study. Tuning needs to be repeated whenever data or goals are changed.
-
-%% Topic Modeling have been used in various spheres of SE. Sun et al reported a survey of LDA's usage to support various SE tasks between 2003 and 2015~\cite{sun2016exploring}. The number of papers published across top major conferences and journals are listed in Table \ref{tab:venues}. The survey in figure \ref{fig: survey} show that there is an increasing concern in this area.
-
-
-%% \begin{compactitem}
-%%     \item Topic modeling is applied in various SE tasks, including source code comprehension, feature location, software defects prediction, developer recommendation, traceability link recovery, re-factoring, software history comprehension, software testing and social software engineering.
-%%     \item There are works in Requirements Engineering where it was necessary to analyze the text and come up with the important topics~\cite{asuncion2010software, thomas2014studying, massey2013automated}.
-%%     \item People have used topic modeling in prioritizing test cases, \& identifying the importance of test cases~\cite{hemmati2015prioritizing, zhang2015inferring, yang2015predicting}.
-%%     \item Increasingly, it has become very important to have automated tools to do a Systematic Literature Review (SLR) ~\cite{tsafnat2014systematic}. We found these papers~\cite{restificar2012inferring,alreview,marshall2013tools} who have used clustering algorithms (topic modeling) to do SLR.
-%% \end{compactitem}
-
-%% Since topic modeling has been widely used in various spheres of SE, and it is really important to generate stable topics. Prior Papers who reports LDA may have been severely compromised. This gives all of us the motivation of generating stable topics in software engineering which will make product development faster, cheaper and accurate.
-
+\tion{rq3} of this paper compares the $F_2$ scores seen in text mining classification using standard and stable LDA topics.
+There, we report 
+significant and large
+$F_2$ improvements. That is, LDADE not only improves topic stability, but also the efficacy
+of the inference that subsequently uses those topics.
 \section{Related Work}
-
-\subsection{Tuning: Important and Ignored}
-\label{sect: tuning}
-
-The impact of tuning are well understood in the theoretical machine learning literature~\cite{bergstra2012random}.  When we tune a
-data miner, what we are really doing is changing how a learner applies its
-heuristics. This means tuned data miners use different heuristics, which means
-they ignore different possible models, which means they return different models;
-i.e. \textit{how} we learn changes \textit{what} we learn.
-
-Yet issues relating to
-tuning are poorly addressed in the software analytics literature.  Fu et al~\cite{fu2016tuning} surveyed hundreds of recent SE papers in the area
-of software defect prediction from static code attributes. They found that most SE
-  authors do not take steps to explore tunings (rare exception:~\cite{tantithamthavorn2016icse}). For example, Elish et
-  al~\cite{elish2008predicting} compared support vector machines to other data
-  miners for the purposes of defect prediction. That paper tested different
-  ``off-the-shelf'' data miners on the same data set, without adjusting the
-  parameters of each individual learner.  Yet Fu et al
-  showed that (a)~finding useful tunings for software defect prediction is remarkably
-  easy using DE;  (b)~different data sets require
-  different tunings; hence, for software defect prediction,  (c)~tuning is essential for  all
-  new data sets.
-
-
-Accordingly,  we are now engaged in an on-going research project that explores tuning for software analytics.
-\begin{itemize}
-
-
-\item Find some data mining widely used in SE;
-\item Check the conclusions of that data miner under different parameter tunings;
-\item See if those different tunings significantly change the results of that learner;
-\item Look for ways to better manage the exploration of those tunings. \end{itemize}
-This
-  paper explores these four steps in the context of topic modeling. 
-
+\label{sect:related}
 
 \subsection{Topic Modeling}\label{sect:tm}
 
@@ -424,29 +449,6 @@ particular topic mixture of each document).
 What makes topic modeling interesting is that these algorithms scale to very
 large text corpuses.  For example, in this paper, we apply LDA to whole of StackOverflow,
 as well as to two other large text corpuses in SE.
-
-Figure~\ref{fig:lda} illustrates topic generation from StackOverflow.
-To find these words, LDA explores two probability distributions:
-\begin{itemize}
-\item $\alpha=P(k|d)$; probability of topic $k$ in  document $d$.
-\item $\beta=P(w|k)$; probability of word $w$ in topic $k$; 
-\end{itemize}
-  Initially, $\alpha,\beta$ may be set randomly as follows:
-each word in a document was generated by first randomly picking a topic (from
-the document’s distribution of topics) and then randomly picking a word (from
-the topic’s distribution of words). Successive iterations of the algorithm 
-count the implications of prior sampling which, in turn,  incrementally updates $\alpha,\beta$.
-
-Binkley et al~\cite{binkley2014understanding} performed an extensive study and found that apart from $\alpha,\beta$, the other parameters that define LDA
-are:
-\begin{itemize}
-\item $k$ = number of topics;
-\item $b$ = number of burn-in iterations;
-\item $si$ = the sampling interval
-\end{itemize}
-
-But finally Binkley et al, with all the many researchers found the only important parameters that matters the most are $k$, $\alpha$, $\beta$. Even our results showed the same. Binkley et al didn't provide any automatic methods to find these settings. They haven't even covered  the possibility of input ordering of data samples.
-
 \begin{figure}[!t]
 \scriptsize
 \begin{center}
@@ -465,6 +467,39 @@ of generating topics from StackOverflow. For each topic, we show just the five m
   weighted words.}\label{fig:lda}
 
 \end{figure}
+
+
+Figure~\ref{fig:lda} illustrates topic generation from StackOverflow.
+To find these words, LDA explores two probability distributions:
+\bi
+\item $\alpha=P(k|d)$; probability of topic $k$ in  document $d$.
+\item $\beta=P(w|k)$; probability of word $w$ in topic $k$; 
+\ei
+  Initially, $\alpha,\beta$ may be set randomly as follows:
+each word in a document was generated by first randomly picking a topic (from
+the document’s distribution of topics) and then randomly picking a word (from
+the topic’s distribution of words). Successive iterations of the algorithm 
+count the implications of prior sampling which, in turn,  incrementally updates $\alpha,\beta$.
+
+Binkley et al.~\cite{binkley2014understanding} performed an extensive study and found that 
+apart from $\alpha,\beta$, the other parameters that define LDA
+are:
+\bi
+\item $k$ = number of topics;
+\item $b$ = number of burn-in iterations;
+\item $si$ = the sampling interval
+\ei
+Binkely et al.'s study of the LDA settings was a mostly manual process
+guided by their considerable background knowledge and expertise and program
+comprehension.
+In the field of program comprehension. the Binkley article
+is the state of the art in applications of LDA to software engineering.
+
+To that work, this paper adds a few extra conclusions.
+Firstly, we explore LDA in fields other than program comprehension.
+Secondly, we ask the question ``what if the analysts lacks extensive background knowledge
+of the domain?''. In that circumstance, some automatic method is needed to support
+an informed selection of the LDA parameters.
 
 %\begin{center}
 %\begin{tabular}{c|c|c|c}
@@ -501,15 +536,16 @@ random divisions of the data (e.g. Random Forests~\cite{Breiman2001}).
 From the description offered above in \S\ref{sect:tm},
 we can see (a)~how topic modeling might be susceptible to order effects and (b)~how such order
 effects might be tamed:
-\begin{itemize}
+\bi
 \item
   In the above description, $k$, $\alpha,\beta$ are initialized at random
 then updated via an incremental re-sampling process. Such incremental updates are prone to order effects.
 \item
   One technique to reduce the effect of different data orderings is to initialize, $k$, $\alpha,\beta$ to some
-  large value. The trick when applying this technique is that different data sets will requiring different
+  useful value. As shown in \tion{diff},
+the key to  applying this technique is that different data sets will requiring different
   initializations; i.e. the tuning process will have to be repeated for each new data set.
-\end{itemize}
+\ei
   
 %%   Apart fro order effects, another reason for instability within LDA are the random choices
 %%   made within Another reason for ins  
@@ -555,27 +591,50 @@ then updated via an incremental re-sampling process. Such incremental updates ar
 %We observed that this is just not happening with only particular programming language or particular library. This instability is happening irrespective of the tools in which LDA has been implemented. Some of the papers mentioned using GibbsLDA++ written in C++ and they observed the same instability~\cite{lukins2008source, tian2009using, guzman2014users}. Some papers mentioned about using Python implementation of LDA and observed the same instability~\cite{guzman2014users}. LDA implemented in JAVA language produced the same incoherent topics~\cite{martin2015app, hindle2011automated}. And, we observed this problem is in the Scikit-Learn version of LDA, implemented in Python, as well as Spark Mllib library.
 
 
+\subsection{Tuning: Important and (Mostly) Ignored}
+\label{sect:tuning}
 
-\subsection{WorkArounds for LDA Instability Problem}
-\label{sect: solutions}
-%YYY
-In order to understand how other researchers have explored LDA instability,
-in April 2016, we searched scholar.google.com for the conjunction of ``lda'' and ``topics'' or ``stable'' or
+The impact of tuning are well understood in the theoretical machine learning literature~\cite{bergstra2012random}.  When we tune a
+data miner, what we are really doing is changing how a learner applies its
+heuristics. This means tuned data miners use different heuristics, which means
+they ignore different possible models, which means they return different models;
+i.e. \textit{how} we learn changes \textit{what} we learn.
+
+Yet issues relating to
+tuning are poorly addressed in the software analytics literature.  Fu et al~\cite{fu2016tuning} surveyed hundreds of recent SE papers in the area
+of software defect prediction from static code attributes. They found that most SE
+  authors do not take steps to explore tunings (rare exception:~\cite{tantithamthavorn2016icse}). For example, Elish et
+  al~\cite{elish2008predicting} compared support vector machines to other data
+  miners for the purposes of defect prediction. That paper tested different
+  ``off-the-shelf'' data miners on the same data set, without adjusting the
+  parameters of each individual learner. Similar comparisons of data miners in SE,
+with no or minimal pre-tuning study, can be found in the work on Lessmann et al.~\cite{4527256}
+and, most recently, in Yang et al.~\cite{Yang:2016}.  
+
+In summary, all our literature reviews of the general  (non-LDA) software analytics literature
+show that
+the importance of tuning is often mentioned, but never directly address.
+
+\subsection{LDA and  Instability and Tuning}
+\label{sect:solutions}
+Within the LDA ltierature, some researchers
+have explored LDA instability.
+In April 2016, we searched scholar.google.com for the conjunction of ``lda'' and ``topics'' or ``stable'' or
 ``unstable'' or ``coherence''. Since 2012, there are  189 such papers, 57
-of which are related to software engineering results. Table \ref{tbl:survey2} gives a broad discussion on these papers. In short, of those papers:
-\begin{itemize}
-\item 29
+of which are related to software engineering results. Table \ref{tbl:survey2} gaves a broad discussion on these papers. In short, of those papers:
+\bi
+\item 29/57
 mention instability in LDA. %(more details can
 %be found at \href{https://goo.gl/Bpc6Vb}{\textit{https://goo.gl/Bpc6Vb}}).
 \item Of those 29, despite mentioning stability problems,
-  10 papers used LDA's ``off-the-shelf'' parameters;
-  \item The  other papers used some combination of manual adjustment or some
+  10 papers still used LDA's ``off-the-shelf'' parameters;
+  \item The  other 29-10=19 papers used some combination of manual adjustment or some
 under-explained limited exploration of tunings based on ``engineering judgment''
 (i.e. some settings guided by the insights of the researchers).
 \item
 Only 4 of the authors acknowledge that tuning might have a large impact
 on the results.
-\end{itemize}
+\ei
 Apart from tuning, there are several other workarounds explored in the literature
 in order to handle LDA instability. Overall, there was little systematic exploration of tuning and LDA in the SE literature.
 Instead, researchers relied on other methods that are less suited to automatic reproduction of prior results.
@@ -599,10 +658,24 @@ In the literature, researchers~\cite{maskeri2008mining, martin2015app, guzman201
     automated methods.
 
 %UYY need to sort this
-Some researchers~\cite{panichella2013effectively, lohar2013improving, sun2015msr4sm}
-used Genetic Algorithm (GA) to tune the parameters-- but for different
-purposes than LDADE. Panichella et al~\cite{panichella2013effectively} used GAs to explore parameters. This method is quite time consuming than using a simple multiobjective optimizer like differential evolution~\cite{storn1997differential}. They have not even explored the problem of input ordering of data samples. But the gain from their studies was that finding good optimal settings of LDA could give us larger improvement in their results.
-
+Some resarchers 
+use
+genetic
+algorithms to learn better settings for LDA~\cite{panichella2013effectively,lohar2013improving,sun2015msr4sm}.
+Genetic algorithms are 
+themselves a stochastic search process. That is, the changes to 
+input orderings explored in this paper would introduce further conclusion instability
+from the genetic algorithms.
+In principle, that instability could be removed via extra  runs of genetic algorithms 
+over multiple sub-samples of that, where the GA goals are augmented to include
+``similar topics should be found in different runs''.
+That said:
+\bi
+\item None of the prior work using GAs to improve LDA have applied those sub-sampling stability test;
+\item If done naively, adding further goals and data sub-sampling to a GA runs the risk
+  of dramatically increasing the runtimes.
+One reason to prefer LDADE is that it terminates very quickly.
+\ei
 Finally, other researchers explore
 some limited manual parameter tuning for LDA
 (e.g. experiment with one parameter: cluster size)~\cite{galvis2013analysis, tian2009using}
@@ -689,7 +762,7 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
  al.~\cite{vasilescu2013historical}.  This dataset is available on-line\footnote{https://github.com/ai-se/citemap/blob/master/citemap.csv}.
 
   For this study, all  datasets were preprocessed using the usual text mining filters~\cite{feldman2006j}:
-\begin{itemize}
+\bi
 \item
   Stop words removal using NLTK toolkit\footnote{http://www.nltk.org/book/ch02.html}~\cite{bird2006nltk} : ignore very common short words such as  ``and'' or ``the''.
 \item
@@ -706,17 +779,17 @@ Topic modeling on StackOverflow is useful for finding patterns in programmer kno
   as follows:
   \[
   \mathit{tfidf}(w,d)=   \frac{w}{W} *\log{\frac{D}{d}}\]
-  \end{itemize}
+  \ei
 
   Table~\ref{tbl:dataset} shows the sizes of our data before and after pre-processing.
   These datasets are of different sizes and so are processed using different tools:
-  \begin{itemize}
+  \bi
 \item PITS and Citemap is small enough to process on a single (four core) desktop machine
   using Scikit-Learn~\cite{pedregosa2011scikit} and Python.
   \item StackOverflow is so large (7GB) that its  processing requires extra hardware support.
  This study used a Spark and Mllib on a cluster of 45 nodes to
  reduce the runtime.
- \end{itemize}
+ \ei
   
 
 
@@ -749,23 +822,23 @@ science literature tells us that $7\pm 2$ is a useful upper size for artifacts t
 
 Next, for $1 \le n \le 9$, we will calculate the median size of the overlap,
 computed as follows:
-\begin{itemize}
+\bi
 \item Let one {\em run} of our rig shuffle the order of the training data, then builds topic models using the data;
   \item $m$ runs of our rig executes $m$ copies of one run, each time using a different random number seed,
 \item We say topics are stable,
 when there are $x$ occurrences of  $n$ terms appearing in all the topics seen in the $m$ runs.
-\end{itemize}
+\ei
 
 
 For example, consider the topics shown in Figure~\ref{fig:jaccard}. These are generated via four {\em runs} of our system. In this hypothetical example, we will assume that the runs of
  Figure~\ref{fig:jaccard} were generated by an LDA suffering from topic instability.
 For $n=5$, we note that Topic~0 of run1 scores $\frac{2}{4}=0.5$ since it shares 5 words with topics in only two out of four runs.
 Repeating that calculation for the other run1 topics shows that:
-\begin{itemize}
+\bi
 \item Topic~1 of run1 scores $\frac{3}{4}=0.75$;
 \item Topic~2 or run1 scores $\frac{1}{4}=0.25$;
 \item Topic~3 of run1 scores $\frac{4}{4}=1$.
-  \end{itemize}
+  \ei
   From this information, we can calculate
   $\Re_5$  (the
   {\em median number overlaps of size $n=5$ words}) as:
@@ -788,10 +861,10 @@ Repeating that calculation for the other run1 topics shows that:
  For the following analysis,
  %YYY do our graphs really use this terminology?
 we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{Delta  score}}:
- \begin{itemize}
+ \bi
 \item The two \textbf{\textit{Raw  scores}} are the $\Re_n$ median similarity scores seen {\em before} and {\em after} tuning LDA;
 \item The \textbf{\textit{Delta score}} is the difference between the two
-  \textbf{\textit{Raw scores}} (after tuning - before tuning).  \end{itemize} 
+  \textbf{\textit{Raw scores}} (after tuning - before tuning).  \ei 
   The pseudocode for these calculations
   is shown in Algorithm 1 with the default set of parameters. In the following
   description, superscript numbers denote lines in the pseudocode. The data ordering is
@@ -835,7 +908,7 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
 
 %YYY: who first proposed LDA... need a referece first time we mention if
 \subsection{Tuning Topic Modeling with LDADE}
-\label{sect: tuning}
+\label{sect:tuning}
 LDADE is a combination of topic modeling (with LDA) and an optimizer (differential evolution, or DE) that adjusts
 the parameters of LDA in order to optimize (i.e. maximize) similarity scores.
 
@@ -854,12 +927,12 @@ that there are many advocates for differential evolution.
 %\newpage
 LDADE  adjusts the parameters of
 Table~\ref{tb:tuned}. Most of these parameters were explained above. Apart from them, there are 2 different kinds of LDA implementations as well and they are:
-\begin{itemize}
+\bi
 \item VEM is the deterministic {\em variational EM} method that computes $\alpha,\beta$ via
   expectation maximization~\cite{minka2002expectation}.
 \item Gibbs sampling~\cite{wei2006lda, griffiths2004finding} is a Markov Chain Monte Carlo algorithm, which is an approximate stochastic process for computing and updating $\alpha,\beta$.
   Topic modeling researchers in SE have argued that Gibbs leads to stabler models~\cite{layman16a,layman2016topic} (a claim which we test, below).
-  \end{itemize}
+  \ei
 
 We manually run with these other inference techniques according to different implementations across different platforms. We need to make sure that these instabilities do not hold for just 1 inference technique, or 1 implementation or on 1 platform.
 
@@ -908,17 +981,6 @@ competitive with particle swarm optimization and other GAs.
 Note that DEs have been
 applied before for parameter tuning (e.g. see~\cite{panichella2013effectively, lohar2013improving, sun2015msr4sm,omran2005differential,chiha2012tuning, fu2016tuning} ) but this is the first time they have been
 applied to tune LDA to increase stability.
-
-\section{Experimentation}
-
-In this section,
- any result from the smaller data sets (Pits and Citemap) come
-from Python implementation based on Scikit-Learn running on a single 4-core machine.
-Also,
-  any results from the larger data (StackOverflow) comes from a Scala implementation
-  based on Mllib~\cite{meng2016mllib} running on a 45 node Spark system (8 cores per node).
-  
-  Note that, for the RQ3, there are some intricate details with classification results. After tuning and finding the optimal `K', we trained a Linear Kernel SVM classifier using document topic distributions as features just like used by Blei et al~\cite{blei2003latent}.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
@@ -970,8 +1032,19 @@ Also,
     \caption{Pseudocode for DE with a constant number of iterations}
     \end{algorithmic}
 \end{algorithm}
+\section{Experimentation}\label{sect:results}
 
-\subsection{\textbf{RQ1: Are the default settings of LDA correct?}}
+In this section,
+ any result from the smaller data sets (Pits and Citemap) come
+from Python implementation based on Scikit-Learn running on a single 4-core machine.
+Also,
+  any results from the larger data (StackOverflow) comes from a Scala implementation
+  based on Mllib~\cite{meng2016mllib} running on a 45 node Spark system (8 cores per node).
+  
+  Note that, for the RQ3, there are some intricate details with classification results. After tuning and finding the optimal `K', we trained a Linear Kernel SVM classifier using document topic distributions as features just like used by Blei et al~\cite{blei2003latent}.
+
+
+\subsection{\textbf{RQ1: Are the default settings of LDA correct?}}\label{sect:unstable}
 
 
 This first research question checks the core premise of this article-- that changes
@@ -1017,7 +1090,7 @@ Note that the  stability collapses the most after $n=5$ words. This means
     are {\em better}.}\label{fig:delta}
 \end{figure*}
 
-\subsection{\textbf{RQ2: Does tuning improve the stability scores of LDA?}}
+\subsection{\textbf{RQ2: Does tuning improve the stability scores of LDA?}}\label{sect:stable}
 
  Figure~\ref{fig:delta}a and Figure~\ref{fig:delta}b shows the stability improvement
  generated by tuning.
@@ -1035,11 +1108,12 @@ Note that the  stability collapses the most after $n=5$ words. This means
 For stable clusters, tuning is strongly recommended for future LDA studies. $\alpha$ and $\beta$ matters the most for getting good clusters.
 \end{lesson}
 
-\subsection{\textbf{RQ3:Does LDADE improve the classification F2 accuracy scores?}} 
+\subsection{\textbf{RQ3:Does LDADE improve the classification F2 accuracy scores?}}\label{sect:rq3} 
 
 We studied some other StackExchange websites data dump for classification results which were generated by Krishna et al \cite{krishna2016bigse}. These datasets are categorized into binary labels saying which documents are relevant and non relevant. Here goal of our DE was still to maximize the $\Re_n$ score. It shouldn't be confused with maximizing some other accuracy goals. After finding the optimal `K', we trained a Linear Kernel SVM classifier using document topic distributions just like used by Blei et al~\cite{blei2003latent}.
 
-In Figure \ref{fig:class}, x-axis represents different datasets as generated. Y-axis represents the F2 scores which weigh recall higher than precision~\cite{powers2011evaluation}. One legend called as ``untuned'' basically uses default parameters with $k=10$. Other legends in the graph shows tuning of $k$ for 20, 40, 80, 200 by keeping $\alpha$ and $\beta$ fixed. There is about 20\% minimum improvement than the untuned results.
+In Figure \ref{fig:class}, x-axis represents different datasets as generated. Y-axis represents the F2 score
+(from \eq{f}) which weights recall higher than precision~\cite{powers2011evaluation}. One legend called as ``untuned'' uses default parameters with $k=10$. Other legends in the graph shows tuning of $k$ for 20, 40, 80, 200 by keeping $\alpha$ and $\beta$ fixed. There is about 20\% minimum improvement than the untuned results.
 
 \begin{lesson}
 For any SE classification task, tuning is again strongly recommended. And $k$ matters the most for a good classification accuracy..
@@ -1075,7 +1149,7 @@ For any SE classification task, tuning is again strongly recommended. And $k$ ma
 \end{figure*}
 
 \subsection{\textbf{RQ4: Do different data sets
-      need different configurations to make LDA stable?}}
+      need different configurations to make LDA stable?}}\label{sect:diff}
 
 Figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b} show the results of tuning for word overlap of $n=5$.
 On display in each set of vertical bars are
@@ -1103,11 +1177,11 @@ Clearly:
 Results were collected across different implementations of LDA (Python+Scikit-Learn, Scala+Spark); across different platforms (Linux, Macintosh) and for different kinds of LDAs (the traditional VEM method, or using Gibbs sampling). 
 
 To check this, it was insightful to compare our results with:
-\begin{itemize}
+\bi
 \item The Pits and Citemap results, executed in Scikit-Learn and Python running on
   a desktop machine.
 \item The StackOverflow data set executed in Scala using Mllib running on a Spark cluster.
-  \end{itemize}
+  \ei
 
 \begin{figure}[!htbp]
   \captionsetup{justification=centering}
@@ -1120,10 +1194,10 @@ Figure \ref{python_spark} shows tuning results for StackOverflow, Citemap, and P
    using Scala/Spark cluster (for results on other data sets, see https://goo.gl/UVaql1).
    
   Another useful comparison is to change the internal of the LDA:
-  \begin{itemize}
+  \bi
 \item Sometimes using VEM sampling;
 \item Sometimes using Gibbs sampling;
-  \end{itemize}
+  \ei
 
 
 \begin{figure}[!htbp]
@@ -1138,11 +1212,11 @@ Figure \ref{python_spark} shows tuning results for StackOverflow, Citemap, and P
    
    When compared with the Python/desktop results of
    Figure~\ref{fig:delta} we see the same patterns:
-   \begin{itemize}
+   \bi
  \item Tuning never makes stability worse.
  \item Sometimes, it dramatically improves it (in particular, see the Citemap results
    of  Figure~\ref{python_spark}).
-   \end{itemize}
+   \ei
    That said, there are some deltas between VEM and Gibbs where it seems tuning
    is more important for VEM than Gibbs (evidence: the improvements seen after
    tuning are largest for the  VEM results of  Figure~\ref{gibbs_vem} and at  https://goo.gl/faYAcg).
@@ -1244,7 +1318,7 @@ holds true in practice. Shown in blue and red are the
 
 
 \section{Threats to Validity}
-\label{sect: validity}
+\label{sect:validity}
 
 As with any empirical study, biases can affect the final
 results. Therefore, any conclusions made from this work must be considered with the following issues in mind:
@@ -1255,8 +1329,9 @@ our datasets and explore the conclusions of this paper. Even though we used so m
 
 \textbf{\textit{Learner bias}}: For running LDA, we selected other parameters as default which are of not much importance. But there could be some datasets where by tuning them there could be much larger improvement. And for RQ2, we only experimented with linear kernel SVM. There could be other classifiers which can change our conclusions. Data Mining is a large and active field and any single study can only use a small subset of the known data miners.
 
-\textbf{\textit{Evaluation bias}}: This paper uses Jaccard similarity ($\Re_n$) and F2 measures of evaluation but there are other measures which are used in software engineering which
-includes perplexity, fscore, recall, performance. Measuring performance with more measures is left for future work.
+\textbf{\textit{Evaluation bias}}: This paper uses topic similarity ($\Re_n$) and F2 measures of evaluation but there are other measures which are used in software engineering which
+includes perplexity, performance, accuracy, etc. Assessing
+the performance of stable LDA is a clear direction for future work.
 
 \textbf{\textit{Order bias}}: With each dataset, how data samples are picked and put into LDA is completely random. Since this paper also consider input order effects, though there could be times when the input order could be with lesser variance. To mitigate this order bias, we ran the experiment 10 times by randomly changing the order of the data samples each time.
 
@@ -1310,7 +1385,7 @@ our materials and explore the conclusions of this paper.
 \section{Conclusion and Future Work}
 
 Based on the above, we offer a specific and general conclusion. Most specifically, we recommend 
-\begin{itemize}
+\bi
 
 \item  
 Any study that shows the topics learned from LDA, and uses them to make a particular
@@ -1323,7 +1398,7 @@ conclusion, needs to first tune LDA. We say this since the topics learned from u
 \item Do not download someone else's pre-tuned LDA since, as shown here,  the best LDA tunings vary from data set to data set.
 \item These results demand us to visit the previous case studies which have used LDA using ``off-the-shelf parameters to rerun by tuning these parameters using automated tools like LDADE.
     
-\end{itemize}
+\ei
 Our experience is that this recommendation is not an arduous demand since tuning adds less than a factor of five to the total run times of an LDA study.
 
 More generally, we comment that the field of software analytics needs to make far more use of search-based software engineering in order
