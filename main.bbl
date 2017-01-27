@@ -1,0 +1,416 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{nadkarni2014structured}
+A.~Nadkarni, N.~Yezhkova, Structured versus unstructured data: The balance of
+  power continues to shift, IDC (Industry Development and Models) Mar.
+
+\bibitem{blei2003latent}
+D.~M. Blei, A.~Y. Ng, M.~I. Jordan, Latent dirichlet allocation, in: the
+  Journal of machine Learning research, Vol.~3, JMLR. org, 2003, pp. 993--1022.
+
+\bibitem{storn1997differential}
+R.~Storn, K.~Price, Differential evolution--a simple and efficient heuristic
+  for global optimization over continuous spaces, Journal of global
+  optimization 11~(4) (1997) 341--359.
+
+\bibitem{rao2011retrieval}
+S.~Rao, A.~Kak, Retrieval from software libraries for bug localization: a
+  comparative study of generic and composite text models, in: Proceedings of
+  the 8th Working Conference on Mining Software Repositories, ACM, 2011, pp.
+  43--52.
+
+\bibitem{oliveto2010equivalence}
+R.~Oliveto, M.~Gethers, D.~Poshyvanyk, A.~De~Lucia, On the equivalence of
+  information retrieval methods for automated traceability link recovery, in:
+  Program Comprehension (ICPC), 2010 IEEE 18th International Conference on,
+  IEEE, 2010, pp. 68--71.
+
+\bibitem{barua2014developers}
+A.~Barua, S.~W. Thomas, A.~E. Hassan, What are developers talking about? an
+  analysis of topics and trends in stack overflow, Empirical Software
+  Engineering 19~(3) (2014) 619--654.
+
+\bibitem{panichella2013effectively}
+A.~Panichella, B.~Dit, R.~Oliveto, M.~Di~Penta, D.~Poshyvanyk, A.~De~Lucia, How
+  to effectively use topic models for software engineering tasks? an approach
+  based on genetic algorithms, in: Proceedings of the 2013 International
+  Conference on Software Engineering, IEEE Press, 2013, pp. 522--531.
+
+\bibitem{galvis2013analysis}
+L.~V. Galvis~Carre{\~n}o, K.~Winbladh, Analysis of user comments: an approach
+  for software requirements evolution, in: Proceedings of the 2013
+  International Conference on Software Engineering, IEEE Press, 2013, pp.
+  582--591.
+
+\bibitem{hindle2011automated}
+A.~Hindle, N.~A. Ernst, M.~W. Godfrey, J.~Mylopoulos, Automated topic naming to
+  support cross-project analysis of software maintenance activities, in:
+  Proceedings of the 8th Working Conference on Mining Software Repositories,
+  ACM, 2011, pp. 163--172.
+
+\bibitem{guzman2014users}
+E.~Guzman, W.~Maalej, How do users like this feature? a fine grained sentiment
+  analysis of app reviews, in: Requirements Engineering Conference (RE), 2014
+  IEEE 22nd International, IEEE, 2014, pp. 153--162.
+
+\bibitem{thomas2011mining}
+S.~W. Thomas, Mining software repositories using topic models, in: Proceedings
+  of the 33rd International Conference on Software Engineering, ACM, 2011, pp.
+  1138--1139.
+
+\bibitem{thomas2014studying}
+S.~W. Thomas, B.~Adams, A.~E. Hassan, D.~Blostein, Studying software evolution
+  using topic models, Science of Computer Programming 80 (2014) 457--479.
+
+\bibitem{chen2012explaining}
+T.-H. Chen, S.~W. Thomas, M.~Nagappan, A.~E. Hassan, Explaining software
+  defects using topic models, in: Mining Software Repositories (MSR), 2012 9th
+  IEEE Working Conference on, IEEE, 2012, pp. 189--198.
+
+\bibitem{thomas2014static}
+S.~W. Thomas, H.~Hemmati, A.~E. Hassan, D.~Blostein, Static test case
+  prioritization using topic models, Empirical Software Engineering 19~(1)
+  (2014) 182--212.
+
+\bibitem{bajracharya2009mining}
+S.~K. Bajracharya, C.~V. Lopes, Mining search topics from a code search engine
+  usage log., in: MSR, Citeseer, 2009, pp. 111--120.
+
+\bibitem{lohar2013improving}
+S.~Lohar, S.~Amornborvornwong, A.~Zisman, J.~Cleland-Huang, Improving trace
+  accuracy through data-driven configuration and composition of tracing
+  features, in: Proceedings of the 2013 9th Joint Meeting on Foundations of
+  Software Engineering, ACM, 2013, pp. 378--388.
+
+\bibitem{binkley2014understanding}
+D.~Binkley, D.~Heinz, D.~Lawrie, J.~Overfelt, Understanding lda in source code
+  analysis, in: Proceedings of the 22nd International Conference on Program
+  Comprehension, ACM, 2014, pp. 26--36.
+
+\bibitem{linares2013exploratory}
+M.~Linares-V{\'a}squez, B.~Dit, D.~Poshyvanyk, An exploratory analysis of
+  mobile development issues using stack overflow, in: Proceedings of the 10th
+  Working Conference on Mining Software Repositories, IEEE Press, 2013, pp.
+  93--96.
+
+\bibitem{koltcov2014latent}
+S.~Koltcov, O.~Koltsova, S.~Nikolenko, Latent dirichlet allocation: stability
+  and applications to studies of user-generated content, in: Proceedings of the
+  2014 ACM conference on Web science, ACM, 2014, pp. 161--165.
+
+\bibitem{grant2013using}
+S.~Grant, J.~R. Cordy, D.~B. Skillicorn, Using heuristics to estimate an
+  appropriate number of latent topics in source code analysis, Science of
+  Computer Programming 78~(9) (2013) 1663--1678.
+
+\bibitem{hindle2012relating}
+A.~Hindle, C.~Bird, T.~Zimmermann, N.~Nagappan, Relating requirements to
+  implementation via topic analysis: Do topics extracted from requirements make
+  sense to managers and developers?, in: Software Maintenance (ICSM), 2012 28th
+  IEEE International Conference on, IEEE, 2012, pp. 243--252.
+
+\bibitem{fu2015automated}
+Y.~Fu, M.~Yan, X.~Zhang, L.~Xu, D.~Yang, J.~D. Kymer, Automated classification
+  of software change messages by semi-supervised latent dirichlet allocation,
+  Information and Software Technology 57 (2015) 369--377.
+
+\bibitem{garousi2016citations}
+V.~Garousi, M.~V. M{\"a}ntyl{\"a}, Citations, research topics and active
+  countries in software engineering: A bibliometrics study, Computer Science
+  Review 19 (2016) 56--77.
+
+\bibitem{le2014predicting}
+T.-D.~B. Le, F.~Thung, D.~Lo, Predicting effectiveness of ir-based bug
+  localization techniques, in: 2014 IEEE 25th International Symposium on
+  Software Reliability Engineering, IEEE, 2014, pp. 335--345.
+
+\bibitem{nikolenko2015topic}
+S.~I. Nikolenko, S.~Koltcov, O.~Koltsova, Topic modelling for qualitative
+  studies, Journal of Information Science (2015) 0165551515617393.
+
+\bibitem{sun2015msr4sm}
+X.~Sun, B.~Li, H.~Leung, B.~Li, Y.~Li, Msr4sm: Using topic models to
+  effectively mining software repositories for software maintenance tasks,
+  Information and Software Technology 66 (2015) 1--12.
+
+\bibitem{chen2016topic}
+T.-H. Chen, W.~Shang, M.~Nagappan, A.~E. Hassan, S.~W. Thomas, Topic-based
+  software defect explanation, Journal of Systems and Software.
+
+\bibitem{GENNARI198911}
+J.~H. Gennari, P.~Langley, D.~Fisher,
+  \href{http://www.sciencedirect.com/science/article/pii/0004370289900465}{Models
+  of incremental concept formation}, Artificial Intelligence 40~(1) (1989) 11
+  -- 61.
+\newblock \href
+  {http://dx.doi.org/http://dx.doi.org/10.1016/0004-3702(89)90046-5}
+  {\path{doi:http://dx.doi.org/10.1016/0004-3702(89)90046-5}}.
+\newline\urlprefix\url{http://www.sciencedirect.com/science/article/pii/0004370289900465}
+
+\bibitem{Breiman2001}
+L.~Breiman, {Random forests}, Machine Learning 45~(1) (2001) 5--32.
+\newblock \href
+  {http://arxiv.org/abs//dx.doi.org/10.1023{\%}2FA{\%}3A1010933404324}
+  {\path{arXiv:/dx.doi.org/10.1023{\%}2FA{\%}3A1010933404324}}, \href
+  {http://dx.doi.org/10.1023/A:1010933404324}
+  {\path{doi:10.1023/A:1010933404324}}.
+
+\bibitem{bergstra2012random}
+J.~Bergstra, Y.~Bengio, Random search for hyper-parameter optimization, Journal
+  of Machine Learning Research 13~(Feb) (2012) 281--305.
+
+\bibitem{fu2016tuning}
+W.~Fu, T.~Menzies, X.~Shen, Tuning for software analytics: Is it really
+  necessary?, Information and Software Technology 76 (2016) 135--146.
+
+\bibitem{tantithamthavorn2016icse}
+C.~Tantithamthavorn, S.~McIntosh, A.~E. Hassan, K.~Matsumoto, {Automated
+  Parameter Optimization of Classification techniques for Defect Prediction
+  Models}, in: Proc. of the International Conference on Software Engineering
+  (ICSE), 2016, pp. 321--332.
+
+\bibitem{elish2008predicting}
+K.~O. Elish, M.~O. Elish, Predicting defect-prone software modules using
+  support vector machines, Journal of Systems and Software 81~(5) (2008)
+  649--660.
+
+\bibitem{4527256}
+S.~Lessmann, B.~Baesens, C.~Mues, S.~Pietsch, Benchmarking classification
+  models for software defect prediction: A proposed framework and novel
+  findings, IEEE Transactions on Software Engineering 34~(4) (2008) 485--496.
+\newblock \href {http://dx.doi.org/10.1109/TSE.2008.35}
+  {\path{doi:10.1109/TSE.2008.35}}.
+
+\bibitem{Yang:2016}
+Y.~Yang, Y.~Zhou, J.~Liu, Y.~Zhao, H.~Lu, L.~Xu, B.~Xu, H.~Leung,
+  \href{http://doi.acm.org/10.1145/2950290.2950353}{Effort-aware just-in-time
+  defect prediction: Simple unsupervised models could be better than supervised
+  models}, in: Proceedings of the 2016 24th ACM SIGSOFT International Symposium
+  on Foundations of Software Engineering, FSE 2016, ACM, New York, NY, USA,
+  2016, pp. 157--168.
+\newblock \href {http://dx.doi.org/10.1145/2950290.2950353}
+  {\path{doi:10.1145/2950290.2950353}}.
+\newline\urlprefix\url{http://doi.acm.org/10.1145/2950290.2950353}
+
+\bibitem{maskeri2008mining}
+G.~Maskeri, S.~Sarkar, K.~Heafield, Mining business topics in source code using
+  latent dirichlet allocation, in: Proceedings of the 1st India software
+  engineering conference, ACM, 2008, pp. 113--120.
+
+\bibitem{martin2015app}
+W.~Martin, M.~Harman, Y.~Jia, F.~Sarro, Y.~Zhang, The app sampling problem for
+  app store mining, in: Mining Software Repositories (MSR), 2015 IEEE/ACM 12th
+  Working Conference on, IEEE, 2015, pp. 123--133.
+
+\bibitem{lau2014machine}
+J.~H. Lau, D.~Newman, T.~Baldwin, Machine reading tea leaves: Automatically
+  evaluating topic coherence and topic model quality., in: EACL, 2014, pp.
+  530--539.
+
+\bibitem{yang2015improving}
+Y.~Yang, Improving the usability of topic models, Ph.D. thesis, NORTHWESTERN
+  UNIVERSITY (2015).
+
+\bibitem{tian2009using}
+K.~Tian, M.~Revelle, D.~Poshyvanyk, Using latent dirichlet allocation for
+  automatic categorization of software, in: Mining Software Repositories, 2009.
+  MSR'09. 6th IEEE International Working Conference on, IEEE, 2009, pp.
+  163--166.
+
+\bibitem{menzies2008improving}
+T.~Menzies, Improving iv\&v techniques through the analysis of project
+  anomalies: Text mining pits issue reports-final report, Citeseer.
+
+\bibitem{menzies2008automated}
+T.~Menzies, A.~Marcus, Automated severity assessment of software defect
+  reports, in: Software Maintenance, 2008. ICSM 2008. IEEE International
+  Conference on, IEEE, 2008, pp. 346--355.
+
+\bibitem{promiserepo}
+T.~Menzies, R.~Krishna, D.~Pryor, The {Promise} {Repository} of {Empirical
+  Software Engineering} {Data}, \url{http://openscience.us/repo} (2015).
+
+\bibitem{allamanis2013and}
+M.~Allamanis, C.~Sutton, Why, when, and what: analyzing stack overflow
+  questions by topic, type, and code, in: Proceedings of the 10th Working
+  Conference on Mining Software Repositories, IEEE Press, 2013, pp. 53--56.
+
+\bibitem{rosen2016mobile}
+C.~Rosen, E.~Shihab, What are mobile developers asking about? a large scale
+  study using stack overflow, Empirical Software Engineering 21~(3) (2016)
+  1192--1223.
+
+\bibitem{vasilescu2013historical}
+B.~Vasilescu, A.~Serebrenik, T.~Mens, A historical dataset of software
+  engineering conferences, in: Proceedings of the 10th Working Conference on
+  Mining Software Repositories, IEEE Press, 2013, pp. 373--376.
+
+\bibitem{mathew2016trends}
+G.~Mathew, A.~Agarwal, T.~Menzies, Trends in topics at se conferences
+  (1993-2013), arXiv preprint arXiv:1608.08100.
+
+\bibitem{vasilescu2014healthy}
+B.~Vasilescu, A.~Serebrenik, T.~Mens, M.~G. van~den Brand, E.~Pek, How healthy
+  are software engineering conferences?, Science of Computer Programming 89
+  (2014) 251--272.
+
+\bibitem{feldman2006j}
+R.-S. Feldman, J, The Text Mining Handbook, New York: Cambridge University
+  Press, 2006.
+
+\bibitem{bird2006nltk}
+S.~Bird, Nltk: the natural language toolkit, in: Proceedings of the COLING/ACL
+  on Interactive presentation sessions, Association for Computational
+  Linguistics, 2006, pp. 69--72.
+
+\bibitem{Porter1980}
+M.~Porter, \href{http://tartarus.org/martin/PorterStemmer/}{{The Porter
+  Stemming Algorithm}} (1980).
+\newline\urlprefix\url{http://tartarus.org/martin/PorterStemmer/}
+
+\bibitem{pedregosa2011scikit}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
+  M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, et~al., Scikit-learn:
+  Machine learning in python, Journal of Machine Learning Research 12~(Oct)
+  (2011) 2825--2830.
+
+\bibitem{o2015analysis}
+D.~O’Callaghan, D.~Greene, J.~Carthy, P.~Cunningham, An analysis of the
+  coherence of descriptors in topic modeling, Expert Systems with Applications
+  42~(13) (2015) 5645--5657.
+
+\bibitem{zhao2015heuristic}
+W.~Zhao, J.~J. Chen, R.~Perkins, Z.~Liu, W.~Ge, Y.~Ding, W.~Zou, A heuristic
+  approach to determine an appropriate number of topics in topic modeling, BMC
+  bioinformatics 16~(13) (2015) 1.
+
+\bibitem{miller1956magical}
+G.~A. Miller, The magical number seven, plus or minus two: Some limits on our
+  capacity for processing information., Psychological review 63~(2) (1956) 81.
+
+\bibitem{feather2002converging}
+M.~S. Feather, T.~Menzies, Converging on the optimal attainment of
+  requirements, in: Requirements Engineering, 2002. Proceedings. IEEE Joint
+  International Conference on, IEEE, 2002, pp. 263--270.
+
+\bibitem{menzies2007business}
+T.~Menzies, O.~Elrawas, J.~Hihn, M.~Feather, R.~Madachy, B.~Boehm, The business
+  case for automated software engineering, in: Proceedings of the twenty-second
+  IEEE/ACM international conference on Automated software engineering, ACM,
+  2007, pp. 303--312.
+
+\bibitem{goldberg1979complexity}
+A.~T. Goldberg, On the complexity of the satisfiability problem, Ph.D. thesis,
+  New York University (1979).
+
+\bibitem{glover1986general}
+F.~Glover, C.~McMillan, The general employee scheduling problem. an integration
+  of ms and ai, Computers \& operations research 13~(5) (1986) 563--573.
+
+\bibitem{beausoleil2006moss}
+R.~P. Beausoleil, {“MOSS”} multiobjective scatter search applied to
+  non-linear multiple criteria optimization, European Journal of Operational
+  Research 169~(2) (2006) 426--449.
+
+\bibitem{molina2007sspmo}
+J.~Molina, M.~Laguna, R.~Mart{\'\i}, R.~Caballero, Sspmo: A scatter tabu search
+  procedure for non-linear multiobjective optimization, INFORMS Journal on
+  Computing 19~(1) (2007) 91--100.
+
+\bibitem{nebro2008abyss}
+A.~J. Nebro, F.~Luna, E.~Alba, B.~Dorronsoro, J.~J. Durillo, A.~Beham, Abyss:
+  Adapting scatter search to multiobjective optimization, Evolutionary
+  Computation, IEEE Transactions on 12~(4) (2008) 439--457.
+
+\bibitem{pan2008particle}
+H.~Pan, M.~Zheng, X.~Han, Particle swarm-simulated annealing fusion algorithm
+  and its application in function optimization, in: Computer Science and
+  Software Engineering, 2008 International Conference on, Vol.~1, IEEE, 2008,
+  pp. 78--81.
+
+\bibitem{krall2015gale}
+J.~Krall, T.~Menzies, M.~Davies, Gale: Geometric active learning for
+  search-based software engineering, Software Engineering, IEEE Transactions on
+  41~(10) (2015) 1001--1018.
+
+\bibitem{zuluaga2013active}
+M.~Zuluaga, G.~Sergent, A.~Krause, M.~P{\"u}schel, Active learning for
+  multi-objective optimization, in: Proceedings of the 30th International
+  Conference on Machine Learning, 2013, pp. 462--470.
+
+\bibitem{minka2002expectation}
+T.~Minka, J.~Lafferty, Expectation-propagation for the generative aspect model,
+  in: Proceedings of the Eighteenth conference on Uncertainty in artificial
+  intelligence, Morgan Kaufmann Publishers Inc., 2002, pp. 352--359.
+
+\bibitem{wei2006lda}
+X.~Wei, W.~B. Croft, Lda-based document models for ad-hoc retrieval, in:
+  Proceedings of the 29th annual international ACM SIGIR conference on Research
+  and development in information retrieval, ACM, 2006, pp. 178--185.
+
+\bibitem{griffiths2004finding}
+T.~L. Griffiths, M.~Steyvers, Finding scientific topics, Proceedings of the
+  National academy of Sciences 101~(suppl 1) (2004) 5228--5235.
+
+\bibitem{layman16a}
+L.~Layman (2016).
+
+\bibitem{layman2016topic}
+L.~Layman, A.~P. Nikora, J.~Meek, T.~Menzies, Topic modeling of nasa space
+  system problem reports: research in practice, in: Proceedings of the 13th
+  International Workshop on Mining Software Repositories, ACM, 2016, pp.
+  303--314.
+
+\bibitem{vesterstrom2004comparative}
+J.~Vesterstr{\o}m, R.~Thomsen, A comparative study of differential evolution,
+  particle swarm optimization, and evolutionary algorithms on numerical
+  benchmark problems, in: Evolutionary Computation, 2004. CEC2004. Congress on,
+  Vol.~2, IEEE, 2004, pp. 1980--1987.
+
+\bibitem{omran2005differential}
+M.~G. Omran, A.~P. Engelbrecht, A.~Salman, Differential evolution methods for
+  unsupervised image classification, in: Evolutionary Computation, 2005. The
+  2005 IEEE Congress on, Vol.~2, IEEE, 2005, pp. 966--973.
+
+\bibitem{chiha2012tuning}
+I.~Chiha, J.~Ghabi, N.~Liouane, Tuning pid controller with multi-objective
+  differential evolution, in: Communications Control and Signal Processing
+  (ISCCSP), 2012 5th International Symposium on, IEEE, 2012, pp. 1--4.
+
+\bibitem{meng2016mllib}
+X.~Meng, J.~Bradley, B.~Yuvaz, E.~Sparks, S.~Venkataraman, D.~Liu, J.~Freeman,
+  D.~Tsai, M.~Amde, S.~Owen, et~al., Mllib: Machine learning in apache spark,
+  JMLR 17~(34) (2016) 1--7.
+
+\bibitem{lukins2010bug}
+S.~K. Lukins, N.~A. Kraft, L.~H. Etzkorn, Bug localization using latent
+  dirichlet allocation, Information and Software Technology 52~(9) (2010)
+  972--990.
+
+\bibitem{krishna2016bigse}
+R.~Krishna, Z.~Yu, A.~Agrawal, M.~Dominguez, D.~Wolf, The bigse project:
+  lessons learned from validating industrial text mining, in: Proceedings of
+  the 2nd International Workshop on BIG Data Software Engineering, ACM, 2016,
+  pp. 65--71.
+
+\bibitem{powers2011evaluation}
+D.~M. Powers, Evaluation: from precision, recall and f-measure to roc,
+  informedness, markedness and correlation.
+
+\bibitem{wang2013searching}
+T.~Wang, M.~Harman, Y.~Jia, J.~Krinke, Searching for better configurations: a
+  rigorous approach to clone evaluation, in: Proceedings of the 2013 9th Joint
+  Meeting on Foundations of Software Engineering, ACM, 2013, pp. 455--465.
+
+\bibitem{sayyad2013scalable}
+A.~S. Sayyad, J.~Ingram, T.~Menzies, H.~Ammar, Scalable product line
+  configuration: A straw to break the camel's back, in: Automated Software
+  Engineering (ASE), 2013 IEEE/ACM 28th International Conference on, IEEE,
+  2013, pp. 465--474.
+
+\end{thebibliography}

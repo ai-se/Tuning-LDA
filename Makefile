@@ -1,5 +1,5 @@
 Src=main#
-Bib=$(shell ls *.bib)#
+Bib=$(shell ls *.bib *.bst)#
 D=$(HOME)/tmp/$(Src)#
 define grab
    gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
@@ -29,6 +29,9 @@ one: dirs tex done
 
 open:
 	open $(D).pdf
+
+evince:
+	evince $(D).pdf 2> /dev/null &
 
 
 skim:
