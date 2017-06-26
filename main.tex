@@ -879,9 +879,9 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
   The pseudocode for these calculations
   is shown in Algorithm 1 with the default set of parameters. In the following
   description, superscript numbers denote lines in the pseudocode. The data ordering is
-  shuffled every time LDA is ran$^{5}$. Data is in the form of term frequency
+  shuffled every time LDA is ran$^{6}$. Data is in the form of $\mathit{tfidf}$
   scores of each word per document. Shuffling is done in order to induce maximum
-  variance among the ordering of data with  different runs of LDA. Topics$^{6}$ are a list of lists which
+  variance among the ordering of data with  different runs of LDA. \textcolor{red}{Function $\mathit{lda}^{7}$ returns $k$ topics.} Topics$^{7}$ are a list of lists which
   contains topics from all the different runs. A stability score is evaluated on
   every 10 runs (Fixed), and this process is continued 10 (Fixed) times. At the end, the median
   score is selected as the untuned raw score ($\Re_n$ ) $^{3-11}$. Hence, the runtimes comes from $10 * 10$ evaluations of untuned experiment.
@@ -893,21 +893,20 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \begin{algorithm}
-    %\scriptsize
-    %\label{algo: untuned}
     
     \begin{algorithmic}[1]
     %\label{algo: untuned}
     \Require $Data$, $n$, $k$, $\alpha$, $\beta$ (Defaults) 
     \Ensure $Raw\_Score$    
-    \Function{ldascore}{ $n$, $Data$}
+    \Function{ldascore}{ $n$, $k$, $\alpha$, $\beta$, $Data$}
         \State $Score \leftarrow \emptyset$
         \For{$j = 0$ to 10}
+            \State $Topics \leftarrow \emptyset$
             \For{$i = 0$ to 10}
                 \State $data \leftarrow$ \textbf{shuffle}($Data$)
-                \State $Topics$.add(lda($k,\alpha,\beta$ ))
+                \State $Topics$.add(lda($k,\alpha,\beta, data$))
             \EndFor
-            \State $Score$.add($Overlap$(Topics, $n$, $l[0]$))
+            \State $Score$.add($Overlap$(Topics, $n$, $k$))
         \EndFor
         \State $Raw\_Score \leftarrow $ median(Score)
         \State \textbf{return} $Raw\_Score$
@@ -932,7 +931,8 @@ decomposition approaches that use heuristics to decompose the total space into
 small problems, then apply a response surface methods~\cite{krall2015gale, zuluaga2013active}.
 Of these, we use DE for two reasons. Firstly, it has been proven useful in prior SE tuning
 studies~\cite{fu2016tuning}. Secondly, our reading of the current literature is
-that there are many advocates for differential evolution.
+that there are many advocates for differential evolution like Vesterstrom et al.~\cite{vesterstrom2004comparative} showed DE to be
+competitive with particle swarm optimization and other GAs. 
 
 %\newpage
 LDADE  adjusts the parameters of
@@ -967,39 +967,29 @@ We manually run with these other inference techniques according to different imp
 \label{tb:tuned}
 \end{table}
 
-Algorithm 2 shows LDADE's version of DE.  DE evolves a \textit{NewGeneration} of
-candidates from a current Population.   Each candidate solution in the Population is a pair of
-(Tunings, Scores). Tunings are selected from Table \ref{tb:tuned} and scores
-come similarly from Algorithm 1$^{3-11}$. Note that there is not any outer loop$^{3}$: in Algorithm 2, LDA is only run as one rig$^{11 \& 12}$. Here, the runtimes comes from $\mathit{iter} * np * 10$ evaluations of tuned experiment.
-
-The main loop of DE$^{9}$ runs over the \textit{Population}, replacing old items with new Candidates (if new candidate is better).
-DE generates \textit{new Candidates} via 
-extrapolating$^{23}$ between current solutions in the frontier. Three solutions $a$, $b$ and $c$ are
-selected at random. For each tuning parameter i, at some probability \textit{cr}, we
-replace the old tuning $x_i$ with $y_i$. For booleans, we use $y_i = x_i$ (see
-line 31). For numerics, $y_i = a_i + f \times (b_i - c_i)$ where $f$ is a
-parameter controlling crossover. The trim function$^{33}$ limits the new value
-to the legal range min..max of that parameter.
+\textcolor{red}{Algorithm 2 shows LDADE's version of DE. DE evolves from the \textit{NewGeneration} of
+candidates from a current Population. Each candidate solution in the \testit{Population}$^{3}$ is a set of  parameters (Tunings). The values of this set is selected randomly from Table~\ref{tb:tuned} in the $\mathit{InitializePopulation}^{3}$ function. \testit{Population} variable is now a matrix of $10\times3$ since $np=10$.}
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \begin{algorithm}
   
     \begin{algorithmic}[1]
-    \Require $np=10$, $f=0.7$, $cr=0.3$, $iter=3$, Goal $\in$ Finding maximum score
-    \Ensure $Raw\_Score, final\_generation$
-    \Function{DE}{$np,f,cr,iter, Goal$}
+    \Require $np=10$, $f=0.7$, $cr=0.3$, $iter=3$, $n$, $Data$, Goal $\in$ Maximizing $\Re_n$ score
+    \Ensure $Raw\_Score,\ best\_set$
+    \Function{DE}{$np,f,cr,iter,n,Data, Goal$}
         \State  $Cur\_Gen \leftarrow \emptyset$
         \State $Population \leftarrow $InitializePopulation(np)
         \For{$i = 0$ to $np-1$}
-            \State $Cur\_Gen$.add($Population$[i],ldascore($Population$[i],$n$,$Data$)
+            \State $Cur\_Gen$.add([$Population$[i],ldascore($n$,$Population$[i],$Data$)])
         \EndFor
         \For{$i = 0$ to $iter$}
             \State $NewGeneration \leftarrow \emptyset$
             \For{$j = 0$ to $np-1$}
                 \State $S_i \leftarrow $Extrapolate($Population$[j],Population,cr,f,np)
-                \If{ldascore($S_i$) $\geq$ $Cur\_Gen$[j][1]}
-                    \State $NewGeneration$.add($S_i$,ldascore($S_i$,$n$, $Data$))
+                \State temp = ldascore(n,$S_i$, Data)
+                \If{temp $\geq$ $Cur\_Gen$[j][1]}
+                    \State $NewGeneration$.add([$S_i$,temp])
                 \Else
                     \State $NewGeneration$.add($Cur\_Gen$[j])
                 \EndIf
@@ -1007,23 +997,18 @@ to the legal range min..max of that parameter.
             \EndFor
             \State  $Cur\_Gen \leftarrow NewGeneration$
         \EndFor
-        \State $Raw\_Score \leftarrow$ GetBestSolution($Cur\_Gen$)
-        \State  $final\_generation \leftarrow Cur\_Gen$
-        \State \textbf{return} $Raw\_Score, final\_generation$
+        \State $Raw\_Score,\ best\_set \leftarrow$ GetBestSolution($Cur\_Gen$)
+        \State \textbf{return} $Raw\_Score,\ best\_set$
     \EndFunction
 
     \Function{Extrapolate}{$old, pop, cr, f,np$}
-        \State $a,b,c \leftarrow threeOthers$(pop, old)
+        \State $a,b,c \leftarrow threeOthers$(pop)
         \State $newf \leftarrow \emptyset$
         \For{$i = 0$ to $np-1$}
             \If{$cr \leq$ random()}
                 \State $newf$.add($old[i]$)
             \Else
-                \If{typeof($old$[i])$ ==$ bool then}
-                    \State $newf$.add(not $old[i]$)
-                \Else 
                     \State $newf$.add(trim(i,($a$[i]+$f\ast$($b$[i] $-$ $c$[i]))))
-                \EndIf
             \EndIf
         \EndFor
         \State \textbf{return} $newf$ 
@@ -1032,12 +1017,21 @@ to the legal range min..max of that parameter.
     \end{algorithmic}
 \end{algorithm}
 
-The loop invariant of DE is that, after the zero-th iteration$^7$, the \textit{Population}
-contains examples that are better than at least one other candidate.
+\textcolor{red}{$\mathit{Cur\_gen}^{2}$ and $\mathit{NewGeneration}^{8}$ variables are the list of Tunings, and $\Re_n$ score 
+comes similarly from Algorithm 1$^{3-12}$. But for LDADE, everytime Algorithm 1 uses a different values of parameters found by DE. Here, the runtimes comes from $\mathit{iter} * np * 10$ evaluations of tuned experiment. Here, the quality/fitness function is $\mathit{ldascore}$.}
+
+\textcolor{red}{The main loop of DE$^{9}$ runs over the \textit{Population}, replacing old items with new Candidates (if new candidate is better).
+DE generates \textit{new Candidates} via 
+$\mathit{Extrapolate}^{10}$ function between current solutions of the $\mathit{Cur\_gen}$ variable. Three solutions $a$, $b$ and $c\ ^{24}$ are
+selected at random from the $\mathit{pop}$. Each of these solution is nothing but a set of ($k$, $\alpha$ and $\beta$). For each tuning parameter i$^{26}$, at some crossover probability (\textit{cr} $^{27}$), we
+replace the old tuning $\mathit{old}$ with $\mathit{newf}$. We mutate a solution with the equation $y_i = a_i + f \times (b_i - c_i)$ where $f$ is a
+parameter controlling crossover. The trim function$^{30}$ limits the new value
+to the legal range min..max of that parameter.}
+
+\textcolor{red}{The loop invariant of DE is that, after the zero-th iteration$^7$, the \textit{Population}
+contains examples that are better than at least one other candidate$^{12}$.
 As the looping progresses, the \textit{Population} is full of increasingly more valuable solutions
-which, in turn, also improve the candidates, which are Extrapolated from the Population.
-Hence, Vesterstrom et al.~\cite{vesterstrom2004comparative} found DE to be
-competitive with particle swarm optimization and other GAs.
+which, in turn, also improve the candidates, which are Extrapolated from the Population. LDADE finds the optimal configuration and the $\Re_n$ score$^{20}$ for a particular dataset to be used with LDA for further SE task. One may argue why we have been encoding $\Re_n$ score in the solution. This is just shown in pesudocode just to keep track of the values but it is not used to drive our DE.}
 
 Note that DEs have been
 applied before for parameter tuning (e.g. see~\cite{omran2005differential,chiha2012tuning, fu2016tuning} ) but this is the first time they have been
@@ -1082,13 +1076,6 @@ Note that if this is {\em not true}, then there would be no value-added to this 
     are {\em better}.}\label{fig:delta}
 \end{figure}
 
-\begin{figure}[!b]
-  \begin{center}
-    \includegraphics[width=\linewidth]{./fig/F2.png}
-    \end{center}
-  \caption{Tuning and Untuned results for Classification SE Task}\label{fig:class}  
-\end{figure}
-
 \begin{figure*}[!t]
     \centering
     \begin{minipage}{.33\textwidth}
@@ -1122,6 +1109,13 @@ Note that the  stability collapses the most after $n=5$ words. This means
   Using the default settings of LDA for SE data can lead to systematic errors due to topic
   modeling instability. 
 \end{lesson}
+
+\begin{figure}[!htbp]
+  \begin{center}
+    \includegraphics[width=\linewidth]{./fig/F2.png}
+    \end{center}
+  \caption{Tuning and Untuned results for Classification SE Task}\label{fig:class}  
+\end{figure}
 
 
 \subsection{\textbf{RQ2: Does LDADE improve the stability scores?}}\label{sect:stable}
@@ -1299,17 +1293,17 @@ holds true in practice. Shown in blue and red are the
 
 \subsection{\textcolor{red}{\textbf{RQ8: How better LDADE is compared against LDA-GA?}}}
 
-\textcolor{red}{Before comparing the results of LDA-GA~\cite{panichella2013effectively} against LDADE, our assumption was that Panichella et al. didn't consider the problem of order effects, it will still have instability issues. And their method of using Genetic Algorithm to find optimal configurations should be more time consuming.}
+\textcolor{red}{Before comparing the results of LDA-GA~\cite{panichella2013effectively} against LDADE, our assumption was that Panichella et al. didn't consider the problem of order effects, it will still have instability issues. And their method of using Genetic Algorithm to find optimal configurations should be more time consuming. Fu et al.~\cite{fu2017easy} argues why there is a need for faster software analytics and the remaining cpu could be utilized for better purposes.}
 
 \textcolor{red}{We ran LDA-GA on our datasets and report the delta of $\Re_n$ of LDADE against $\Re_n$ of LDA-GA. In Figure~\ref{fig:ldaga}, the positive value shows LDADE performed better than LDA-GA and negative shows LDA-GA performed better. In only about 2 cases (PitsB, PitsC), it is seen that LDAGA performed better. The reason being, LDAGA takes a larger number of evaluations which was able to find a better optimal configuration, but it took about 7 times more time than LDADE (See Figure~\ref{fig:run_ldaga}). These results verify that our initial assumptions hold true.This shows that LDADE is much faster and gets much more stable results.}
 
-\begin{figure}[!htbp]
+\begin{figure}[!b]
   \includegraphics[width=\linewidth]{./fig/ldaga.png}
   \caption{Terms vs Delta comparison of LDADE against LDA-GA}
   \label{fig:ldaga}
 \end{figure}
 
-\begin{figure}[!htbp]
+\begin{figure}[!b]
   \includegraphics[width=\linewidth]{./fig/runtime_ga.png}
   \caption{Gibbs: Runtime comparisons between LDADE and LDA-GA}
   \label{fig:run_ldaga}

@@ -111,7 +111,7 @@ Thank you for those kind words
 
 \textit{The first issue is related to the description of LDADE. I have to admit that Section 4.3 of the paper is quite difficult to follow. First of all, I strongly suggest to the authors to provide a ``bird-eye-view'' of the approach before providing the details. Which is the output of LDADE? How can I use such an output? If I understood correctly, the output of LDADE is just a set of topics (similar to the output of LDA). Is this correct? If so, the authors should explicit mention this. Also, an usage scenario of LDADE could be worthwhile.\\}
 
-We have updated the algorithm in section 4.3 and have provided the bird-eye-view of our approach. Yes, the output of LDADE is just a set of topics but this time these topics will be more stable. For usage, please see A.2. Since so many people have been using unstable LDA, LDADE could provide stability and conclude better results.
+We have updated the algorithm in section 4.3 which makes our approach of LDADE more clearer. The output of LDADE is $\Re_n$ and the optimal configuration for a dataset to be used with LDA for further SE task. For usage, please see A.2. Since so many people have been using unstable LDA, LDADE could provide stability and get better results.
 
 \noindent
 \textit{\\B.2.}  
@@ -125,14 +125,14 @@ Sorry about that we did not clear this in the text. Ldascore function is invoked
 
 \textit{I appreciated that the authors reported the pseudo-code of LDADE. However, I think that a much deeper description of each step is required. The authors should explain each step of the algorithm and more important should define each function/variable of the pseudo-code. For instance, Data is never instantiated in Algorithm 2 (probably because it is an input?). Or, which is l[0] in Algorithm 1. Another imprecision is related to the function ldascore. From Algorithm 1, ldascore takes as input n and Data. In Algorithm 2 ldascore is called at line 11 passing as parameter Si (a population?) and at line 12 Si, n and Data. Also, Cur\_Gen is used as a matrix. However, when calling on Cur\_Gen the method ``add'', four parameters are passed. I understand that it is just a pseudo-code. However, a much higher level of formality is required.\\}
 
-Thank you for pointing out those. We have provided a better explanation of Algorithm 2 in Section 4.3. 
+Thank you for pointing out those. We have fixed the errors of Algorithm 2 in Section 4.3. 
 
 \noindent
 \textit{\\B.4.} 
 
 \textit{I still have some doubts about how DE is used. Specifically, I would like to see much more details on the technique (to make the paper self-contained) and (much important) the design of the approach. For instance, which is the encoding of each solution? Which are the operators used to evolve the solutions? Which is the quality/fitness function? Looking at the pseudo-code, it seems that the quality function is represented by ldascore. If so, why scores are encoded in the solution?\\} 
 
-We have fixed that by providing a better explaining of the Algorithm 2 in section 4.3.
+We have fixed that by providing a better explaining of Algorithm 2 in section 4.3. The quality/fitness function is represented by ldascore. The encoding of $\Re_n$ score in the solution is just shown in pesudocode just to keep track of the values but it is not used to drive our DE. 
 
 \noindent
 \textit{\\B.5.}  
