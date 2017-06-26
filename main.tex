@@ -1295,7 +1295,7 @@ holds true in practice. Shown in blue and red are the
 
 \textcolor{red}{Before comparing the results of LDA-GA~\cite{panichella2013effectively} against LDADE, our assumption was that Panichella et al. didn't consider the problem of order effects, it will still have instability issues. And their method of using Genetic Algorithm to find optimal configurations should be more time consuming. Fu et al.~\cite{fu2017easy} argues why there is a need for faster software analytics and the remaining cpu could be utilized for better purposes.}
 
-\textcolor{red}{We ran LDA-GA on our datasets and report the delta of $\Re_n$ of LDADE against $\Re_n$ of LDA-GA. In Figure~\ref{fig:ldaga}, the positive value shows LDADE performed better than LDA-GA and negative shows LDA-GA performed better. In only about 2 cases (PitsB, PitsC), it is seen that LDAGA performed better. The reason being, LDAGA takes a larger number of evaluations which was able to find a better optimal configuration, but it took about 7 times more time than LDADE (See Figure~\ref{fig:run_ldaga}). These results verify that our initial assumptions hold true.This shows that LDADE is much faster and gets much more stable results.}
+\textcolor{red}{We ran LDA-GA on our datasets and report the delta of $\Re_n$ of LDADE against $\Re_n$ of LDA-GA. In Figure~\ref{fig:ldaga}, the positive value shows LDADE performed better than LDA-GA and negative shows LDA-GA performed better. In only about 2 cases (PitsB, PitsC), it is seen that LDAGA performed better. The reason being, LDAGA takes a larger number of evaluations which was able to find a better optimal configuration, but it took about 7 times more time than LDADE (See Figure~\ref{fig:run_ldaga}). In Figure~\ref{fig:run_ldaga}), we are seeing varying ratio of runtimes between LDADE and LDA-GA. LDA-GA has early termination criteria which depends on the quality of dataset. If a particular dataset is not skewed, it will be terminated early. These results verify that our initial assumptions hold true.This shows that LDADE is much faster and gets much more stable results.}
 
 \begin{figure}[!b]
   \includegraphics[width=\linewidth]{./fig/ldaga.png}
@@ -1308,6 +1308,10 @@ holds true in practice. Shown in blue and red are the
   \caption{Gibbs: Runtime comparisons between LDADE and LDA-GA}
   \label{fig:run_ldaga}
 \end{figure}
+
+  \begin{lesson}
+    LDA-GA is affected by order effects and it is heavily time consuming as well. LDADE solves both the problem.
+  \end{lesson}
 
 \subsection{\textbf{RQ9: Should topic modeling be used ``off-the-shelf'' with their default tunings?}}
 
