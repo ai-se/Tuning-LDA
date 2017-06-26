@@ -77,6 +77,28 @@ fill=Gray!40,  drop shadow={fill=black, opacity=1}]
 \let\theoremframecommand\thmbox
 \newshadedtheorem{lesson}{Result}
 
+\usepackage{listings}
+\definecolor{MyDarkBlue}{rgb}{0,0.08,0.45} 
+\lstset{
+    language=Python,
+    basicstyle=\sffamily\fontsize{3mm}{0.8em}\selectfont,
+    breaklines=true,
+    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=l,
+    keepspaces=false,
+    showtabs=false,
+    columns=fullflexible,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\bfseries\sffamily,
+    emph={ m, r, k, frontier, cf, f, g, n}, emphstyle=\bfseries\color{blue!50!black},
+    stringstyle=\color{green!50!black},
+    commentstyle=\color{red!50!black}\it,
+    numbers=left,
+    captionpos=t,
+    escapeinside={\%*}{*)}
+}
+
 \begin{document}
 \begin{frontmatter}
 
@@ -158,25 +180,7 @@ Topic modeling, Stability, LDA, tuning, differential evolution.
 \section{Introduction}
 \label{sect:intro} 
 
-\definecolor{MyDarkBlue}{rgb}{0,0.08,0.45} 
-\lstset{
-    language=Python,
-    basicstyle=\sffamily\fontsize{3mm}{0.8em}\selectfont,
-    breaklines=true,
-    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-    frame=l,
-    showtabs=false,
-    columns=fullflexible,
-    showspaces=false,
-    showstringspaces=false,
-    keywordstyle=\bfseries\sffamily,
-    emph={progressive, build_model, rank_based, projective, measure}, emphstyle=\bfseries\color{blue!50!black},
-    stringstyle=\color{green!50!black},
-    commentstyle=\color{red!50!black}\it,
-    numbers=left,
-    captionpos=t,
-    escapeinside={\%*}{*)}
-}
+
 
 
 
