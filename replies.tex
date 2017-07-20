@@ -73,7 +73,7 @@ Yes, 5-fold stratified cross validation was used. 80\% was used as training and 
 
 \textit{Why F2 rather than F1 or F1/2? Is the difference statistically significant? \\}
 
- We did F1 and F2 analysis both, and in both the cases LDADE selected the optimal configuration and performed better. But since we were working with industrial partners on the classification task, they wanted F2. This is the reason why we showed F2 results. In Figure~\ref{fig:f1}, we show LDADE is improving the F1 results as well. We have updated the Figure 8 with variance which is inter-quartile (75th-25th percentile) range. We can see how stable our results are, and the improved performance of tuned over untuned is statistically significant.
+ We did F1 and F2 analysis both, and in both the cases LDADE selected the optimal configuration and performed better. But since we were working with industrial partners on the classification task, they wanted F2. This is the reason why we showed F2 results. We have updated Sec 5.3 with F1 results. Figure~\ref{fig:f1} shown below, it can be seen that LDADE is improving the F1 results as well. We have also updated the Figure 8 with variance which is inter-quartile (75th-25th percentile) range. We can see how stable our results are, and the improved performance of tuned over untuned is statistically significant.
 
 \begin{figure}[!htbp]
   \includegraphics[width=\linewidth]{./fig/F1.png}
@@ -118,7 +118,7 @@ We have updated the algorithm in section 4.3 which makes our approach of LDADE m
 
 \textit{In addition, I did not understand at all when and how LDADE varies the parameters of LDA (k, alpha and beta). LDA in LDADE is invoked through the function ldascore. However, in such a function k, alpha and beta are set to default values.\\}
 
-Sorry about that we did not clear this in the text. Ldascore function is invoked which is same as algorithm 1 but this time rather than having default parameters as input, ldascore takes the tuned parameters generated from DE. We have made this more clearer in section 4.3.
+Sorry about that we did not clear this in the text. Ldascore function is invoked which is same as Algorithm 1 but this time rather than having default parameters as input, ldascore takes the tuned parameters generated from DE. We have made this more clearer in section 4.3.
 
 \noindent
 \textit{\\B.3.} 
@@ -153,14 +153,14 @@ Sorry, that is the whole objective of this paper. We need to find correct config
 
 \textit{Turning to the empirical evaluation, the main problem here is related to the lack of a deeper analysis of the results achieved. For instance, looking at Figure 6 it seems that the results achieved on “PitsC” are quite stable. Why? Did the authors have some clues on why on this particular dataset the untuned LDA provides quite acceptable results? Here a qualitative analysis of the results achieved could be worthwhile.\\}
 
-Sorry, I believe you mistook it for PitsD. We are seeing the largest improvements in PitsD, that is because what kind of data it represents. About 92\% of the data samples report the severity of level 3.  All the other Pits Datasets have mixed samples of severity level. This also proves that LDADE gets better cluster when data is not skewed, where as on the other hand even the data is not skewed, LDA was providing bad performance.
+Sorry, I believe you mistook it for PitsD. We are seeing the largest improvements in PitsD, that is because what kind of data it represents. About 92\% of the data samples report the severity of level 3.  All the other Pits Datasets have mixed samples of severity level. This also proves that LDADE gets better cluster when data is not skewed, where as on the other hand even the data is not skewed, LDA was providing bad performance before.
 
 \noindent
 \textit{\\B.8.} 
 
 \textit{A qualitative analysis could be also useful to better explain why LDADE provides much more benefits on VEM than Gibbs. Note that this result also confirms the results achieved in the literature about the higher stability of Gibbs as compared to other implementation of LDA.\\}
 
-VEM only gets you to a local optimum that depends on initialization and other factors in the optimization problem~\cite{asuncion2009smoothing}. On the other hand a good sampling algorithm like gibbs sampling can achieve the global optimum. In practice because of finite number of samples that are used, sampling can give you a sub-optimal solution. LDADE works as another kind of sampler which selects good priors at the initialization can achieve better sub-optimal solutions and that is the reason why LDADE has better benefits on VEM.
+VEM only gets you to a local optimum that depends on initialization and other factors in the optimization problem~\cite{asuncion2009smoothing}. On the other hand a good sampling algorithm like gibbs sampling can achieve the global optimum. In practice because of finite number of samples that are used, sampling can give you a sub-optimal solution. LDADE works as another kind of sampler which selects good priors at the initialization and can achieve better sub-optimal solutions, which is why LDADE has better benefits on VEM.
 
 \noindent
 \textit{\\B.9.} 
