@@ -221,10 +221,10 @@ the algorithm is re-run.
 \ei
 To fix this problem,
 we propose LDADE: a  combination of LDA and a search-based optimizer (differential evolution, or DE)~\cite{storn1997differential})
-that automatically tunes LDA's \mbox{$<k$, $\alpha$, $\beta>$} parameters. \textcolor{red}{We prefer LDADE to other methods for two reasons, 1) LDADE is orders of magnitude faster and 2) other methods do not address the problem of order effects (for evidence on this second point,
+that automatically tunes LDA's \mbox{$<k$, $\alpha$, $\beta>$} parameters. We prefer LDADE to other methods for two reasons, 1) LDADE is orders of magnitude faster and 2) other methods do not address the problem of order effects (for evidence on this second point,
 see our  comparison against the LDA-GA method used by Panichella et al.~\cite{panichella2013effectively}, in the results section).
 %proposed a search-based solution in the form of LDA-GA which uses Genetic Algorithm to find the optimal configurations of LDA. From the outlooks of their methodology, we saw 2 problems with it. Firstly, they did not consider the order effects. And secondly, their Genetic Algorithm would be time extensive. We compared their results with LDADE in the results section to validate our assumptions.
-}
+
 
 This paper tests LDADE 
 by applying text mining to
@@ -254,9 +254,9 @@ Using these datasets, we explore these research questions:
       tuning with DE makes LDA three to five times slower.
       While this is definitely more than not using LDA, this may not be an arduous increase
       given modern cloud computing environments. 
-    \item \textcolor{red}{\textbf{RQ8}: \textbf{How better LDADE is compared against LDA-GA?}
+    \item \textbf{RQ8}: \textbf{How better LDADE is compared against LDA-GA?}
     Our analysis confirms that LDADE is much faster and achieves stabler results than LDA-GA.
-    }
+    
        
     \item \textbf{RQ9}: \textbf{Should topic modeling be used ``off-the-shelf'' with their default tunings?}
       Based on these findings, our answer to this question is an emphatic ``no''. We can see little reason to use ``off-the-shelf'' LDA for any kind of SE data mining applications.
@@ -367,7 +367,60 @@ For details on how this table was generated, see Section \tion{solutions}.}
 \end{table*}
 
 
-\input{table3a}
+\begin{table*}[!t]
+\renewcommand{\baselinestretch}{0.75}
+\begin{center}
+\footnotesize
+\caption{LDA topic instability. Shows results from two runs. Column1 reports the percent
+of words from a topic seen in its nearest match in the second run.}
+\label{tbl:olap}
+\begin{tabular}{r|l|l}
+\% overlap with & &\\
+closest topic in run2  & Topic name & top 9 words in topic\\\hline
+100 &Xaml Binding & grid window bind valu wpf silverlight control xaml properti\\
+100 & Ruby on Rails & rubi rail gem lib user end rvm app requir  \\ 
+100 &MVC & http com java apach bean org springframework sun servlet\\
+88 &Objective C & self cell nsstring iphon nil object anim alloc view\\
+88 &Function Return Types & function const char void includ amp return int std\\
+77 &Testing & chang tri work use problem like set code test\\
+77 &Socket Communications & Main send socket connect run Android Activity thread start task process time\\
+77 &Q and A & know need want way use question time like make\\
+77 &OO Programming & instanc void type new method class return object public\\
+77 &HTML Links & com http www url html site content page link\\
+77 &Display & height jpg imag png src size img color width\\
+66 &Windows/VS Tips & studio net dll web use mvc control asp visual\\
+66 &Website Design & left span style text class div color css width\\
+66 &Web Development & script jqueri function form input type ajax var javascript\\
+66 &Java Programming & java void new privat return null int public string\\
+66 &Date/Time Format & select day valu option year format month time date\\
+66 &Database & column order group select join tabl row queri null\\
+66 &Android User View & height content textview parent wrap android width view layout\\
+66 &.NET Framework & net form text checkbox control click label asp button\\
+55 &iOS App Development & applic user need iphon develop want app use like\\
+55 &MySQL & connect sql databas tabl row queri data mysql server\\
+55 &HTML Form & form login user usernam password page XML control action session\\
+55 &Git Operations & folder upload open git use path read file directori\\
+55 &Email Message & address form send field email messag error valid contact\\
+55 &Eclipse & maven jar target build eclips version depend plugin project\\
+44 &iOS App Development & applic user need iphon develop want app use like\\
+44 &Regular Expressions & function array replac regex match echo php post string\\
+44 &Media Player & object video play game player obj use data audio \\ 
+44 &Float number Manipulation & doubl valu count rang number data length float point\\
+44 &Compiling & librari compil lib includ usr command file error test\\
+44 &.NET Framework & net form text checkbox control click label asp button\\
+33 &Ruby Version Manager & end lib user rvm rubi rail app gem requir\\
+33 &Scripting Language & def line self modul print import templat django python\\
+33 &NodeJS & tag function node express parent use list like variabl\\
+33 & C\# Programming & net web asp servic mvc use control applic wcf \\ 
+33 & Python Programming & line python file print command script curl output run \\ 
+33 &Android Debugging & com java lang debug method info android error androidruntim\\
+22 & Visual Studio & window project file error librari compil visual build dll \\ 
+22 & Information Systems & messag email log address contact send mail phone locat \\ 
+22 &Flex4 Development & flash function new var list click sub event item
+\end{tabular}
+\end{center}
+\end{table*}
+
 
 \subsection{LDA is Widely Used}
 
@@ -375,22 +428,22 @@ We study LDA since this algorithm
 is a widely-used technique in recent research papers appearing in prominent SE venues.
 Tables~\ref{tab:venues}~\cite{sun2016exploring} and ~\ref{tbl:survey2} show top SE venues that published SE results and a sample of those papers respectively. For details on how Table~\ref{tbl:survey2} is generated, see Section \tion{solutions}.
 
-\textcolor{red}{As to {\em how} LDA is used, it is important to understand the distinction between supervised
+As to {\em how} LDA is used, it is important to understand the distinction between supervised
 and unsupervised data mining algorithms. In the general sense, most data mining is ``supervised'' when you have data samples associated with labels and then use machine learning tools to make predictions. For example,  in
 the case of~\cite{lohar2013improving, sun2015msr4sm}, the authors used LDA as a feature extractor to build
 feature vectors which, subsequently, were passed to a learner to predict for a target class. Note that such
 supervised LDA processes can be fully automated and do not require human-in-the-loop insight to 
-generate their final conclusions.}
+generate their final conclusions.
 
-\textcolor{red}{However, in case of,
+However, in case of,
 ``unsupervised learning'', the final conclusions are generated via a manual analysis and reflection over, e.g.,
 the topics generated by LDA.  
 Such cases represent~\cite{barua2014developers, hindle2012relating} who used a manual analysis of the topics generated from some SE tasks textual data by LDA as part of the reasoning within the
  text of that paper. It is possible to combine manual and automatic methods, please see the ``Semi-supervised''
- LDA paper of Le et al.~\cite{le2014predicting}.}
+ LDA paper of Le et al.~\cite{le2014predicting}.
 
-\textcolor{red}{However, as shown in our sample, one observation could be made that out of the 28 studies in Table \ref{tbl:survey2}, 23 of them make extensive
-use of LDA for the purposes of {\em unsupervised exploration}. At some point these papers, browsed the LDA topics to guide their subsequent analysis. For example: 1) Barua et al.~\cite{barua2014developers} used the LDA topics to summarize the topics and trends in Stackoverflow, 2) Galvis et al.~\cite{galvis2013analysis} used LDA to gain an understanding of the nature of user statements in requirements documents, and many more.}
+However, as shown in our sample, one observation could be made that out of the 28 studies in Table \ref{tbl:survey2}, 23 of them make extensive
+use of LDA for the purposes of {\em unsupervised exploration}. At some point these papers, browsed the LDA topics to guide their subsequent analysis. For example: 1) Barua et al.~\cite{barua2014developers} used the LDA topics to summarize the topics and trends in Stackoverflow, 2) Galvis et al.~\cite{galvis2013analysis} used LDA to gain an understanding of the nature of user statements in requirements documents, and many more.
 
 As witnessed by the central columns of Table~\ref{tbl:survey2},
 many prior papers~\cite{panichella2013effectively,lohar2013improving,sun2015msr4sm} have commented that the results of a topic modeling
@@ -542,7 +595,7 @@ two or more orders of $T$ for which $L$ produces different knowledge structures.
 Many learners exhibit order effects, e.g., certain incremental clustering algorithms generate different
 clusters, depending on the order with which they explore the data~\cite{gennari1989models}.
 Hence, some algorithms survey the space of possible models across numerous
-random divisions of the data (e.g., Random Forests~\cite{Breiman2001}).
+random divisions of the data (e.g., Random Forests~\cite{breiman2001random}).
 
 From the description offered above in Section \ref{sect:tm},
 we can see how topic modeling might be susceptible to order effects and how such order
@@ -613,7 +666,7 @@ of software defect prediction from static code attributes. They found that most 
   miners for the purposes of defect prediction. That paper tested different
   ``off-the-shelf'' data miners on the same data set, without adjusting the
   parameters of each individual learner. Similar comparisons of data miners in SE,
-with no or minimal pre-tuning study, can be found in the work on Lessmann et al.~\cite{4527256}
+with no or minimal pre-tuning study, can be found in the work on Lessmann et al.~\cite{lessmann2008benchmarking}
 and, most recently, in Yang et al~\cite{yang2016effort}.  
 
 In summary, all our literature reviews of the general  (non-LDA) software analytics literature
@@ -762,7 +815,7 @@ Topic modeling on Stackoverflow is useful for finding patterns in programmer kno
   \textbf{Citemap} contains titles and abstracts of 15121 papers from a
  database of 11 senior software engineering conferences from 1992-2016. Most of this data was
  obtained in the form of an SQL dump from the work of Vasilescu et
- al.~\cite{vasilescu2013historical} and some are collected by Mathew et al~\cite{mathew2016trends}. People have studied healthiness of software engineering conferences~\cite{vasilescu2014healthy}. This dataset is available online\footnote{https://github.com/ai-se/Pits\_lda/blob/master/dataset/citemap.csv}.
+ al.~\cite{vasilescu2013historical} and some are collected by Mathew et al~\cite{mathew2017trends}. People have studied healthiness of software engineering conferences~\cite{vasilescu2014healthy}. This dataset is available online\footnote{https://github.com/ai-se/Pits\_lda/blob/master/dataset/citemap.csv}.
 
   For this study, all  datasets were preprocessed using the usual text mining filters~\cite{feldman2006j}:
 \bi
@@ -789,7 +842,6 @@ Topic modeling on Stackoverflow is useful for finding patterns in programmer kno
   using Scikit-Learn~\cite{pedregosa2011scikit} and Python, and 2) Stackoverflow is so large (7GB) that its  processing requires extra hardware support.
  This study used Spark and Mllib on a cluster of 45 nodes to
  reduce the runtime.
- \ei
   
 
 
@@ -866,7 +918,7 @@ we distinguish between the \textbf{\textit{Raw  score}} and the \textbf{\textit{
   description, superscript numbers denote lines in the pseudocode. The data ordering is
   shuffled every time LDA is ran$^{7}$. Data is in the form of $\mathit{tfidf}$
   scores of each word per document. Shuffling is done in order to induce maximum
-  variance among the ordering of data with  different runs of LDA. \textcolor{red}{Function $\mathit{lda}^{8}$ returns $k$ topics.} Topics$^{8}$ are a list of lists which
+  variance among the ordering of data with  different runs of LDA. Function $\mathit{lda}^{8}$ returns $k$ topics. Topics$^{8}$ are a list of lists which
   contains topics from all the different runs. A stability score is evaluated on
   every 10 runs (Fixed) of LDA, and this process is continued 10 (Fixed) times to avoid any sampling bias. At the end, the median
   score is selected as the untuned raw score ($\Re_n$ ) $^{4-12}$. Hence, the runtimes comes from $10$ evaluations of untuned experiment.
@@ -967,8 +1019,8 @@ We manually run these other inference techniques according to different implemen
 \end{center}
 \end{table}
 
-\textcolor{red}{\fig{pseudo_DE} (Algorithm 2) shows the pseudocode of LDADE. DE evolves from the \textit{NewGen} of
-candidates from a current $Pop$. Each candidate solution in the $Pop^{10}$ is a set of  parameters (Tunings). The values of this set is selected randomly from Table~\ref{tb:tuned} in the $\mathit{InitializePopulation}^{10}$ function. $Pop$ variable is now a matrix of $10\times3$ since $np=10$.}
+\fig{pseudo_DE} (Algorithm 2) shows the pseudocode of LDADE. DE evolves from the \textit{NewGen} of
+candidates from a current $Pop$. Each candidate solution in the $Pop^{10}$ is a set of  parameters (Tunings). The values of this set is selected randomly from Table~\ref{tb:tuned} in the $\mathit{InitializePopulation}^{10}$ function. $Pop$ variable is now a matrix of $10\times3$ since $np=10$.
 
 \begin{figure}[!h]
 \scriptsize
@@ -1066,21 +1118,21 @@ candidates from a current $Pop$. Each candidate solution in the $Pop^{10}$ is a 
 %     \end{algorithmic}
 % \end{algorithm}
 
-\textcolor{red}{$\mathit{Cur\_gen}^{9}$ and $\mathit{NewGen}^{16}$ variables are the list of Tunings, and $\Re_n$ score 
-which comes similarly from Algorithm 1$^{4-12}$ (\fig{pseudo_un}). But for LDADE, everytime Algorithm 1 uses different values of parameters found by DE. The runtimes comes from 1 DE run which does about $\mathit{iter} * np$ evaluations of tuned experiment. DE is driven by a goal (called quality/fitness funtion), which in this case is maximizing the $\Re_n$ (raw) score calculated using  $\mathit{ldascore}^{19}$ function.}
+$\mathit{Cur\_gen}^{9}$ and $\mathit{NewGen}^{16}$ variables are the list of Tunings, and $\Re_n$ score 
+which comes similarly from Algorithm 1$^{4-12}$ (\fig{pseudo_un}). But for LDADE, everytime Algorithm 1 uses different values of parameters found by DE. The runtimes comes from 1 DE run which does about $\mathit{iter} * np$ evaluations of tuned experiment. DE is driven by a goal (called quality/fitness funtion), which in this case is maximizing the $\Re_n$ (raw) score calculated using  $\mathit{ldascore}^{19}$ function.
 
-\textcolor{red}{The main loop of DE$^{15}$ runs over the \textit{Pop}, replacing old items with new Candidates (if new candidate is better).
+The main loop of DE$^{15}$ runs over the \textit{Pop}, replacing old items with new Candidates (if new candidate is better).
 DE generates \textit{new Candidates} via 
 $\mathit{Extrapolate}^{18}$ function between current solutions of the $\mathit{Cur\_gen}$ variable. Three solutions $a$, $b$ and $c\ ^{32}$ are
 selected at random from the $\mathit{pop}$. Each of these solution is nothing but a set of ($k$, $\alpha$ and $\beta$). For each tuning parameter i$^{34}$, at some crossover probability (\textit{cr} $^{35}$), we
 replace the $\mathit{old}$ tuning with $\mathit{newf}$. We mutate a solution with the equation $y_i = a_i + f \times (b_i - c_i)$ where $f$ is a
 parameter controlling crossover. The trim function$^{38}$ limits the new value
-to the legal range min..max of that parameter.}
+to the legal range min..max of that parameter.
 
-\textcolor{red}{The loop invariant of DE is that, after the zero-th iteration$^{15}$, the \textit{Pop}
+The loop invariant of DE is that, after the zero-th iteration$^{15}$, the \textit{Pop}
 contains examples that are better than at least one other candidate$^{20}$.
 As the looping progresses, the \textit{Pop} is full of increasingly more valuable solutions
-which, in turn, also improve the candidates, which are Extrapolated from the Population. LDADE finds the optimal configuration and the $\Re_n$ (Raw) score$^{28}$ using $GetBestSolution$ function for a particular dataset to be used with LDA for further SE task. One may argue why we have been encoding $\Re_n$ score in the solution. This is shown in pseudocode just to keep track of the values but it is not used to drive our quality/fitness ($ldascore$) function.}
+which, in turn, also improve the candidates, which are Extrapolated from the Population. LDADE finds the optimal configuration and the $\Re_n$ (Raw) score$^{28}$ using $GetBestSolution$ function for a particular dataset to be used with LDA for further SE task. One may argue why we have been encoding $\Re_n$ score in the solution. This is shown in pseudocode just to keep track of the values but it is not used to drive our quality/fitness ($ldascore$) function.
 
 \begin{table}[!htbp]
 \begin{center}
@@ -1143,6 +1195,7 @@ Note that if this is {\em not true}, then there would be no value added to this 
     \end{center}
   \caption{{\em Before} tuning: uses LDA's default parameters}\label{fig:delta11}  
 \end{figure}
+
 \begin{figure}[!t]
         \begin{center}
         \includegraphics[width=0.9\linewidth]{./fig/raw_graph.png}
@@ -1180,9 +1233,9 @@ Note that the  stability collapses the most after $n=5$ words. This means
    Overall, after reporting topics of up to 7 words, in the majority case (66\%),
   those topics can be found in models generated using different input orderings.
   
-  \textcolor{red}{Continuing on the result of PitsD which achieves the highest improvement. We observed that  about 92\% of the data in that sample has the severity of level 3.  All the other Pits Datasets have mixed samples of severity level. When data is less skewed LDADE achieves the highest improvement which was not achieved when just LDA was being used. So, this makes it highly unimaginable to use just LDA for highly skewed data. This also emphasizes the use of LDADE more. 
+  Continuing on the result of PitsD which achieves the highest improvement. We observed that  about 92\% of the data in that sample has the severity of level 3.  All the other Pits Datasets have mixed samples of severity level. When data is less skewed LDADE achieves the highest improvement which was not achieved when just LDA was being used. So, this makes it highly unimaginable to use just LDA for highly skewed data. This also emphasizes the use of LDADE more. 
   %This shows that LDADE finds better cluster when data is not skewed, where as on the other hand even the data is not skewed, LDA was providing bad performance before.
-  }
+  
   
   Accordingly, our answer to {\bf RQ2} is:
 
@@ -1192,10 +1245,10 @@ For stable clusters, tuning is strongly recommended for future LDA studies. $\al
 
 \subsection{\textbf{RQ3: Does LDADE improve text mining classification accuracy?}}\label{sect:rq3} 
 
-We studied some other StackExchange websites data dump for classification results which were generated by Krishna et al \cite{krishna2016bigse}. These datasets are categorized into binary labels indicating which documents are relevant and non relevant. The goal of our DE was still to maximize the $\Re_n$ score. We did not change the goal of our DE based on classification task. \textcolor{red}{After finding the optimal $k$, $\alpha$ and $\beta$, we trained a Linear Kernel SVM classifier using document topic distributions just like used by Blei et al~\cite{blei2003latent}. We used a 5-fold stratified cross validation to remove any sampling bias from the data. 80\% was used as training and 20\% as testing, and for the tuning phase, out of 80\%, 65\% was used for training and 15\% as validation set.}
+We studied some other StackExchange websites data dump for classification results which were generated by Krishna et al \cite{krishna2016bigse}. These datasets are categorized into binary labels indicating which documents are relevant and non relevant. The goal of our DE was still to maximize the $\Re_n$ score. We did not change the goal of our DE based on classification task. After finding the optimal $k$, $\alpha$ and $\beta$, we trained a Linear Kernel SVM classifier using document topic distributions just like used by Blei et al~\cite{blei2003latent}. We used a 5-fold stratified cross validation to remove any sampling bias from the data. 80\% was used as training and 20\% as testing, and for the tuning phase, out of 80\%, 65\% was used for training and 15\% as validation set.
 
-\textcolor{red}{In Figures \ref{fig:classF1} and~\ref{fig:classF2}, the x-axis represents different datasets as generated. Y-axis represents the F1 score in Figure~\ref{fig:classF1} and in Figure~\ref{fig:classF2}, Y-axis represents F2 score
-(from \eq{f})  which weights recall higher than precision~\cite{powers2011evaluation}. In the figures, ``untuned\_10'' indicates LDA used with default parameters of $k=10$, ``tuned\_k'' represents tuning of parameters selected from Table~\ref{tb:tuned} with value of $k$ written beside it, and ``tuned 10'' shows $k=10$ with $\alpha$ and $\beta$ tuned by our LDADE method. At the bottom of the figure, we show the variance which is inter-quartile (75th-25th percentile, i.e., IQR) range.}
+In Figures \ref{fig:classF1} and~\ref{fig:classF2}, the x-axis represents different datasets as generated. Y-axis represents the F1 score in Figure~\ref{fig:classF1} and in Figure~\ref{fig:classF2}, Y-axis represents F2 score
+(from \eq{f})  which weights recall higher than precision~\cite{powers2011evaluation}. In the figures, ``untuned\_10'' indicates LDA used with default parameters of $k=10$, ``tuned\_k'' represents tuning of parameters selected from Table~\ref{tb:tuned} with value of $k$ written beside it, and ``tuned 10'' shows $k=10$ with $\alpha$ and $\beta$ tuned by our LDADE method. At the bottom of the figure, we show the variance which is inter-quartile (75th-25th percentile, i.e., IQR) range.
 
 \begin{figure}[!htbp]
   \begin{center}
@@ -1235,13 +1288,11 @@ We studied some other StackExchange websites data dump for classification result
     \end{minipage}
 \end{figure*}
 
-\textcolor{red}{
 %We can see how stable our results are, and the improved performance of tuned over untuned is much larger, measured in terms of the  performance metrics. 
-There is about 100\% minimum improvement over the untuned (``untuned\_10'')  with LDADE (``tuned\_k''). Even when LDADE is tuned just with $\alpha$ and $\beta$, keeping $k$ constant we see minimum improvement of about 25\%. These results also validate the study of Blei et al.~\cite{blei2003latent} in which they stated that for a classification task, value of $k$ matters the most. Since the variance seen are so small, that this makes the results highly stable.} 
+There is about 100\% minimum improvement over the untuned (``untuned\_10'')  with LDADE (``tuned\_k''). Even when LDADE is tuned just with $\alpha$ and $\beta$, keeping $k$ constant we see minimum improvement of about 25\%. These results also validate the study of Blei et al.~\cite{blei2003latent} in which they stated that for a classification task, value of $k$ matters the most. Since the variance seen are so small, that this makes the results highly stable.
 
-\textcolor{red}{Just for completeness, we ran the Scott-Knot~\cite{jelihovschi2014scottknott} procedure for statistical differences using the A12 effect size~\cite{vargha2000critique}
-test and bootstrapping~\cite{efron1994introduction} which have a confidence levels of 1\%.
-Based on those tests, we assert that the tuned results are different and better to the untuned results.}
+Just for completeness, we ran the Scott-Knot~\cite{jelihovschi2014scottknott} procedure for statistical differences using the A12 effect size~\cite{vargha2000critique}
+test and bootstrapping~\cite{efron1994introduction} test which agreed that the division between tuned and untuned results were statistically significant (99\% confidence) and not a ``small'' effect ($A12 \ge 0.6$).
 
 \noindent
 Hence, we say:
@@ -1295,24 +1346,6 @@ Figure \ref{python_spark} shows tuning results for Stackoverflow, Citemap, and P
 \end{figure}
 
 
-  Figure~\ref{gibbs_vem} compares the  VEM vs Gibbs sampling (for results on other datasets, see https://goo.gl/faYAcg). When compared with the Python/desktop results of
-   Figure~\ref{fig:delta} we see the same patterns that tuning never makes stability worse and sometimes, tuning dramatically improves it (in particular, see the Citemap results
-   of  Figure~\ref{python_spark}).
-
-   That said, there are some deltas between VEM and Gibbs where it seems tuning
-   is more important for VEM than Gibbs (evidence: the improvements seen after
-   tuning are largest for the  VEM results of  Figure~\ref{gibbs_vem} and at  https://goo.gl/faYAcg). \textcolor{red}{The reason being, VEM only gets to a local optimum that depends on initialization and other factors in the optimization problem~\cite{asuncion2009smoothing}. On the other hand a good sampling algorithm like Gibbs sampling can achieve the global optimum. In practice because of finite number of samples that are used, sampling can give a sub-optimal solution. LDADE works as another kind of sampler which selects good priors at the initialization and can achieve better sub-optimal solutions, which is why LDADE has better benefits on VEM.}
-
-\begin{lesson}
-  Instability is not due to any quirk in the implementation of LDA. Instability is consistent and LDADE can stabilize. 
-\end{lesson}
-
-\begin{figure}[!b]
-  \includegraphics[width=\linewidth]{./fig/citemap.png}
-  \caption{Terms vs Delta Improvement using Different settings of DE}
-  \label{fig:RQ4}
-\end{figure}
-
 \begin{figure*}[!t]
     \centering
   \begin{minipage}{.49\textwidth}
@@ -1329,6 +1362,25 @@ Figure \ref{python_spark} shows tuning results for Stackoverflow, Citemap, and P
     \end{minipage}%
     
 \end{figure*}
+
+\begin{figure}[!t]
+  \includegraphics[width=\linewidth]{./fig/citemap.png}
+  \caption{Terms vs Delta Improvement using fifferent settings of DE. The legends represent different values of $f$, $cr$ and $np$. So if legend says F3CR7P30, this shows $f=0.3$, $CR=0.7$ and $np=30$. Similarly for other legends}
+  \label{fig:RQ4}
+\end{figure}
+
+  Figure~\ref{gibbs_vem} compares the  VEM vs Gibbs sampling (for results on other datasets, see https://goo.gl/faYAcg). When compared with the Python/desktop results of
+   Figure~\ref{fig:delta} we see the same patterns that tuning never makes stability worse and sometimes, tuning dramatically improves it (in particular, see the Citemap results
+   of  Figure~\ref{python_spark}).
+
+   That said, there are some deltas between VEM and Gibbs where it seems tuning
+   is more important for VEM than Gibbs (evidence: the improvements seen after
+   tuning are largest for the  VEM results of  Figure~\ref{gibbs_vem} and at  https://goo.gl/faYAcg). The reason being, VEM only gets to a local optimum that depends on initialization and other factors in the optimization problem~\cite{asuncion2009smoothing}. On the other hand a good sampling algorithm like Gibbs sampling can achieve the global optimum. In practice because of finite number of samples that are used, sampling can give a sub-optimal solution. LDADE works as another kind of sampler which selects good priors at the initialization and can achieve better sub-optimal solutions, which is why LDADE has better benefits on VEM.
+
+\begin{lesson}
+  Instability is not due to any quirk in the implementation of LDA. Instability is consistent and LDADE can stabilize. 
+\end{lesson}
+
 
 \subsection{\textbf{RQ6: Is  tuning  easy?}}
 
@@ -1382,16 +1434,41 @@ holds true in practice. Shown in blue and red are the
   While this is definitely more than not using DE, but this may not be an arduous increase
   given modern cloud computing environments.
 
-\subsection{\textcolor{red}{\textbf{RQ8: How better LDADE is compared against LDA-GA?}}}
+\subsection{\textbf{RQ8: How better LDADE is compared against LDA-GA?}}
 \label{sect:rq8}
 
-\textcolor{red}{Panichella et al.~\cite{panichella2013effectively} did not consider order effects, which could result in instability of LDA. 
+Panichella et al.~\cite{panichella2013effectively} did not consider order effects, which could result in instability of LDA. 
 Another issue could be with their use of Genetic Algorithms to find optimal configurations. Such GAs can be very time consuming to run.
  Fu et al.~\cite{fu2017easy} argues for faster software analytics,
  saying that the saved CPU time
- could be put to better uses.}
+ could be put to better uses.
 
-\textcolor{red}{We ran LDA-GA with their same settings but on our datasets and report the delta of $\Re_n$ of LDADE against $\Re_n$ of LDA-GA. In Figure~\ref{fig:ldaga}, the positive value shows LDADE performed better than LDA-GA and negative shows LDA-GA performed better. In only about 2 cases (PitsB, PitsC), it is seen that LDA-GA performed better. The reason being, LDA-GA takes a larger number of evaluations which was able to find a better sub-optimal configuration, but it took somewhere between 24-70 times more time than LDADE (See Figure~\ref{fig:run_ldaga}). In Figure~\ref{fig:run_ldaga}, we are seeing variations in the difference between the runtimes of LDADE and LDA-GA in these datasets. This is due to the settings of GA. LDA-GA has early termination criteria which depends on the quality of dataset. LDA-GA should take somewhere from 1000 to 10,000 evaluations where as our DE would take about 30 evaluations. If a particular dataset is less skewed, it will be terminated early in LDA-GA. These results verify that our initial assumptions hold true, i.e., we can get much faster and more stabler results with LDADE than LDA-GA.}
+We ran LDA-GA with their same settings but on our datasets and report the delta of $\Re_n$ of LDADE against $\Re_n$ of LDA-GA. In Figure~\ref{fig:ldaga}, the positive value shows LDADE performed better than LDA-GA and negative shows LDA-GA performed better. In only about 2 cases (PitsB, PitsC), it is seen that LDA-GA performed better. The reason being, LDA-GA takes a larger number of evaluations which was able to find a better sub-optimal configuration, but it took somewhere between 24-70 times more time than LDADE (See Figure~\ref{fig:run_ldaga}). In Figure~\ref{fig:run_ldaga}, we are seeing variations in the difference between the runtimes of LDADE and LDA-GA in these datasets. This is due to the settings of GA. LDA-GA has early termination criteria which depends on the quality of dataset. LDA-GA should take somewhere from 1000 to 10,000 evaluations where as our DE would take about 30 evaluations. If a particular dataset is less skewed, it will be terminated early in LDA-GA. These results verify that our initial assumptions hold true, i.e., we can get much faster and more stabler results with LDADE than LDA-GA.
+
+
+\textcolor{red}{We further performed our comparison of LDADE against LDA-GA for the classification task and details are the same as described in Section~\ref{sect:rq3}.
+ From Figure~\ref{fig:ldade_ga}, we did not see big difference in F1 results among the 2 methods. The reason being the value of $k$ matters for the classification analysis and both the methods find the same range of $k$.}
+
+\textcolor{red}{Overall we say:
+\bi
+\item Measured in terms of the
+resulting classification accuracy,
+both LDADE and LDA-GA are similar;
+\item But
+LDADE executes  24-70 times faster
+than LDA-GA (see Figure~\ref{fig:run_ldaga}).
+\item And LDADE produces stabler
+topics.
+\ei}
+ 
+
+
+ 
+
+  \begin{lesson}
+    LDA-GA is affected by order effects and it is slower than LDADE.  LDADE achieves stabler results. 
+  \end{lesson}
+
 
 \begin{figure}[!t]
   \includegraphics[width=\linewidth]{./fig/ldaga.png}
@@ -1405,15 +1482,78 @@ Another issue could be with their use of Genetic Algorithms to find optimal conf
   \label{fig:run_ldaga}
 \end{figure}
 
-  \begin{lesson}
-    LDA-GA is affected by order effects and it is slower than LDADE. Also, LDADE achieves stabler results.
-  \end{lesson}
+\begin{figure}[!t]
+  \includegraphics[width=\linewidth]{./fig/F1_ga.png}
+  \caption{Comparison of LDADE and LDA-GA for Classification SE Task. The numbers in black show the $k$ values
+  learned by individual methods.}
+  \label{fig:ldade_ga}
+\end{figure}
 
+\begin{table*}[!t]
+\renewcommand{\baselinestretch}{0.75}
+\begin{center}
+\footnotesize
+\caption{LDADE finds 27 stable topics which were unstable with the use of LDA shown in Table~\ref{tbl:olap}. Column1 reports the percent
+of words from a topic seen in its nearest match in the second run.}
+\label{tbl:olap_stable}
+\begin{tabular}{r|l|l}
+\% overlap with & &\\
+closest topic in run2  & Topic name & top 9 words in topic\\\hline
+100 &C Programming & function return const char void includ amp int std\\
+100 &Visual Studio & studio net visual dll web use window control asp\\
+100 &Xaml Binding & grid window bind xaml valu data silverlight control properti\\
+100 &HTML Form & form page user usernam password XML action session control login\\
+100 &Objective C & alloc nsock nsstring view iphon cell nil object anim\\
+88 &iOS Software & applic user need iphon develop want app use like\\
+88 &Testing & code suite chang work use problem software set test\\
+88 &Date/Time Format & month time date select day valu option year format\\
+88 &Socket Communications & network protocol send socket connect run address thread start \\
+88 & Ruby on Rails & gem rail lib user rubi end mvc app requir  \\
+88 &.NET Framework & asp net form text checkbox control click label button\\
+88 &OO Programming & class instanc void public type interface method return object\\
+77 &Android User View & android view layout height content textview parent wrap width\\
+77 &Java Envrionment & http java apach bean org spring framework sun servlet \\
+77 &Display & png src size height jpg imag img color width\\
+77 & CSS & color css width left span style text class div\\
+77 &Email Message & messag error address form email send field  valid contact\\
+77 &Web Development & ajax var javascript script jqueri function form input type\\
+77 &Git Operations & git use path read folder directori upload open file \\
+66 &Java Programming & java privat return null void new  int public string\\
+66 &MySQL & tabl row queri data mysql connect sql databas server\\
+66 &Regular Expressions & regex match echo php post function array replac string\\
+66 &Eclipse & eclips version depend plugin maven jar target build  project\\
+66 &Database & group join tabl row column order select  queri null\\
+66 &iOS App Development & app iphon applic user need  develop want ios like\\
+55 &HTML Links & url html com http www content page site  link\\
+55 & Compiling & compil lib includ usr librari  command file error test\\
+\end{tabular}
+\end{center}
+\end{table*}
 \subsection{\textbf{RQ9: Should topic modeling be used ``off-the-shelf'' with their default tunings?}}
+\label{sect:rq9}
 
   Figure~\ref{fig:delta} shows that there is much benefit in tuning.
   Figures \ref{RQ3:k}, \ref{RQ3:a}, and \ref{RQ3:b} show that
-  the range of ``best'' tunings is very dataset specific. Hence, for a new dataset,
+  the range of ``best'' tunings is very dataset specific. 
+  \textcolor{red}{The
+  application of LDADE's recommended tunings can be most beneficial. For example,
+  we have performed the same analysis as we did in Table~\ref{tbl:olap} but this time
+  using LDADE's recommended
+  configurations.
+  This lead to the 27   topics of Table~\ref{tbl:olap_stable}. Note that
+  the topics
+  found by our methods are far more stable
+  than before:
+  \bi
+  \item The usual stability of our topics is nearly 88\% (or more);
+  \item
+  The worst  stability of the topics
+  found by LDADE (55\%) is equal to the {\em
+  median} instability of
+  Table~\ref{tbl:olap}.
+  \ei}
+    Based on the above, we assert that
+  for a new dataset,
   the off-the-shelf tunings
   may often fall far from the useful range.
   Figures \ref{RQ5 VEM} and \ref{RQ5 Gibbs} show that tuning is definitely
@@ -1423,6 +1563,7 @@ Another issue could be with their use of Genetic Algorithms to find optimal conf
     Whatever the goal is, whether using the learned topics, or cluster distribution for classification
     we cannot recommend using ``off-the-shelf'' LDA.
   \end{lesson}
+
 
 
 \section{Threats to Validity}
@@ -1452,7 +1593,19 @@ many evaluations to execute before terminating DEs. All the results in this pape
 evaluation budget of 30 evaluations. Table~V
 compares results across different numbers of evaluations. While clearly,
 the more evaluations the better, there is little improvement after the
-30 evaluations used in this paper.
+30 evaluations used in this paper. \textcolor{red}{We observed that DE only took about 30 evaluations to find stable configurations of LDA which a random search could find as well. We performed the  comparison with random search with 30 evaluations and observed that the improvement achieved with LDADE outperforms the improvement achieved with random search (Figure~\ref{fig:random}). DE is smarter than random search because of 2 reasons:} 
+\bi
+\item \textcolor{red}{It samples from a space that is continuously improving. In every generation, the frontier contains atleast one candidate which is better than the last generation. During the next generation, mutation happens between 3 better candidates.}
+\item \textcolor{red}{It supports vector level mutation that retain the association between variables in the space which other optimizers like GAs, SA does not provide~\cite{das2011differential}.}
+\ei
+\begin{figure}[!htbp]
+  \includegraphics[width=\linewidth]{./fig/delta_randomness.png}
+  \caption{Terms vs Delta comparison of LDADE against Random Search. Higher the improvement, better is LDADE.}
+  \label{fig:random}
+\end{figure}
+
+\noindent
+\textcolor{red}{We also acknowledge that for now we validated the improvement of LDADE over LDA in an unsupervised task (see Table~\ref{tbl:olap} and ~\ref{tbl:olap_stable}) and in 1 case study of supervised task. The gains shown in this study may not be prominent when tested on any other unsupervised or supervised task. We would like to test LDADE's advantage in further SE tasks.}
 
 \begin{table}[!htbp]
 \scriptsize
@@ -1522,8 +1675,8 @@ In how many domains can search-based SE dramatically improve software analytics?
 \setcounter{page}{1}
 
 \nobalance
-
 \pagestyle{plain} 
+
 \section*{Responses to reviewers}
 
 Please see our replies to reviewer comments, below. Note that anything in {\em italics} is from the review team.\\
@@ -1531,247 +1684,332 @@ Please see our replies to reviewer comments, below. Note that anything in {\em i
 \noindent
 \textit{A. Comment from Editor:}
 
-{\em Both reviewers consider the research of great interest. LDA is a widely used techniques, and studying and improving its performance is a value research topic.}
-
-Thank you for those kind words.\\
-
-{\em Both reviewers raised a number of substantial concerns that need to be looked into. Mainly they are related to}
+{\em Sorry for the delay in the response to your revision. Both reviewers acknowledge good progress, but have some outstanding issue you need to look into}:
 
 \bi
-\item
-{\em More transparently differentiate from existing and closely related work.}
-
-As recomended by the reviewers, we now compare our proposed method to prior work
-that used a genetic algorithm
-(by Panichella, Dit, Oliveto,  Di Penta,  Poshyvanyk, De Lucia, et al.~\cite{panichella2013effectively}). We find our method runs
-orders of magnitude faster than theirs (see Figure~\ref{fig:run_ldaga}) and
-that their method result in worse topics stability  (see Figure~\ref{fig:ldaga}).\\
-
-
-\item
-{\em More precise and detailed description of LDADA and its evaluation.}
-
-As per the the feedback from reviewers,   we have provided a more precised and detailed description on LDADE (see Section \ref{sect:tuning}).\\
+\item {\em Why categorizing StackExchange data into relevant and non relevant categories useful (Motivation of the SENG related example)\\}
 \ei
+We answered the reviewers concern in our reply to A.2\\
 
-There is one matter that the coordinating editor might need to comment on. Review A.2 comments that ``There is a need to expand the experiments to  compare  LDA  and  LDADE  on    realistic  software engineering  tasks''. By this, we think, the reviewer
-means running more experiments on supervised learning tasks where there is some target variable that should be predicted for. In reply, we note that:
 \bi
-\item
-We do run some experiments on supervised tasks (see Section~\ref{sect:rq3} and Figures~\ref{fig:classF1},~\ref{fig:classF2});
-\item
-But, more importantly, as we show in our
-literature review (section 2.1 and Table 2), most of the usages of LDA is for ``unsupervised tasks'' where LDA is used to find a structure to help humans navigate around and  gain some insight to the space within software artifacts. In fact, by our count (in Table 2). $23/28=82$\% of the applications
-of LDA in SE are of this unsupervised nature. 
+\item {\em Use LDA-GA for the classification task in Section 5.3 and demonstrate whether or not LDADE outperforms LDA-GA\\}
 \ei
-Now we believe that when using LDA for such navigation purposes that unstable topics would be very misleading (see our case study on that in section 2.2 and Table 3; also seee our notes on that point in A.1) so we think our paper does address a ``realistic task''. Nevertheless, this
-is a matter that needs to be decided by the co-ordinating editor.
+As suggested by the Reviewer 1, we now include our results on the comparative analysis between LDADE and LDA-GA for a classification task (please see Section~\ref{sect:rq8}).
+
+\bi
+\item {\em Provide a deeper discussion on the very low number of evaluations of the proposed algorithm.\\}
+\ei
+As per the suggestion from our Reviewer 2, we provided our reasoning of such low number of evaluations in our reply to B.2. We also performed another experiment where we compared LDADE with the random search.\\
+
 
 \newpage
 \section*{A. Reviewer 1}
 
-\textit{Topic modeling has been used in many software engineering papers. The paper shows that topic modeling, especially LDA, suffers from order effects -- which is new and interesting. Depending on the order data is presented to LDA, it produces a different model. Search-based software engineering can be used to tune LDA parameters so that order effect is minimized. LDADE (LDA mixed with Differential Evolution) is presented. It is shown to improve standard LDA for various settings including classification of StackExchange websites into relevant and non-relevant documents -- which is good.\\}
+\textit{Thank you for the addressing my comments. I'm happy with most of the changes made.\\}
 
-Thank you for those kind words.
+Thank you for those kind words.\\
 
-\noindent
-\textit{\\A.1.}
-\textit{Very closely related work exists:}
-
-\textit{A prior work has demonstrated suboptimal performance of topic modeling, in particular LDA, when default parameters are used, and proposed a solution that addresses the problem using search-based software engineering~\cite{panichella2013effectively}. Thus, the novelty of the work seems limited. The paper does not describe why LDADE is better than Panichella et al.'s work. Panichella et al.'s work (LDA-GA) should have been prominently highlighted in the introduction of the paper and a short discussion should be given as to why another search-based solution is needed.\\}
-
-Thank you for making us look again at that prior work.
-We have updated the introduction section to highlight the difference between LDA-GA and LDADE. Also,
-we have compared the results of LDADE against LDA-GA in Section~\ref{sect:rq8}.
-We note that
-Panichella et al. did not consider the problem of order effects. Also, their  Genetic Algorithm method
-is much slower than our approach. We observed that LDADE 
-gets better stable results (see Figure~\ref{fig:ldaga}) 
-and is much faster (see Figure~\ref{fig:run_ldaga})\footnote{Just to answer your next question, we think there is much 
-value in speeding up widely used algorithms.
-A summary  of our arguments for this point appears in section 2.1 of https://arxiv.org/abs/1703.00133  and  pages 7 to 35 of http://tiny.cc/tim17vic.
-Our call is that material is not needed to be summarized here (but would take the reviewer's advice here).}.
-Now we stress that   Panichella et al.'s  {\em did not} optimize for stability. As shown in Figure~\ref{fig:ldaga}, the topics found by Panichella et al.'s methods are far less stable than ours, This is important since, as Mark Harmon~\cite{harman2007current} said
-
+\textit{A.1\\}
+{\em Let me clear one misunderstanding.
+You wrote:
 \begin{quote}
-``In some software engineering applications, solution robustness may be as important
-as solution functionality. For example, it may be better to locate an area
-of the search space that is rich in fit solutions, rather than identifying an even
-better solution that is surrounded by a set of far less fit solutions.''
 
-``Hitherto, research on SBSE has tended to focus on the production of the fittest
-possible results. However, many application areas require solutions in a search
-space that may be subject to change. This makes robustness a natural second
-order property to which the research community could and should turn its attention.''
+$>$ The experiments need to be improved in the following ways/ First, LDA has been used to help many realistic software engineering tasks (for example, tasks considered by papers included in Table 2. There is a need to expand the experiments to compare LDA and LDADE on those realistic software engineering tasks. It is unclear if the task considered in the experiments (Section 5.3) is realistic (why categorizing StackExchange data into relevant and non relevant categories useful?). More than one tasks should have been considered (similar like Panichella et al.’s work). 
+
+$>$ Our goal in this revision was to be as responsive as possible to your suggestions (as as you can see below, in A.4, A.5 and A.7, we were able to implement much of your advice.) But as to applying this to “more realistic SE task”, we might have a different perspective on what is a “valid” SE task. 
+We say this since it sounds like you are saying the unsupervised tasks conducted by 23 of 28 recent highly cited LDA papers are not “realistic”? And that we should evaluate this paper only via the supervised tasks seen in 4 of the 28 papers? That is not our view, please see the notes above in A.1 on the need for stability in unsupervised SE tasks.
 \end{quote}
-Why is optimizing for stability important in the particular context of this research? For tasks such as those explored by  Panichella et al.'s, it does not matter since the output LDA models are not inspected by humans. Rather, they are under-the-hood intermediaries
-for further analysis.
 
-However, for {\em unsupervised tasks}, the situation is very different. This distinction between  {\em unsupervised tasks} and  {\em supervised tasks} is significant since,
-as shown in Table 2, 23 of the recent highly-cited LDA  studies found in the SE literature are for {\em unsupervised tasks}. And
-as shown by example, (please see Table~\ref{tbl:olap}) that topic instability can be a major impediment to knowledge discovery in SE. 
-Note that for {\em unsupervised tasks},  the LDA topics are the primary product used and shared by humans to justify certain conclusions about a domain. In such unsupervised tasks, humans have no goal, no supervised direction, rather, they are reading the topics as knowledge discovery aids to better explore some domain
-(or they are used by clustering algorithms to determine groupings of software artifacts).
-In either case, instabilities in the topics will result in different clustering and different justifications. Hence, this paper.
+From my original comment "LDA has been used to help many realistic software engineering tasks (for example, tasks considered by papers included in Table 2)", I'm not saying that the unsupervised tasks considered prior work listed in Table 2 are not realistic. The point that I would like to convey is: the paper does not evaluate LDADE and LDA directly for any of the supervised or unsupervised tasks listed in Table 2. Considering several of the unsupervised or supervised tasks in Table 2 will be good.  I leave it to the authors to either perform this analysis or not, but at least the limitation should be acknowledged in the paper and maybe considered as  a future work.\\}
 
+Thank you for clarifying your concern. Based on your suggestion, we added a analysis where LDADE provides a set of stable topics which were unstable before with the use of LDA. Please remember from Table~\ref{tbl:olap}, we showed how highly unstable LDA was if used with default configurations. We added another Table~\ref{tbl:olap_stable} in section~\ref{sect:rq9}, where same analysis was performed as before but this time with more stable configurations that was found by LDADE. LDADE found 27 stable topics. We also have acknowledged the limitation of this study for the supervised task in our threats to validity section.\\
 
+\textit{A.2\\}
+{\em Also, there is a need to better motivate the supervised task considered in Section 5.3  (to answer the question: why categorizing StackExchange data into relevant and non relevant categories useful?).\\}
 
-\noindent
-\textit{\\A.2.} 
+While working with an industrial partner, their main product is about reading legal documents which they can mark as relevant or irrelevant in a legal case. They want to reduce the cost and improve the efficiency of labeling the involved party's legal case documents. We generated a similar mock-up with our Stackoverflow documents. This is the reason why categorizing these data into relevant and non relevant became useful. Since most of our SE tasks can be divided into the same case scenario where SE community want to reduce the cost and improve the efficiency, such as categorizing the test reports into buggy and not buggy.\\
 
-\textit{The experiments need to be improved in the following ways/ First, LDA has been used to help many realistic software engineering tasks (for example, tasks considered by papers included in Table 2. There is a need to expand the experiments to compare LDA and LDADE on those realistic software engineering tasks. It is unclear if the task considered in the experiments (Section 5.3) is realistic (why categorizing StackExchange data into relevant and non relevant categories useful?). More than one tasks should have been considered (similar like Panichella et al.'s work).\\}
+\textit{A.3\\}
+{\em There is also a need to use LDA-GA for the classification task in Section 5.3 and demonstrate whether or not LDADE outperforms LDA-GA. Even if LDADE does not outperform LDA-GA, it is still okay. The paper can inform researchers to use LDADE for unsupervised tasks or tasks requiring short parameter tuning time or tasks requiring better stability, and LDA-GA for supervised tasks or tasks where parameter tuning can be done overnight. However, without the comparison, researchers may not be able to make such a decision in a future work.\\}
 
-
-Our goal in this revision was to be as responsive as possible to your suggestions (as as you can see below, in  A.4, A.5 and A.7, we were
-able to implement much of your advice.) 
-
-
-But as to applying this to ``more realistic SE task'',   we might have a different perspective on what is a ``valid'' SE task.
-We say this since it
-sounds like you are saying the unsupervised
-tasks conducted by   23 of 28 recent highly cited LDA papers are not ``realistic''? And that we should
-evaluate this paper only via the supervised tasks seen in 4 of the 28 papers?
-That is not our view, please see the notes above in A.1 on the need for stability in unsupervised SE tasks.
-
-
-
-\noindent
-\textit{A.3.} 
-
-\textit{Second, there is a need to compare Panichella's work (LDAGA) with LDADE on some realistic software engineering tasks. It is unclear if LDADE is better than LDAGA.\\}
-
-We agree on your suggestion and now we have provided that comparison. Please see section~\ref{sect:rq8}. We find that  LDA-GA is much slower than our approach. Also, it does not generate anywhere the stable topics we do.
-
-\noindent
-\textit{\\A.4.}
-
-\textit{The results reported in Section 5.3 are questionable. Why not use LDADE to tune all 3 parameters of LDA (k, alpha, beta)? f k is fixed and alpha and beta are fixed too, what parameter(s) is tuned then?\\}
-
- That is a great catch, that was our mistake in the text. We did not tune separately. We tuned for all 3 at once. We have corrected the text to make that clearer. See Section~\ref{sect:rq3}.
-
-\noindent
-\textit{\\A.5.}  
-
-\textit{Why untuned (with $k = 10$) is compared with tuned (with k = 20, 40, 80, and 200)? Shouldn't they be compared under the same setting of $k$? \\}
-
-Thank you for providing us this insight to present our results in a better way. We have updated the Section~\ref{sect:rq3} to show the results under the same settings of k. This result shows that, if we keep $k$ fixed, then tuning $\alpha$ and $\beta$ produces somewhat better improvement.  As shown in~\ref{fig:classF1}, for some datasets $k=39$ matters and for some $k=82$ (and LDADE now finds this kind of settings automatically).
-
-\noindent
-\textit{\\A.6.} 
-\textit{Is k-fold cross validation used?  Is training data kept separate from test data (including during the tuning phase)? \\}
-
-Thank you for pointing out this, we did perform a 5-fold stratified cross validation but missed out onto include that in the paper. Now this detail is added in Section \ref{sect:rq3}.  %80\% was used as training and 20\% as testing. During training, 65\% was used for training and 15\% as a validation set. We have
-
-
-\noindent
-\textit{\\A.7.}  
-
-\textit{Why F2 rather than F1 or F1/2? Is the difference statistically significant? \\}
-
-Our industrial partners prefer F2 but you right, we should have used more standard measures. Hence, we now
-include the F2 and F1 results in Section~\tion{rq3}. 
-
-As to statistical tests, as said at the end of Section~\tion{rq3}, the tuned results are indeed different and better to the untuned. 
-
- %We did F1 and F2 analysis both, and in both the cases LDADE selected the optimal configuration and performed better. But since we were working with industrial partners on the classification task, they wanted F2. This is the reason why we showed F2 results. We have updated Sec 5.3 with F1 results. Figure~\ref{fig:f1} shown below, it can be seen that LDADE is improving the F1 results as well. We have also updated the Figure 8 with variance which is inter-quartile (75th-25th percentile) range. We can see how stable our results are, and the improved performance of tuned over untuned is statistically significant.
-
-% \begin{figure}[!htbp]
-%   \includegraphics[width=\linewidth]{./fig/F1_temp.png}
-%   \caption{Tuning and Untuned results for Classification SE Task}
-%   \label{fig:f1}
-% \end{figure}
-
-\noindent
-\textit{\\A.8.}  
-
-\textit{Minor issues:}
- 
-{\em Why need to evaluate across different platforms (Linux, Macintosh)? Wouldn't the platform be irrelevant?}
-That is our mistake in text, we wanted to say that we performed the experiments on any kind of Linux platform
-
-{\em \bi
-\item Related work is revised $->$ is reviewed
-\item S2 $->$ Section 2 (similarly for S1, S3, and so on)
-\item The period of time considered for drawing Table 1 needs to be mentioned. 
-\item Should Table headings be at the top of tables? Need to confirm with IST guidelines.
-\item Reference 69 is incomplete.\\
-\ei}
-
-Thank you for pointing out these, we have fixed them now.
+Thank you for suggesting us to look further into the comparison of LDA-GA and LDADE. We added the details in the text (see Section~\ref{sect:rq8}). From Figure~\ref{fig:ldade_ga}, we did not see big difference in F1 results among the 2 methods. The reason being the value of $k$ matters for the classification analysis and both the methods find the same range of $k$. But LDA-GA is still 24-70 times slower than LDADE which gives advantage of using LDADE (see Figure~\ref{fig:run_ldaga}). We would still suggest researchers to perform LDADE for any task, since LDADE is orders of magnitude faster and gets better or same improvement.\\
 
 \newpage
 \section*{B. Reviewer 2}
 
-\textit{SUMMARY: The authors empirically analyze the instability of LDA and the importance of its parameters' tuning. Then the authors present LDADE, a search-based software engineering tool that tunes LDA parameters using DE (Differential Evolution). An empirical study indicate that by using LDADE, the topic modeling technique is much more stable and reliable.}
+\textit{First of all, I would like to thank the authors for the effort they put to address my comments. The paper is improved a lot.\\}
 
-\textit{EVALUATION: This is a very interesting paper. It is in general well-written and easy to follow. I really like the goal of the paper. Having worked with LDA I totally agree that using the technique as a ``black-box'' is not recommended. So, the idea of using LDADE to (i) improve the stability of LDA and (ii) reduce the threats that could affect the validity of the results achieved due to an incorrect configuration of the technique is really important. Thus, I think that the paper has a great potential.\\} 
+Thank you for those kind words.\\
+\textit{B.1\\}
+{\em But, I have still a couple of comments.
+I was really surprised that with just 30 evaluations the algorithm is able to achieve a stable configuration. This is - in my opinion - a result that in some way belittles the issue raised in the paper. If by exploring only 30 different configurations I’m able to obtain a stable solution, probably LDA is in general stable and I don’t need a sophisticated approach to find a much stable solution.\\}
 
-Thank you for those kind words
+We find DE to be smarter than random search because of two reasons:
+\bi
+\item It samples from a space that is continuously improving. In every generation, the frontier contains atleast one candidate which is better than the last generation. During the next generation, mutation happens between 3 better candidates.
+\item It supports vector-level mutation that retain the association between variables in the space which other optimizers like GAs, SA does not provide~\cite{das2011differential}.\\
+\ei
 
-\noindent
-\textit{\\B.1.} 
+\textit{B.2\\}
+{\em I just need to perform some trials and pick the configuration that provides the best results. Indeed, which are the benefits of DE as compared with a Random Search? I would like to see in the paper a deeper discussion on the very low number of evaluations of the proposed algorithm and – if possible – a comparison with Random Search.\\}
 
-\textit{The first issue is related to the description of LDADE. I have to admit that Section 4.3 of the paper is quite difficult to follow. First of all, I strongly suggest to the authors to provide a ``bird-eye-view'' of the approach before providing the details. Which is the output of LDADE? How can I use such an output? If I understood correctly, the output of LDADE is just a set of topics (similar to the output of LDA). Is this correct? If so, the authors should explicit mention this. Also, an usage scenario of LDADE could be worthwhile.\\}
+But after considering your suggestions we did perform the comparison of DE with random search and observed that the improvement achieved with LDADE outperforms the improvement achieved with random search. (Please see Figure~\ref{fig:random}).\\
 
-We carefully considered your suggestions here and also the follow-up comments, and this made us to reformat the Algorithm 2 and provide it with detailed description in the text of Section \ref{sect:tuning}. This reformatting makes our approach of LDADE more clearer. To answer your questions, the output of LDADE is $\Re_n$ and the optimal configuration for a dataset to be used with LDA for further SE task. For usage, please see A.2 and Table 2. Since so many people have been using unstable LDA, LDADE could provide stability and get better results.
+\textit{B.3\\}
+{\em In addition, I concur with Reviewer 1 that the proposed algorithm should be experimented in a scenario more specific for the software engineering community, such as traceability link recovery, feature location, or software artefact labelling.\\}
 
-\noindent
-\textit{\\B.2.}  
+Please see our analysis to address a more specific SE task which we included in section~\ref{sect:rq9} and the reply provided in A.1\\
 
-\textit{In addition, I did not understand at all when and how LDADE varies the parameters of LDA (k, alpha and beta). LDA in LDADE is invoked through the function ldascore. However, in such a function k, alpha and beta are set to default values.\\}
 
-Sorry about that we did not clear this in the text. $Ldascore$ function is invoked which is same as Algorithm 1 but this time rather than having default parameters as input, $ldascore$ takes the tuned parameters generated from DE. We have made this more clearer in Section~\ref{sect:tuning}.
+% \section*{Responses to reviewers}
 
-\noindent
-\textit{\\B.3.} 
+% Please see our replies to reviewer comments, below. Note that anything in {\em italics} is from the review team.\\
 
-\textit{I appreciated that the authors reported the pseudo-code of LDADE. However, I think that a much deeper description of each step is required. The authors should explain each step of the algorithm and more important should define each function/variable of the pseudo-code. For instance, Data is never instantiated in Algorithm 2 (probably because it is an input?). Or, which is l[0] in Algorithm 1. Another imprecision is related to the function ldascore. From Algorithm 1, ldascore takes as input n and Data. In Algorithm 2 ldascore is called at line 11 passing as parameter Si (a population?) and at line 12 Si, n and Data. Also, Cur\_Gen is used as a matrix. However, when calling on Cur\_Gen the method ``add'', four parameters are passed. I understand that it is just a pseudo-code. However, a much higher level of formality is required.\\}
+% \noindent
+% \textit{A. Comment from Editor:}
 
-Thank you for pointing out those. We have fixed the errors of Algorithm 2 in Section~\ref{sect:tuning}. 
+% {\em Both reviewers consider the research of great interest. LDA is a widely used techniques, and studying and improving its performance is a value research topic.}
 
-\noindent
-\textit{\\B.4.} 
+% Thank you for those kind words.\\
 
-\textit{I still have some doubts about how DE is used. Specifically, I would like to see much more details on the technique (to make the paper self-contained) and (much important) the design of the approach. For instance, which is the encoding of each solution? Which are the operators used to evolve the solutions? Which is the quality/fitness function? Looking at the pseudo-code, it seems that the quality function is represented by ldascore. If so, why scores are encoded in the solution?\\} 
+% {\em Both reviewers raised a number of substantial concerns that need to be looked into. Mainly they are related to}
 
-We have fixed that by providing a better explanation of Algorithm 2 (Figure~\ref{fig:pseudo_DE}) in section~\ref{sect:tuning}. We have also included another table~\ref{tb:algo2} which provides an overview of LDADE algorithm. The quality/fitness function is represented by $ldascore$. The encoding of $\Re_n$ score in the solution is shown in pseudocode just to keep track of the values but it is not used to drive our $ldascore$ function. 
+% \bi
+% \item
+% {\em More transparently differentiate from existing and closely related work.}
 
-\noindent
-\textit{\\B.5.}  
+% As recomended by the reviewers, we now compare our proposed method to prior work
+% that used a genetic algorithm
+% (by Panichella, Dit, Oliveto,  Di Penta,  Poshyvanyk, De Lucia, et al.~\cite{panichella2013effectively}). We find our method runs
+% orders of magnitude faster than theirs (see Figure~\ref{fig:run_ldaga}) and
+% that their method result in worse topics stability  (see Figure~\ref{fig:ldaga}).\\
 
-\textit{The authors provide empirical evidence that LDA used with default configuration parameters is not stable. What about if LDA is configured properly - for instance by using LDA-GA? In other words, which are the results achieved if in the algorithm 1 instead of using LDA, the authors try to use LDA-GA?\\}
 
-Please see Section~\ref{sect:rq8} for a comparison with LDA-GA. In summary, we are order of magnitude faster and our solutions are more stable.
+% \item
+% {\em More precise and detailed description of LDADA and its evaluation.}
 
-\noindent
-\textit{\\B.6.}  
+% As per the the feedback from reviewers,   we have provided a more precised and detailed description on LDADE (see Section \ref{sect:tuning}).\\
+% \ei
 
-\textit{Could the instability be due to an incorrect configuration of the LDA parameters? This is a critical point that should be addressed in the paper.\\}
+% There is one matter that the coordinating editor might need to comment on. Review A.2 comments that ``There is a need to expand the experiments to  compare  LDA  and  LDADE  on    realistic  software engineering  tasks''. By this, we think, the reviewer
+% means running more experiments on supervised learning tasks where there is some target variable that should be predicted for. In reply, we note that:
+% \bi
+% \item
+% We do run some experiments on supervised tasks (see Section~\ref{sect:rq3} and Figures~\ref{fig:classF1},~\ref{fig:classF2});
+% \item
+% But, more importantly, as we show in our
+% literature review (section 2.1 and Table 2), most of the usages of LDA is for ``unsupervised tasks'' where LDA is used to find a structure to help humans navigate around and  gain some insight to the space within software artifacts. In fact, by our count (in Table 2). $23/28=82$\% of the applications
+% of LDA in SE are of this unsupervised nature. 
+% \ei
+% Now we believe that when using LDA for such navigation purposes that unstable topics would be very misleading (see our case study on that in section 2.2 and Table 3; also seee our notes on that point in A.1) so we think our paper does address a ``realistic task''. Nevertheless, this
+% is a matter that needs to be decided by the co-ordinating editor.
 
-You are correct, this is the  whole point of this paper. We need to find correct LDA configurations, where ``correct'' means ``achieved stabler results''. We show in this paper that the DE algorithm explored here can achieve
-this, very quickly.
+% \newpage
+% \section*{A. Reviewer 1}
 
-\newpage
-\noindent
-\textit{B.7.}   
+% \textit{Topic modeling has been used in many software engineering papers. The paper shows that topic modeling, especially LDA, suffers from order effects -- which is new and interesting. Depending on the order data is presented to LDA, it produces a different model. Search-based software engineering can be used to tune LDA parameters so that order effect is minimized. LDADE (LDA mixed with Differential Evolution) is presented. It is shown to improve standard LDA for various settings including classification of StackExchange websites into relevant and non-relevant documents -- which is good.\\}
 
-\textit{Turning to the empirical evaluation, the main problem here is related to the lack of a deeper analysis of the results achieved. For instance, looking at Figure 6 it seems that the results achieved on “PitsC” are quite stable. Why? Did the authors have some clues on why on this particular dataset the untuned LDA provides quite acceptable results? Here a qualitative analysis of the results achieved could be worthwhile.\\}
+% Thank you for those kind words.
 
-Sorry, I believe you mistook it for PitsD. We are seeing the largest improvements in PitsD, that is because what kind of data it represents. About 92\% of the data samples report the severity of level 3.  All the other Pits Datasets have mixed samples of severity level. When data is less skewed LDADE achieves the highest improvement which was not achieved when just LDA was being used. So, this makes it highly unimaginable to use just LDA for highly skewed data. This also emphasizes the use of LDADE more. And we have included the insight on the quality of data in Section ~\tion{stable}.
+% \noindent
+% \textit{\\A.1.}
+% \textit{Very closely related work exists:}
 
-\noindent
-\textit{\\B.8.} 
+% \textit{A prior work has demonstrated suboptimal performance of topic modeling, in particular LDA, when default parameters are used, and proposed a solution that addresses the problem using search-based software engineering~\cite{panichella2013effectively}. Thus, the novelty of the work seems limited. The paper does not describe why LDADE is better than Panichella et al.'s work. Panichella et al.'s work (LDA-GA) should have been prominently highlighted in the introduction of the paper and a short discussion should be given as to why another search-based solution is needed.\\}
 
-\textit{A qualitative analysis could be also useful to better explain why LDADE provides much more benefits on VEM than Gibbs. Note that this result also confirms the results achieved in the literature about the higher stability of Gibbs as compared to other implementation of LDA.\\}
+% Thank you for making us look again at that prior work.
+% We have updated the introduction section to highlight the difference between LDA-GA and LDADE. Also,
+% we have compared the results of LDADE against LDA-GA in Section~\ref{sect:rq8}.
+% We note that
+% Panichella et al. did not consider the problem of order effects. Also, their  Genetic Algorithm method
+% is much slower than our approach. We observed that LDADE 
+% gets better stable results (see Figure~\ref{fig:ldaga}) 
+% and is much faster (see Figure~\ref{fig:run_ldaga})\footnote{Just to answer your next question, we think there is much 
+% value in speeding up widely used algorithms.
+% A summary  of our arguments for this point appears in section 2.1 of https://arxiv.org/abs/1703.00133  and  pages 7 to 35 of http://tiny.cc/tim17vic.
+% Our call is that material is not needed to be summarized here (but would take the reviewer's advice here).}.
+% Now we stress that   Panichella et al.'s  {\em did not} optimize for stability. As shown in Figure~\ref{fig:ldaga}, the topics found by Panichella et al.'s methods are far less stable than ours, This is important since, as Mark Harmon~\cite{harman2007current} said
 
-We have updated this qualitative analysis in Section~\tion{vem-gibbs}. VEM only gets you to a local optimum that depends on initialization and other factors in the optimization problem~\cite{asuncion2009smoothing}. On the other hand a good sampling algorithm like Gibbs sampling can achieve the global optimum. In practice because of finite number of samples that are used, sampling can give you a sub-optimal solution. LDADE works as another kind of sampler which selects good priors at the initialization and can achieve better sub-optimal solutions, which is why LDADE has better benefits on VEM.
+% \begin{quote}
+% ``In some software engineering applications, solution robustness may be as important
+% as solution functionality. For example, it may be better to locate an area
+% of the search space that is rich in fit solutions, rather than identifying an even
+% better solution that is surrounded by a set of far less fit solutions.''
 
-\noindent
-\textit{\\B.9.} 
+% ``Hitherto, research on SBSE has tended to focus on the production of the fittest
+% possible results. However, many application areas require solutions in a search
+% space that may be subject to change. This makes robustness a natural second
+% order property to which the research community could and should turn its attention.''
+% \end{quote}
+% Why is optimizing for stability important in the particular context of this research? For tasks such as those explored by  Panichella et al.'s, it does not matter since the output LDA models are not inspected by humans. Rather, they are under-the-hood intermediaries
+% for further analysis.
 
-\textit{Very interesting is the analysis of the Delta score. However, in some cases the improvement in terms of stability is not so high. Also here could be worthwhile to discuss in details such cases. In addition, is there any statistical significant difference between the achieved scores? An analysis of the results supported by statistical tests could strengthen the findings.\\}
+% However, for {\em unsupervised tasks}, the situation is very different. This distinction between  {\em unsupervised tasks} and  {\em supervised tasks} is significant since,
+% as shown in Table 2, 23 of the recent highly-cited LDA  studies found in the SE literature are for {\em unsupervised tasks}. And
+% as shown by example, (please see Table~\ref{tbl:olap}) that topic instability can be a major impediment to knowledge discovery in SE. 
+% Note that for {\em unsupervised tasks},  the LDA topics are the primary product used and shared by humans to justify certain conclusions about a domain. In such unsupervised tasks, humans have no goal, no supervised direction, rather, they are reading the topics as knowledge discovery aids to better explore some domain
+% (or they are used by clustering algorithms to determine groupings of software artifacts).
+% In either case, instabilities in the topics will result in different clustering and different justifications. Hence, this paper.
 
-To explain why stability is achieved better in some cases and not in some cases, please look at our explanation in B.7 and in Section~\tion{stable}. And we have also explained whether our results achieved are statistically significant or not in Section~\tion{rq3}.
+
+
+% \noindent
+% \textit{\\A.2.} 
+
+% \textit{The experiments need to be improved in the following ways/ First, LDA has been used to help many realistic software engineering tasks (for example, tasks considered by papers included in Table 2. There is a need to expand the experiments to compare LDA and LDADE on those realistic software engineering tasks. It is unclear if the task considered in the experiments (Section 5.3) is realistic (why categorizing StackExchange data into relevant and non relevant categories useful?). More than one tasks should have been considered (similar like Panichella et al.'s work).\\}
+
+
+% Our goal in this revision was to be as responsive as possible to your suggestions (as as you can see below, in  A.4, A.5 and A.7, we were
+% able to implement much of your advice.) 
+
+
+% But as to applying this to ``more realistic SE task'',   we might have a different perspective on what is a ``valid'' SE task.
+% We say this since it
+% sounds like you are saying the unsupervised
+% tasks conducted by   23 of 28 recent highly cited LDA papers are not ``realistic''? And that we should
+% evaluate this paper only via the supervised tasks seen in 4 of the 28 papers?
+% That is not our view, please see the notes above in A.1 on the need for stability in unsupervised SE tasks.
+
+
+
+% \noindent
+% \textit{A.3.} 
+
+% \textit{Second, there is a need to compare Panichella's work (LDAGA) with LDADE on some realistic software engineering tasks. It is unclear if LDADE is better than LDAGA.\\}
+
+% We agree on your suggestion and now we have provided that comparison. Please see section~\ref{sect:rq8}. We find that  LDA-GA is much slower than our approach. Also, it does not generate anywhere the stable topics we do.
+
+% \noindent
+% \textit{\\A.4.}
+
+% \textit{The results reported in Section 5.3 are questionable. Why not use LDADE to tune all 3 parameters of LDA (k, alpha, beta)? f k is fixed and alpha and beta are fixed too, what parameter(s) is tuned then?\\}
+
+%  That is a great catch, that was our mistake in the text. We did not tune separately. We tuned for all 3 at once. We have corrected the text to make that clearer. See Section~\ref{sect:rq3}.
+
+% \noindent
+% \textit{\\A.5.}  
+
+% \textit{Why untuned (with $k = 10$) is compared with tuned (with k = 20, 40, 80, and 200)? Shouldn't they be compared under the same setting of $k$? \\}
+
+% Thank you for providing us this insight to present our results in a better way. We have updated the Section~\ref{sect:rq3} to show the results under the same settings of k. This result shows that, if we keep $k$ fixed, then tuning $\alpha$ and $\beta$ produces somewhat better improvement.  As shown in~\ref{fig:classF1}, for some datasets $k=39$ matters and for some $k=82$ (and LDADE now finds this kind of settings automatically).
+
+% \noindent
+% \textit{\\A.6.} 
+% \textit{Is k-fold cross validation used?  Is training data kept separate from test data (including during the tuning phase)? \\}
+
+% Thank you for pointing out this, we did perform a 5-fold stratified cross validation but missed out onto include that in the paper. Now this detail is added in Section \ref{sect:rq3}.  %80\% was used as training and 20\% as testing. During training, 65\% was used for training and 15\% as a validation set. We have
+
+
+% \noindent
+% \textit{\\A.7.}  
+
+% \textit{Why F2 rather than F1 or F1/2? Is the difference statistically significant? \\}
+
+% Our industrial partners prefer F2 but you right, we should have used more standard measures. Hence, we now
+% include the F2 and F1 results in Section~\tion{rq3}. 
+
+% As to statistical tests, as said at the end of Section~\tion{rq3}, the tuned results are indeed different and better to the untuned. 
+
+%  %We did F1 and F2 analysis both, and in both the cases LDADE selected the optimal configuration and performed better. But since we were working with industrial partners on the classification task, they wanted F2. This is the reason why we showed F2 results. We have updated Sec 5.3 with F1 results. Figure~\ref{fig:f1} shown below, it can be seen that LDADE is improving the F1 results as well. We have also updated the Figure 8 with variance which is inter-quartile (75th-25th percentile) range. We can see how stable our results are, and the improved performance of tuned over untuned is statistically significant.
+
+% % \begin{figure}[!htbp]
+% %   \includegraphics[width=\linewidth]{./fig/F1_temp.png}
+% %   \caption{Tuning and Untuned results for Classification SE Task}
+% %   \label{fig:f1}
+% % \end{figure}
+
+% \noindent
+% \textit{\\A.8.}  
+
+% \textit{Minor issues:}
+ 
+% {\em Why need to evaluate across different platforms (Linux, Macintosh)? Wouldn't the platform be irrelevant?\\}
+
+% That is our mistake in text, we wanted to say that we performed the experiments on any kind of Linux platform.\\
+
+% {\em \bi
+% \item Related work is revised $->$ is reviewed
+% \item S2 $->$ Section 2 (similarly for S1, S3, and so on)
+% \item The period of time considered for drawing Table 1 needs to be mentioned. 
+% \item Should Table headings be at the top of tables? Need to confirm with IST guidelines.
+% \item Reference 69 is incomplete.\\
+% \ei}
+
+% Thank you for pointing out these, we have fixed them now.
+
+% \newpage
+% \section*{B. Reviewer 2}
+
+% \textit{SUMMARY: The authors empirically analyze the instability of LDA and the importance of its parameters' tuning. Then the authors present LDADE, a search-based software engineering tool that tunes LDA parameters using DE (Differential Evolution). An empirical study indicate that by using LDADE, the topic modeling technique is much more stable and reliable.}
+
+% \textit{EVALUATION: This is a very interesting paper. It is in general well-written and easy to follow. I really like the goal of the paper. Having worked with LDA I totally agree that using the technique as a ``black-box'' is not recommended. So, the idea of using LDADE to (i) improve the stability of LDA and (ii) reduce the threats that could affect the validity of the results achieved due to an incorrect configuration of the technique is really important. Thus, I think that the paper has a great potential.\\} 
+
+% Thank you for those kind words
+
+% \noindent
+% \textit{\\B.1.} 
+
+% \textit{The first issue is related to the description of LDADE. I have to admit that Section 4.3 of the paper is quite difficult to follow. First of all, I strongly suggest to the authors to provide a ``bird-eye-view'' of the approach before providing the details. Which is the output of LDADE? How can I use such an output? If I understood correctly, the output of LDADE is just a set of topics (similar to the output of LDA). Is this correct? If so, the authors should explicit mention this. Also, an usage scenario of LDADE could be worthwhile.\\}
+
+% We carefully considered your suggestions here and also the follow-up comments, and this made us to reformat the Algorithm 2 and provide it with detailed description in the text of Section \ref{sect:tuning}. This reformatting makes our approach of LDADE more clearer. To answer your questions, the output of LDADE is $\Re_n$ and the optimal configuration for a dataset to be used with LDA for further SE task. For usage, please see A.2 and Table 2. Since so many people have been using unstable LDA, LDADE could provide stability and get better results.
+
+% \noindent
+% \textit{\\B.2.}  
+
+% \textit{In addition, I did not understand at all when and how LDADE varies the parameters of LDA (k, alpha and beta). LDA in LDADE is invoked through the function ldascore. However, in such a function k, alpha and beta are set to default values.\\}
+
+% Sorry about that we did not clear this in the text. $Ldascore$ function is invoked which is same as Algorithm 1 but this time rather than having default parameters as input, $ldascore$ takes the tuned parameters generated from DE. We have made this more clearer in Section~\ref{sect:tuning}.
+
+% \noindent
+% \textit{\\B.3.} 
+
+% \textit{I appreciated that the authors reported the pseudo-code of LDADE. However, I think that a much deeper description of each step is required. The authors should explain each step of the algorithm and more important should define each function/variable of the pseudo-code. For instance, Data is never instantiated in Algorithm 2 (probably because it is an input?). Or, which is l[0] in Algorithm 1. Another imprecision is related to the function ldascore. From Algorithm 1, ldascore takes as input n and Data. In Algorithm 2 ldascore is called at line 11 passing as parameter Si (a population?) and at line 12 Si, n and Data. Also, Cur\_Gen is used as a matrix. However, when calling on Cur\_Gen the method ``add'', four parameters are passed. I understand that it is just a pseudo-code. However, a much higher level of formality is required.\\}
+
+% Thank you for pointing out those. We have fixed the errors of Algorithm 2 in Section~\ref{sect:tuning}. 
+
+% \noindent
+% \textit{\\B.4.} 
+
+% \textit{I still have some doubts about how DE is used. Specifically, I would like to see much more details on the technique (to make the paper self-contained) and (much important) the design of the approach. For instance, which is the encoding of each solution? Which are the operators used to evolve the solutions? Which is the quality/fitness function? Looking at the pseudo-code, it seems that the quality function is represented by ldascore. If so, why scores are encoded in the solution?\\} 
+
+% We have fixed that by providing a better explanation of Algorithm 2 (Figure~\ref{fig:pseudo_DE}) in section~\ref{sect:tuning}. We have also included another table~\ref{tb:algo2} which provides an overview of LDADE algorithm. The quality/fitness function is represented by $ldascore$. The encoding of $\Re_n$ score in the solution is shown in pseudocode just to keep track of the values but it is not used to drive our $ldascore$ function. 
+
+% \noindent
+% \textit{\\B.5.}  
+
+% \textit{The authors provide empirical evidence that LDA used with default configuration parameters is not stable. What about if LDA is configured properly - for instance by using LDA-GA? In other words, which are the results achieved if in the algorithm 1 instead of using LDA, the authors try to use LDA-GA?\\}
+
+% Please see Section~\ref{sect:rq8} for a comparison with LDA-GA. In summary, we are order of magnitude faster and our solutions are more stable.
+
+% \noindent
+% \textit{\\B.6.}  
+
+% \textit{Could the instability be due to an incorrect configuration of the LDA parameters? This is a critical point that should be addressed in the paper.\\}
+
+% You are correct, this is the  whole point of this paper. We need to find correct LDA configurations, where ``correct'' means ``achieved stabler results''. We show in this paper that the DE algorithm explored here can achieve
+% this, very quickly.
+
+% \newpage
+% \noindent
+% \textit{B.7.}   
+
+% \textit{Turning to the empirical evaluation, the main problem here is related to the lack of a deeper analysis of the results achieved. For instance, looking at Figure 6 it seems that the results achieved on “PitsC” are quite stable. Why? Did the authors have some clues on why on this particular dataset the untuned LDA provides quite acceptable results? Here a qualitative analysis of the results achieved could be worthwhile.\\}
+
+% Sorry, I believe you mistook it for PitsD. We are seeing the largest improvements in PitsD, that is because what kind of data it represents. About 92\% of the data samples report the severity of level 3.  All the other Pits Datasets have mixed samples of severity level. When data is less skewed LDADE achieves the highest improvement which was not achieved when just LDA was being used. So, this makes it highly unimaginable to use just LDA for highly skewed data. This also emphasizes the use of LDADE more. And we have included the insight on the quality of data in Section ~\tion{stable}.
+
+% \noindent
+% \textit{\\B.8.} 
+
+% \textit{A qualitative analysis could be also useful to better explain why LDADE provides much more benefits on VEM than Gibbs. Note that this result also confirms the results achieved in the literature about the higher stability of Gibbs as compared to other implementation of LDA.\\}
+
+% We have updated this qualitative analysis in Section~\tion{vem-gibbs}. VEM only gets you to a local optimum that depends on initialization and other factors in the optimization problem~\cite{asuncion2009smoothing}. On the other hand a good sampling algorithm like Gibbs sampling can achieve the global optimum. In practice because of finite number of samples that are used, sampling can give you a sub-optimal solution. LDADE works as another kind of sampler which selects good priors at the initialization and can achieve better sub-optimal solutions, which is why LDADE has better benefits on VEM.
+
+% \noindent
+% \textit{\\B.9.} 
+
+% \textit{Very interesting is the analysis of the Delta score. However, in some cases the improvement in terms of stability is not so high. Also here could be worthwhile to discuss in details such cases. In addition, is there any statistical significant difference between the achieved scores? An analysis of the results supported by statistical tests could strengthen the findings.\\}
+
+% To explain why stability is achieved better in some cases and not in some cases, please look at our explanation in B.7 and in Section~\tion{stable}. And we have also explained whether our results achieved are statistically significant or not in Section~\tion{rq3}.
 
 
 \end{document}
