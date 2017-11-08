@@ -18,6 +18,12 @@ R.~Storn, K.~Price, Differential evolution--a simple and efficient heuristic
   for global optimization over continuous spaces, Journal of global
   optimization 11~(4) (1997) 341--359.
 
+\bibitem{panichella2013effectively}
+A.~Panichella, B.~Dit, R.~Oliveto, M.~Di~Penta, D.~Poshyvanyk, A.~De~Lucia, How
+  to effectively use topic models for software engineering tasks? an approach
+  based on genetic algorithms, in: Proceedings of the 2013 International
+  Conference on Software Engineering, IEEE Press, 2013, pp. 522--531.
+
 \bibitem{rao2011retrieval}
 S.~Rao, A.~Kak, Retrieval from software libraries for bug localization: a
   comparative study of generic and composite text models, in: Proceedings of
@@ -34,12 +40,6 @@ R.~Oliveto, M.~Gethers, D.~Poshyvanyk, A.~De~Lucia, On the equivalence of
 A.~Barua, S.~W. Thomas, A.~E. Hassan, What are developers talking about? an
   analysis of topics and trends in stack overflow, Empirical Software
   Engineering 19~(3) (2014) 619--654.
-
-\bibitem{panichella2013effectively}
-A.~Panichella, B.~Dit, R.~Oliveto, M.~Di~Penta, D.~Poshyvanyk, A.~De~Lucia, How
-  to effectively use topic models for software engineering tasks? an approach
-  based on genetic algorithms, in: Proceedings of the 2013 International
-  Conference on Software Engineering, IEEE Press, 2013, pp. 522--531.
 
 \bibitem{galvis2013analysis}
 L.~V. Galvis~Carre{\~n}o, K.~Winbladh, Analysis of user comments: an approach
@@ -142,23 +142,19 @@ X.~Sun, B.~Li, H.~Leung, B.~Li, Y.~Li, Msr4sm: Using topic models to
 T.-H. Chen, W.~Shang, M.~Nagappan, A.~E. Hassan, S.~W. Thomas, Topic-based
   software defect explanation, Journal of Systems and Software.
 
-\bibitem{GENNARI198911}
-J.~H. Gennari, P.~Langley, D.~Fisher,
-  \href{http://www.sciencedirect.com/science/article/pii/0004370289900465}{Models
-  of incremental concept formation}, Artificial Intelligence 40~(1) (1989) 11
-  -- 61.
-\newblock \href
-  {http://dx.doi.org/http://dx.doi.org/10.1016/0004-3702(89)90046-5}
-  {\path{doi:http://dx.doi.org/10.1016/0004-3702(89)90046-5}}.
-\newline\urlprefix\url{http://www.sciencedirect.com/science/article/pii/0004370289900465}
+\bibitem{sun2016exploring}
+X.~Sun, X.~Liu, B.~Li, Y.~Duan, H.~Yang, J.~Hu, Exploring topic models in
+  software engineering data analysis: A survey, in: 2016 17th IEEE/ACIS
+  International Conference on Software Engineering, Artificial Intelligence,
+  Networking and Parallel/Distributed Computing (SNPD), IEEE, 2016, pp.
+  357--362.
 
-\bibitem{Breiman2001}
-L.~Breiman, {Random forests}, Machine Learning 45~(1) (2001) 5--32.
-\newblock \href
-  {http://arxiv.org/abs//dx.doi.org/10.1023{\%}2FA{\%}3A1010933404324}
-  {\path{arXiv:/dx.doi.org/10.1023{\%}2FA{\%}3A1010933404324}}, \href
-  {http://dx.doi.org/10.1023/A:1010933404324}
-  {\path{doi:10.1023/A:1010933404324}}.
+\bibitem{gennari1989models}
+J.~H. Gennari, P.~Langley, D.~Fisher, Models of incremental concept formation,
+  Artificial intelligence 40~(1-3) (1989) 11--61.
+
+\bibitem{breiman2001random}
+L.~Breiman, Random forests, Machine learning 45~(1) (2001) 5--32.
 
 \bibitem{bergstra2012random}
 J.~Bergstra, Y.~Bengio, Random search for hyper-parameter optimization, Journal
@@ -179,23 +175,17 @@ K.~O. Elish, M.~O. Elish, Predicting defect-prone software modules using
   support vector machines, Journal of Systems and Software 81~(5) (2008)
   649--660.
 
-\bibitem{4527256}
+\bibitem{lessmann2008benchmarking}
 S.~Lessmann, B.~Baesens, C.~Mues, S.~Pietsch, Benchmarking classification
   models for software defect prediction: A proposed framework and novel
   findings, IEEE Transactions on Software Engineering 34~(4) (2008) 485--496.
-\newblock \href {http://dx.doi.org/10.1109/TSE.2008.35}
-  {\path{doi:10.1109/TSE.2008.35}}.
 
-\bibitem{Yang:2016}
-Y.~Yang, Y.~Zhou, J.~Liu, Y.~Zhao, H.~Lu, L.~Xu, B.~Xu, H.~Leung,
-  \href{http://doi.acm.org/10.1145/2950290.2950353}{Effort-aware just-in-time
-  defect prediction: Simple unsupervised models could be better than supervised
-  models}, in: Proceedings of the 2016 24th ACM SIGSOFT International Symposium
-  on Foundations of Software Engineering, FSE 2016, ACM, New York, NY, USA,
-  2016, pp. 157--168.
-\newblock \href {http://dx.doi.org/10.1145/2950290.2950353}
-  {\path{doi:10.1145/2950290.2950353}}.
-\newline\urlprefix\url{http://doi.acm.org/10.1145/2950290.2950353}
+\bibitem{yang2016effort}
+Y.~Yang, Y.~Zhou, J.~Liu, Y.~Zhao, H.~Lu, L.~Xu, B.~Xu, H.~Leung, Effort-aware
+  just-in-time defect prediction: simple unsupervised models could be better
+  than supervised models, in: Proceedings of the 2016 24th ACM SIGSOFT
+  International Symposium on Foundations of Software Engineering, ACM, 2016,
+  pp. 157--168.
 
 \bibitem{maskeri2008mining}
 G.~Maskeri, S.~Sarkar, K.~Heafield, Mining business topics in source code using
@@ -250,9 +240,10 @@ B.~Vasilescu, A.~Serebrenik, T.~Mens, A historical dataset of software
   engineering conferences, in: Proceedings of the 10th Working Conference on
   Mining Software Repositories, IEEE Press, 2013, pp. 373--376.
 
-\bibitem{mathew2016trends}
-G.~Mathew, A.~Agarwal, T.~Menzies, Trends in topics at se conferences
-  (1993-2013), arXiv preprint arXiv:1608.08100.
+\bibitem{mathew2017trends}
+G.~Mathew, A.~Agrawal, T.~Menzies, Trends in topics at se conferences
+  (1993--2013), in: Proceedings of the 39th International Conference on
+  Software Engineering Companion, IEEE Press, 2017, pp. 397--398.
 
 \bibitem{vasilescu2014healthy}
 B.~Vasilescu, A.~Serebrenik, T.~Mens, M.~G. van~den Brand, E.~Pek, How healthy
@@ -343,6 +334,12 @@ M.~Zuluaga, G.~Sergent, A.~Krause, M.~P{\"u}schel, Active learning for
   multi-objective optimization, in: Proceedings of the 30th International
   Conference on Machine Learning, 2013, pp. 462--470.
 
+\bibitem{vesterstrom2004comparative}
+J.~Vesterstr{\o}m, R.~Thomsen, A comparative study of differential evolution,
+  particle swarm optimization, and evolutionary algorithms on numerical
+  benchmark problems, in: Evolutionary Computation, 2004. CEC2004. Congress on,
+  Vol.~2, IEEE, 2004, pp. 1980--1987.
+
 \bibitem{minka2002expectation}
 T.~Minka, J.~Lafferty, Expectation-propagation for the generative aspect model,
   in: Proceedings of the Eighteenth conference on Uncertainty in artificial
@@ -358,19 +355,13 @@ T.~L. Griffiths, M.~Steyvers, Finding scientific topics, Proceedings of the
   National academy of Sciences 101~(suppl 1) (2004) 5228--5235.
 
 \bibitem{layman16a}
-L.~Layman (2016).
+L.~Layman, Personnel communication (2016).
 
 \bibitem{layman2016topic}
 L.~Layman, A.~P. Nikora, J.~Meek, T.~Menzies, Topic modeling of nasa space
   system problem reports: research in practice, in: Proceedings of the 13th
   International Workshop on Mining Software Repositories, ACM, 2016, pp.
   303--314.
-
-\bibitem{vesterstrom2004comparative}
-J.~Vesterstr{\o}m, R.~Thomsen, A comparative study of differential evolution,
-  particle swarm optimization, and evolutionary algorithms on numerical
-  benchmark problems, in: Evolutionary Computation, 2004. CEC2004. Congress on,
-  Vol.~2, IEEE, 2004, pp. 1980--1987.
 
 \bibitem{omran2005differential}
 M.~G. Omran, A.~P. Engelbrecht, A.~Salman, Differential evolution methods for
@@ -402,6 +393,24 @@ R.~Krishna, Z.~Yu, A.~Agrawal, M.~Dominguez, D.~Wolf, The bigse project:
 D.~M. Powers, Evaluation: from precision, recall and f-measure to roc,
   informedness, markedness and correlation.
 
+\bibitem{jelihovschi2014scottknott}
+E.~G. Jelihovschi, J.~C. Faria, I.~B. Allaman, Scottknott: a package for
+  performing the scott-knott clustering algorithm in r, TEMA (S{\~a}o Carlos)
+  15~(1) (2014) 3--17.
+
+\bibitem{vargha2000critique}
+A.~Vargha, H.~D. Delaney, A critique and improvement of the cl common language
+  effect size statistics of mcgraw and wong, Journal of Educational and
+  Behavioral Statistics 25~(2) (2000) 101--132.
+
+\bibitem{efron1994introduction}
+B.~Efron, R.~J. Tibshirani, An introduction to the bootstrap, CRC press, 1994.
+
+\bibitem{asuncion2009smoothing}
+A.~Asuncion, M.~Welling, P.~Smyth, Y.~W. Teh, On smoothing and inference for
+  topic models, in: Proceedings of the Twenty-Fifth Conference on Uncertainty
+  in Artificial Intelligence, AUAI Press, 2009, pp. 27--34.
+
 \bibitem{wang2013searching}
 T.~Wang, M.~Harman, Y.~Jia, J.~Krinke, Searching for better configurations: a
   rigorous approach to clone evaluation, in: Proceedings of the 2013 9th Joint
@@ -412,5 +421,14 @@ A.~S. Sayyad, J.~Ingram, T.~Menzies, H.~Ammar, Scalable product line
   configuration: A straw to break the camel's back, in: Automated Software
   Engineering (ASE), 2013 IEEE/ACM 28th International Conference on, IEEE,
   2013, pp. 465--474.
+
+\bibitem{fu2017easy}
+W.~Fu, T.~Menzies, Easy over hard: A case study on deep learning, arXiv
+  preprint arXiv:1703.00133.
+
+\bibitem{das2011differential}
+S.~Das, P.~N. Suganthan, Differential evolution: A survey of the
+  state-of-the-art, IEEE transactions on evolutionary computation 15~(1) (2011)
+  4--31.
 
 \end{thebibliography}

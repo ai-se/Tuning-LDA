@@ -1562,32 +1562,22 @@ that LDADE produces stabler
 topics.
 \ei}
  
-\textcolor{red}{Secondly, we performed the comparison of LDADE against  andom search procedure.
+\textcolor{red}{Secondly, we performed the comparison of LDADE against random search procedure.
 %Please note that we mentioned our DE only took about 30 evaluations to find stable configurations of LDA which a random search could find as well (Please see section~\ref{sect:tuning}). 
-We performed random search with 30 evaluations to find different configurations of LDA and observed that the improvement achieved with LDADE outperforms the improvement achieved with random search (Figure~\ref{fig:random}). DE is smarter than random search because of 2 reasons:} 
+We performed random search with 30 evaluations to find different configurations of LDA (since DE took 30 evaluations mentioned in Section~\ref{sect:tuning}) and observed that the improvement achieved with LDADE outperforms the improvement achieved with random search (Figure~\ref{fig:random}). DE is smarter than random search because of 2 reasons:} 
 \bi
 \item \textcolor{red}{It samples from a space that is continuously improving. In every generation, after item $i$ the frontier contains   items
   better than at least one thing
 seen in the last generation (as do  items $1..i$).   During the next generation, mutation happens between 3 better candidates
 and, even after being 50\% through one generation,
-odds are that the 3 candidates have all passed the ``better'
+odds are that the 3 candidates have all passed the ``better''
 test. So DE builds better solutions
 from a space of candidates that it is continually
 refining and improving}
-\item \textcolor{red}{GAs and SA mutate all their
+\item \textcolor{red}{GAs, SA and others mutate all their
 attributes independently. But DE  supports vector-level mutation that retain the association between variables in the space~\cite{das2011differential}.}
 \ei
 
-
-
-
-% \begin{figure}[!t]
-  
-% \end{figure}
-
-% \begin{figure}[!t]
-  
-% \end{figure}
 
 
   \begin{lesson}
@@ -1747,6 +1737,7 @@ In how many domains can search-based SE dramatically improve software analytics?
 \bibliographystyle{elsarticle-num}
 \medskip
 \bibliography{main}
+%\input{main}
 
 
 %% Replies.pdf
